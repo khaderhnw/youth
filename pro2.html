@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coming of Age – TAMM Youth & Parent Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --tamm-teal: #00b3a4;
+      --tamm-teal-soft: #35c8bb;
+      --bg-page: #f4f7fb;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --card-bg: #ffffff;
+      --border-subtle: #e5e7eb;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.18);
+      --radius-card: 22px;
+      --radius-pill: 999px;
+
+      --domain-edu: #3b82f6;
+      --domain-ns: #ef4444;
+      --domain-work: #22c55e;
+      --domain-vol: #0ea5e9;
+      --domain-money: #eab308;
+      --domain-well: #fb923c;
+      --domain-biz: #a855f7;
+
+      --stage-s1: #38bdf8;
+      --stage-s2: #22c55e;
+      --stage-s3: #eab308;
+      --stage-s4: #f97316;
+      --stage-s5: #8b5cf6;
+      --stage-s6: #ec4899;
+      --stage-s7: #14b8a6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f4f7fb 35%, #e5fdf8 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .page {
+      max-width: 1240px;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 18px;
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .phones {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .phone-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .phone {
+      width: 360px;
+      height: 760px;
+      background: #ffffff;
+      border-radius: 38px;
+      padding: 10px 10px 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .status-bar {
+      height: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 11px;
+      color: #111827;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .status-pill {
+      width: 23px;
+      height: 13px;
+      border-radius: 6px;
+      border: 1px solid #111827;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-pill::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 5px;
+      background: #111827;
+    }
+
+    .wifi {
+      width: 14px;
+      height: 10px;
+      border-radius: 0 0 12px 12px;
+      border: 2px solid #111827;
+      border-top: none;
+      position: relative;
+    }
+
+    .wifi::after,
+    .wifi::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      border: 2px solid #111827;
+      border-top: none;
+    }
+
+    .wifi::after {
+      width: 10px;
+      height: 8px;
+      top: -6px;
+    }
+
+    .wifi::before {
+      width: 6px;
+      height: 5px;
+      top: -10px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 2px;
+    }
+
+    .dots span {
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: #111827;
+    }
+
+    .screen {
+      flex: 1;
+      border-radius: 30px;
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #f7fafc 40%,
+        #e7fdf7 100%
+      );
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-content {
+      flex: 1;
+      padding: 14px 16px 80px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 13px;
+      background: radial-gradient(circle at 30% 20%, #e0f2fe 0, #00b3a4 70%);
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .logo-mark span {
+      transform: translateY(0.5px);
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title span:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #94a3b8;
+    }
+
+    .header-title span:last-child {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .icon-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 16px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+      cursor: default;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0f172a, #6b7280);
+    }
+
+    .welcome-block {
+      margin-bottom: 14px;
+    }
+
+    .welcome-block h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .welcome-block p {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .vision-card,
+    .summary-card {
+      background: linear-gradient(135deg, #e0fbf7, #ffffff);
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .vision-header,
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .vision-header h3,
+    .summary-header h3 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .small-tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 179, 164, 0.08);
+      color: #0f766e;
+      border: 1px solid rgba(34, 197, 178, 0.35);
+    }
+
+    .goal-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .goal-pill {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #f3f4ff;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .goal-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    .goal-pill[data-goal="study"] span.dot { background: var(--domain-edu); }
+    .goal-pill[data-goal="ns"] span.dot { background: var(--domain-ns); }
+    .goal-pill[data-goal="work"] span.dot { background: var(--domain-work); }
+    .goal-pill[data-goal="volunteering"] span.dot { background: var(--domain-vol); }
+    .goal-pill[data-goal="money"] span.dot { background: var(--domain-money); }
+    .goal-pill[data-goal="business"] span.dot { background: var(--domain-biz); }
+    .goal-pill[data-goal="wellbeing"] span.dot { background: var(--domain-well); }
+
+    .goal-pill.goal-all span.dot {
+      background: linear-gradient(90deg, #22c55e, #0ea5e9);
+    }
+
+    .goal-pill.active {
+      background: rgba(0, 179, 164, 0.12);
+      border-color: rgba(0, 179, 164, 0.8);
+      color: #065f46;
+    }
+
+    .progress-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .progress-label {
+      min-width: 85px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.3);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+    }
+
+    .progress-value {
+      min-width: 34px;
+      text-align: right;
+    }
+
+    .quick-actions {
+      margin-bottom: 12px;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .section-title-row h3 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .see-all {
+      font-size: 11px;
+      color: #0f766e;
+      cursor: pointer;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .chip-row::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .chip-row::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .action-chip {
+      flex-shrink: 0;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(148, 163, 184, 0.35);
+    }
+
+    .action-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      background: radial-gradient(circle at 30% 20%, #e0f2fe 0, #0ea5e9 60%);
+    }
+
+    .today-cards {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .primary-card,
+    .secondary-card {
+      border-radius: var(--radius-card);
+      padding: 10px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(135deg, #0f766e, #00b3a4);
+      color: #ecfeff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      right: -30px;
+      bottom: -50px;
+    }
+
+    .primary-card h4 {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .primary-card p {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .primary-meta {
+      font-size: 10px;
+      margin-top: 6px;
+      opacity: 0.95;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .primary-meta span.badge {
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.2);
+      font-size: 10px;
+    }
+
+    .secondary-card {
+      background: linear-gradient(135deg, #ecfeff, #dbeafe);
+      color: #0f172a;
+    }
+
+    .secondary-card h4 {
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .secondary-card p {
+      font-size: 11px;
+      color: #111827;
+      opacity: 0.8;
+    }
+
+    .rail-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 9px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      font-size: 11px;
+    }
+
+    .rail-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rail-main span:first-child {
+      font-weight: 500;
+    }
+
+    .rail-main span:last-child {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .rail-right {
+      text-align: right;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .rail-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      margin-left: auto;
+      margin-bottom: 2px;
+    }
+
+    /* Youth journey cards */
+
+    .journey-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .journey-item {
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      padding: 8px 9px;
+      font-size: 11px;
+    }
+
+    .journey-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .journey-title {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .journey-stage {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      background: #eef2ff;
+      color: #111827;
+    }
+
+    .journey-text {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .journey-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .journey-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .journey-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .journey-kpi {
+      font-size: 10px;
+      color: #4b5563;
+      margin-top: 3px;
+    }
+
+    /* Parent view specific */
+
+    .family-chip {
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .child-selector {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+      margin-bottom: 10px;
+    }
+
+    .child-pill {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .child-pill.active {
+      background: rgba(0, 179, 164, 0.08);
+      border-color: rgba(0, 179, 164, 0.5);
+      color: #065f46;
+    }
+
+    .avatar-mini {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0f172a, #6b7280);
+    }
+
+    .parent-banner {
+      background: linear-gradient(135deg, #ecfdf5, #e0f2fe);
+      border-radius: var(--radius-card);
+      padding: 11px 12px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      margin-bottom: 14px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+    }
+
+    .parent-banner h2 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .parent-banner p {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .banner-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .banner-badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .banner-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .parent-summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .parent-summary-card {
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      padding: 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .parent-summary-card h4 {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .parent-summary-card p {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .entity-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .entity-chip {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: var(--radius-pill);
+      background: #f9fafb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .entity-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .alert-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .alert-pill {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      background: rgba(239, 68, 68, 0.06);
+      color: #b91c1c;
+      border: 1px solid rgba(248, 113, 113, 0.5);
+    }
+
+    .parent-cta-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-outline,
+    .btn-primary {
+      flex: 1;
+      font-size: 11px;
+      padding: 7px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      text-align: center;
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00b3a4, #35c8bb);
+      color: #ecfeff;
+      border: none;
+    }
+
+    /* Stage chips (youth) */
+
+    .stage-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .stage-chips::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .stage-chips::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .stage-chip {
+      min-width: 118px;
+      padding: 6px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
+      font-size: 11px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 1px;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-chip span.label {
+      font-weight: 500;
+    }
+
+    .stage-chip span.meta {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .stage-chip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .stage-chip[data-stage="S1"]::before { background: radial-gradient(circle at top left, var(--stage-s1), transparent 60%); }
+    .stage-chip[data-stage="S2"]::before { background: radial-gradient(circle at top left, var(--stage-s2), transparent 60%); }
+    .stage-chip[data-stage="S3"]::before { background: radial-gradient(circle at top left, var(--stage-s3), transparent 60%); }
+    .stage-chip[data-stage="S4"]::before { background: radial-gradient(circle at top left, var(--stage-s4), transparent 60%); }
+    .stage-chip[data-stage="S5"]::before { background: radial-gradient(circle at top left, var(--stage-s5), transparent 60%); }
+    .stage-chip[data-stage="S6"]::before { background: radial-gradient(circle at top left, var(--stage-s6), transparent 60%); }
+    .stage-chip[data-stage="S7"]::before { background: radial-gradient(circle at top left, var(--stage-s7), transparent 60%); }
+
+    .stage-chip.active {
+      border-color: rgba(0, 179, 164, 0.8);
+      background: rgba(240, 253, 250, 0.98);
+      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.6);
+    }
+
+    /* bottom nav */
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 6px;
+      padding: 6px 22px 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .nav-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .nav-pill.active {
+      color: #111827;
+    }
+
+    .nav-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 14px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav-pill.active .nav-icon {
+      background: var(--tamm-teal);
+      color: white;
+    }
+
+    .home-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 3px;
+      border-radius: 999px;
+      background: #111827;
+      opacity: 0.8;
+    }
+
+    /* Modal (journey catalogue) */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: min(760px, 94vw);
+      max-height: 80vh;
+      background: #f9fafb;
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.5);
+      padding: 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .modal-close {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .modal-body {
+      margin-top: 6px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .modal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-item {
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 7px 9px;
+      font-size: 11px;
+    }
+
+    .modal-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .modal-item-title {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .modal-stage {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #111827;
+    }
+
+    .modal-text {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .modal-entities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .modal-entity-chip {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .modal-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 840px) {
+      body {
+        padding: 12px 8px;
+      }
+      .phone {
+        width: min(360px, 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <h1>Coming of Age – TAMM Family Space Prototype</h1>
+      <p>Interactive high‑fidelity prototype showing how the 16–23 “Coming of Age” life moment appears inside TAMM for youth and parents.</p>
+    </header>
+
+    <div class="phones">
+      <!-- YOUTH VIEW -->
+      <section class="phone-wrapper">
+        <div class="phone-label">Youth view – Omar (18)</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>5:55</span>
+            <div class="status-icons">
+              <div class="dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="wifi"></div>
+              <div class="status-pill"></div>
+            </div>
+          </div>
+
+          <div class="screen">
+            <div class="screen-content">
+              <div class="screen-header">
+                <div class="header-left">
+                  <div class="logo-mark"><span>ت</span></div>
+                  <div class="header-title">
+                    <span>TAMM · Family Space</span>
+                    <span>Coming of Age</span>
+                  </div>
+                </div>
+                <div class="header-actions">
+                  <div class="icon-button">
+                    <!-- search -->
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="6.5" stroke="#4b5563" stroke-width="1.6" fill="none"></circle>
+                      <line x1="15" y1="15" x2="20" y2="20" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></line>
+                    </svg>
+                  </div>
+                  <div class="icon-button">
+                    <!-- bell -->
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M12 4a4 4 0 0 1 4 4v3.2c0 .5.2 1 .5 1.4l1.4 1.8H6.1l1.4-1.8c.3-.4.5-.9.5-1.4V8a4 4 0 0 1 4-4z" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linejoin="round"></path>
+                      <path d="M10 18a2 2 0 0 0 4 0" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></path>
+                    </svg>
+                  </div>
+                  <div class="avatar"></div>
+                </div>
+              </div>
+
+              <div class="welcome-block">
+                <h2>Hi Omar 👋</h2>
+                <p>Your Coming of Age journey brings together study, National Service, work, money, volunteering and wellbeing – all in one place.</p>
+              </div>
+
+              <section class="vision-card">
+                <div class="vision-header">
+                  <h3>Vision Board overview</h3>
+                  <span class="small-tag" id="youthVisionSummary">4 active goals · Level 3</span>
+                </div>
+                <div class="goal-pills" id="youthGoalPills">
+                  <button class="goal-pill goal-all active" data-goal="ALL">
+                    <span class="dot"></span>All goals
+                  </button>
+                  <button class="goal-pill" data-goal="study">
+                    <span class="dot"></span>Study &amp; scholarships
+                  </button>
+                  <button class="goal-pill" data-goal="ns">
+                    <span class="dot"></span>National Service
+                  </button>
+                  <button class="goal-pill" data-goal="work">
+                    <span class="dot"></span>First job
+                  </button>
+                  <button class="goal-pill" data-goal="volunteering">
+                    <span class="dot"></span>Volunteering
+                  </button>
+                  <button class="goal-pill" data-goal="money">
+                    <span class="dot"></span>Money &amp; Ghaya
+                  </button>
+                  <button class="goal-pill" data-goal="business">
+                    <span class="dot"></span>Business
+                  </button>
+                  <button class="goal-pill" data-goal="wellbeing">
+                    <span class="dot"></span>Wellbeing
+                  </button>
+                </div>
+
+                <div class="progress-rows">
+                  <div class="progress-row">
+                    <div class="progress-label">Education &amp; skills</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progEdu" style="width:68%;"></div>
+                    </div>
+                    <div class="progress-value" id="progEduVal">68%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">National Service</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progNS" style="width:40%;"></div>
+                    </div>
+                    <div class="progress-value" id="progNSVal">40%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Work &amp; experience</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progWork" style="width:24%;"></div>
+                    </div>
+                    <div class="progress-value" id="progWorkVal">24%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Money &amp; wellbeing</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progMoney" style="width:55%;"></div>
+                    </div>
+                    <div class="progress-value" id="progMoneyVal">55%</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="quick-actions">
+                <div class="section-title-row">
+                  <h3>Quick actions</h3>
+                  <span class="see-all" id="openCatalogue">Open journey catalogue</span>
+                </div>
+                <div class="chip-row">
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Continue NS awareness</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Plan my study &amp; scholarship</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Explore MAWAHEB jobs</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Update Ghaya money plan</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Find volunteering today</span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="today-cards">
+                <article class="primary-card" id="youthPrimaryCard">
+                  <h4>Today for you</h4>
+                  <p>Finish the last 3 questions in your National Service myth‑busting module and confirm if you prefer NS before or after university.</p>
+                  <div class="primary-meta">
+                    <span class="badge">NSRA · FCA · 6 XP</span>
+                    <span>~ 3 minutes</span>
+                  </div>
+                </article>
+
+                <article class="secondary-card" id="youthSecondaryCard">
+                  <h4>Money &amp; Ghaya</h4>
+                  <p>You are on track to save 900 AED this month. Complete the next Ghaya step to unlock your “Money Basics” badge.</p>
+                </article>
+              </section>
+
+              <section style="margin-bottom:10px;">
+                <div class="section-title-row">
+                  <h3>Journey by stage</h3>
+                  <span style="font-size:10px; color:var(--text-soft);" id="youthFilterSummary">All stages · all entities</span>
+                </div>
+                <div class="stage-chips" id="youthStageChips">
+                  <!-- JS -->
+                </div>
+              </section>
+
+              <section>
+                <div class="section-title-row">
+                  <h3>Key moments for you</h3>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:10px;color:#6b7280;">Entity</span>
+                    <select id="youthEntityFilter" style="font-size:10px;padding:4px 6px;border-radius:999px;border:1px solid var(--border-subtle);background:#f9fafb;">
+                      <!-- JS -->
+                    </select>
+                  </div>
+                </div>
+                <div class="journey-list" id="youthJourneyList">
+                  <!-- JS -->
+                </div>
+              </section>
+            </div>
+
+            <nav class="bottom-nav">
+              <div class="nav-pill active">
+                <div class="nav-icon">
+                  <!-- grid -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6" height="6" rx="1.4" fill="white"></rect>
+                    <rect x="14" y="4" width="6" height="6" rx="1.4" fill="white" opacity="0.85"></rect>
+                    <rect x="4" y="14" width="6" height="6" rx="1.4" fill="white" opacity="0.85"></rect>
+                    <rect x="14" y="14" width="6" height="6" rx="1.4" fill="white" opacity="0.75"></rect>
+                  </svg>
+                </div>
+                <span>Services</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <!-- user -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="9" r="3.2" fill="#4b5563"></circle>
+                    <path d="M6 19c.8-2.4 3-4 6-4s5.2 1.6 6 4" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <span>My TAMM</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <!-- dots -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="6" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="12" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="18" cy="12" r="1.8" fill="#4b5563"></circle>
+                  </svg>
+                </div>
+                <span>Support</span>
+              </div>
+              <div class="home-indicator"></div>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARENT VIEW -->
+      <section class="phone-wrapper">
+        <div class="phone-label">Parent view – Fatima in Family Space</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>5:55</span>
+            <div class="status-icons">
+              <div class="dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="wifi"></div>
+              <div class="status-pill"></div>
+            </div>
+          </div>
+
+          <div class="screen">
+            <div class="screen-content">
+              <div class="screen-header">
+                <div class="header-left">
+                  <div class="logo-mark"><span>ت</span></div>
+                  <div class="header-title">
+                    <span>TAMM · Family Space</span>
+                    <span>Coming of Age overview</span>
+                  </div>
+                </div>
+                <div class="header-actions">
+                  <div class="family-chip">Parent · Fatima</div>
+                </div>
+              </div>
+
+              <div class="child-selector">
+                <div class="child-pill active" data-child="omar">
+                  <div class="avatar-mini"></div>
+                  <span>Omar · 18</span>
+                </div>
+                <div class="child-pill" data-child="aisha">
+                  <div class="avatar-mini" style="background:linear-gradient(135deg,#f97316,#fb7185);"></div>
+                  <span>Aisha · 16</span>
+                </div>
+              </div>
+
+              <section class="parent-banner">
+                <h2 id="parentBannerTitle">Omar is on track</h2>
+                <p id="parentBannerText">4 out of 5 goals active. National Service plan set, scholarships explored and first job path started.</p>
+                <div class="banner-badges" id="parentBannerBadges">
+                  <!-- JS -->
+                </div>
+              </section>
+
+              <section class="summary-card">
+                <div class="summary-header">
+                  <h3>Parent insights</h3>
+                  <span class="small-tag" id="parentInsightTag">No urgent alerts</span>
+                </div>
+                <div class="progress-rows">
+                  <div class="progress-row">
+                    <div class="progress-label">Engagement (30 days)</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="parentProgEngage" style="width:76%;"></div>
+                    </div>
+                    <div class="progress-value" id="parentProgEngageVal">76%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Volunteering progress</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="parentProgVol" style="width:24%;"></div>
+                    </div>
+                    <div class="progress-value" id="parentProgVolVal">12 / 50h</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Wellbeing check‑ins</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="parentProgWell" style="width:64%;"></div>
+                    </div>
+                    <div class="progress-value" id="parentProgWellVal">Stable</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="parent-summary-grid" id="parentSummaryGrid">
+                <!-- JS fills three cards -->
+              </section>
+            </div>
+
+            <nav class="bottom-nav">
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6" height="6" rx="1.4" fill="#4b5563"></rect>
+                    <rect x="14" y="4" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.85"></rect>
+                    <rect x="4" y="14" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.85"></rect>
+                    <rect x="14" y="14" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.75"></rect>
+                  </svg>
+                </div>
+                <span>Services</span>
+              </div>
+              <div class="nav-pill active">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="9" r="3.2" fill="white"></circle>
+                    <path d="M6 19c.8-2.4 3-4 6-4s5.2 1.6 6 4" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <span>My Family</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="6" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="12" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="18" cy="12" r="1.8" fill="#4b5563"></circle>
+                  </svg>
+                </div>
+                <span>Support</span>
+              </div>
+              <div class="home-indicator"></div>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- JOURNEY CATALOGUE MODAL -->
+  <div class="modal-overlay" id="journeyModal">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Coming of Age journey catalogue</div>
+          <div class="modal-subtitle">All stages, goals and entities – as one integrated dashboard list.</div>
+        </div>
+        <button class="modal-close" id="journeyModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-list" id="journeyModalList">
+          <!-- JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------------------ DATA MODEL ------------------
+
+    const stages = [
+      { id: "S1", short: "Onboard", label: "Onboard to TAMM Youth / Family" },
+      { id: "S2", short: "Discover", label: "Discover & Explore" },
+      { id: "S3", short: "Decide", label: "Decide & Plan" },
+      { id: "S4", short: "Apply", label: "Apply" },
+      { id: "S5", short: "Participate", label: "Participate & Track" },
+      { id: "S6", short: "Transition", label: "Transition & Next Steps" },
+      { id: "S7", short: "Ongoing", label: "Ongoing Support & Engagement" }
+    ];
+
+    const goals = [
+      { id: "study", label: "Study & scholarships" },
+      { id: "ns", label: "Complete National Service" },
+      { id: "work", label: "Get my first job" },
+      { id: "volunteering", label: "Volunteer & civic role" },
+      { id: "money", label: "Save & manage money" },
+      { id: "business", label: "Start a business" },
+      { id: "wellbeing", label: "Wellbeing & support" }
+    ];
+
+    const entities = [
+      { id: "FCA", name: "FCA", color: "var(--domain-well)" },
+      { id: "ADEK", name: "ADEK", color: "var(--domain-edu)" },
+      { id: "ACTVET", name: "ACTVET", color: "var(--domain-edu)" },
+      { id: "NSRA", name: "NSRA", color: "var(--domain-ns)" },
+      { id: "MAWAHEB", name: "Mawaheb", color: "var(--domain-work)" },
+      { id: "TRAIN4WORK", name: "Train for Work", color: "var(--domain-work)" },
+      { id: "NAFIS", name: "Nafis", color: "var(--domain-work)" },
+      { id: "MAAN", name: "Ma’an / Ghaya", color: "var(--domain-money)" },
+      { id: "VOLAE", name: "Volunteers.ae", color: "var(--domain-vol)" },
+      { id: "ADPOLICE", name: "AD Police", color: "var(--domain-vol)" },
+      { id: "ADCD", name: "ADCD", color: "var(--domain-vol)" },
+      { id: "KFED", name: "Khalifa Fund", color: "var(--domain-biz)" },
+      { id: "FYA", name: "FYA", color: "var(--domain-well)" },
+      { id: "SHORY", name: "Shory", color: "var(--domain-money)" }
+    ];
+
+    function domainColor(domain) {
+      switch (domain) {
+        case "education": return "var(--domain-edu)";
+        case "ns": return "var(--domain-ns)";
+        case "work": return "var(--domain-work)";
+        case "volunteering": return "var(--domain-vol)";
+        case "money": return "var(--domain-money)";
+        case "wellbeing": return "var(--domain-well)";
+        case "business": return "var(--domain-biz)";
+        default: return "#9ca3af";
+      }
+    }
+
+    // Journey "moments" – simplified but covering the full life moment
+    const moments = [
+      // S1
+      {
+        id: "s1-youth360",
+        stageId: "S1",
+        title: "Youth 360 onboarding & Vision Board",
+        summary: "Omar opens Coming of Age in Family Space, logs in, consents to data sharing and sets goals across study, NS, work, volunteering, money, business and wellbeing.",
+        kpi: "KPI: % youth 16–23 with completed profile & ≥1 goal.",
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        entities: ["FCA", "ADEK", "ACTVET", "NSRA", "MAWAHEB", "MAAN", "VOLAE", "KFED", "FYA"],
+        domains: ["education", "work", "ns", "volunteering", "money", "business", "wellbeing"]
+      },
+      {
+        id: "s1-lifeskills",
+        stageId: "S1",
+        title: "Life skills & prevention onboarding",
+        summary: "Automatic invitations into Life Skills, Ghaya intro, citizenship and community awareness. Risk flags can route youth to FCA support and halfway houses.",
+        kpi: "KPI: completion of life‑skills modules; early risk flags.",
+        goals: ["money", "wellbeing"],
+        entities: ["FCA", "MAAN"],
+        domains: ["money", "wellbeing"]
+      },
+
+      // S2
+      {
+        id: "s2-edu-options",
+        stageId: "S2",
+        title: "Explore universities, TVET & Yes2Work",
+        summary: "Under 'Life after Grade 12', Omar compares university, TVET and Yes2Work rails, with ADS/Khotwa/Rize and ACTVET Skills options pre‑filtered.",
+        kpi: "KPI: % Grade 12 youth exploring ≥2 rails.",
+        goals: ["study", "work"],
+        entities: ["ADEK", "ACTVET"],
+        domains: ["education"]
+      },
+      {
+        id: "s2-ns-awareness",
+        stageId: "S2",
+        title: "National Service awareness & choices",
+        summary: "NSRA module explains obligations, Data Pioneers, Al Nokhba and Tumooh. Omar chooses preferred NS timing (before/after university).",
+        kpi: "KPI: % eligible youth completing NS awareness; timing preference.",
+        goals: ["ns", "work"],
+        entities: ["NSRA", "FYA"],
+        domains: ["ns"]
+      },
+      {
+        id: "s2-work-mawaheb",
+        stageId: "S2",
+        title: "Discover Mawaheb & job families",
+        summary: "Omar previews MAWAHEB, Train for Work and Nafis, browses job families and sees how NS and ACTVET skills map to jobs.",
+        kpi: "KPI: # MAWAHEB profiles; job families saved.",
+        goals: ["work"],
+        entities: ["MAWAHEB", "TRAIN4WORK", "NAFIS"],
+        domains: ["work"]
+      },
+      {
+        id: "s2-vol",
+        stageId: "S2",
+        title: "Explore volunteering & civic roles",
+        summary: "Volunteers.ae, Takatof, Sanid, We Are All Police and ADCD opportunities appear with filters; Omar bookmarks causes he cares about.",
+        kpi: "KPI: # youth bookmarking ≥1 opportunity.",
+        goals: ["volunteering", "wellbeing"],
+        entities: ["VOLAE", "ADPOLICE", "ADCD", "FCA"],
+        domains: ["volunteering"]
+      },
+      {
+        id: "s2-money",
+        stageId: "S2",
+        title: "Discover Ghaya & basic money topics",
+        summary: "Omar sets a rough saving goal and sees Ghaya modules plus Shory content about insurance and financial risk.",
+        kpi: "KPI: Ghaya/Shory reach; initial saving goals captured.",
+        goals: ["money"],
+        entities: ["MAAN", "SHORY"],
+        domains: ["money"]
+      },
+      {
+        id: "s2-entre",
+        stageId: "S2",
+        title: "Explore entrepreneurship & youth stories",
+        summary: "Entrepreneurship rail shows Khalifa Fund programmes and 'Done by Youth' case studies from FYA; Omar marks his interest level.",
+        kpi: "KPI: entrepreneurship interest flags.",
+        goals: ["business"],
+        entities: ["KFED", "FYA"],
+        domains: ["business"]
+      },
+
+      // S3
+      {
+        id: "s3-path",
+        stageId: "S3",
+        title: "Choose path scenario (Study / NS / Work)",
+        summary: "Plan‑my‑path wizard offers Study‑first, NS‑first, Work‑first and mixed scenarios; Omar selects and saves a draft path.",
+        kpi: "KPI: distribution of chosen scenarios; % with saved path.",
+        goals: ["study", "ns", "work"],
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB"],
+        domains: ["education", "ns", "work"]
+      },
+      {
+        id: "s3-link-goals",
+        stageId: "S3",
+        title: "Link Vision Board goals to initiatives",
+        summary: "For each goal, TAMM attaches 1–3 programmes (ADS, Yes2Work, NSRA, Mawaheb, Ghaya, Volunteers.ae, KFED). Omar can accept or adjust.",
+        kpi: "KPI: % goals with ≥1 initiative; average initiatives per goal.",
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "VOLAE", "MAAN", "KFED", "FCA"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business", "wellbeing"]
+      },
+      {
+        id: "s3-money-plan",
+        stageId: "S3",
+        title: "Detailed Ghaya saving plan",
+        summary: "Omar refines his 15,000 AED saving goal, seeing monthly targets and Ghaya modules linked to that target. Shory suggests protection options.",
+        kpi: "KPI: realism of saving targets; Ghaya enrolments.",
+        goals: ["money"],
+        entities: ["MAAN", "SHORY"],
+        domains: ["money"]
+      },
+      {
+        id: "s3-vol-plan",
+        stageId: "S3",
+        title: "Volunteering & wellbeing planning",
+        summary: "Omar commits to 50 volunteering hours; TAMM lines up opportunities and adds wellbeing nudges if his stress scores trend upwards.",
+        kpi: "KPI: volunteering targets; high‑stress youth linked to support.",
+        goals: ["volunteering", "wellbeing"],
+        entities: ["VOLAE", "ADPOLICE", "ADCD", "FCA"],
+        domains: ["volunteering", "wellbeing"]
+      },
+      {
+        id: "s3-entre-readiness",
+        stageId: "S3",
+        title: "Entrepreneurship readiness check",
+        summary: "Omar completes a short quiz and receives a readiness level with suggestions: training only, side‑hustle or full KFED application.",
+        kpi: "KPI: distribution of entrepreneurship readiness levels.",
+        goals: ["business"],
+        entities: ["KFED"],
+        domains: ["business"]
+      },
+
+      // S4
+      {
+        id: "s4-apply",
+        stageId: "S4",
+        title: "Unified multi‑rail application",
+        summary: "Single TAMM shell reuses Youth 360 data for ADS/Khotwa/Rize, ACTVET/Yes2Work, NS registration, Mawaheb/Nafis jobs, Ghaya, volunteering and KFED loans.",
+        kpi: "KPI: view→start→submit funnel per rail; cross‑rail patterns.",
+        goals: ["study", "ns", "work", "volunteering", "money", "business"],
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "TRAIN4WORK", "NAFIS", "MAAN", "VOLAE", "KFED"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business"]
+      },
+
+      // S5
+      {
+        id: "s5-myjourney",
+        stageId: "S5",
+        title: "My Journey timeline & trackers",
+        summary: "Omar sees all applications and programmes in one view: scholarships, NS, ACTVET modules, jobs, volunteering hours, Ghaya, entrepreneurship and wellbeing check‑ins.",
+        kpi: "KPI: completion & outcomes per rail; volunteering hours; NS completion; first job.",
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "VOLAE", "MAAN", "KFED", "FCA"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business", "wellbeing"]
+      },
+      {
+        id: "s5-yes2work",
+        stageId: "S5",
+        title: "Yes2Work & Skills experience",
+        summary: "Yes2Work placements and Skills Hub training hours are tracked and converted into certificates, experience and potentially ADVETI credit.",
+        kpi: "KPI: Yes2Work completions; conversion to jobs or diplomas.",
+        goals: ["work"],
+        entities: ["ACTVET"],
+        domains: ["education", "work"]
+      },
+
+      // S6
+      {
+        id: "s6-transitions",
+        stageId: "S6",
+        title: "Transitions after school / NS / university",
+        summary: "Graduation or NS completion triggers a 'What’s next?' flow linking Omar to jobseeker journeys, further study or entrepreneurship options.",
+        kpi: "KPI: time from completion to job or next study; # stuck youth.",
+        goals: ["study", "ns", "work", "business", "wellbeing"],
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "NAFIS", "KFED", "MAAN"],
+        domains: ["education", "ns", "work", "business"]
+      },
+      {
+        id: "s6-support",
+        stageId: "S6",
+        title: "Support when stuck or in crisis",
+        summary: "From any point Omar can open a support panel for FCA, Ma’an wellbeing, AD Police/ADCD safety or Ghaya money counselling; risk signals prioritise outreach.",
+        kpi: "KPI: support flows triggered and resolved; time to response.",
+        goals: ["wellbeing", "money", "work"],
+        entities: ["FCA", "MAAN", "ADPOLICE", "ADCD"],
+        domains: ["wellbeing", "money"]
+      },
+
+      // S7
+      {
+        id: "s7-daily",
+        stageId: "S7",
+        title: "Daily loop, XP & rewards",
+        summary: "On each open, Omar receives one micro‑task (NS, study, money, volunteering or wellbeing), earns XP and sees progress towards rewards and tiers.",
+        kpi: "KPI: DAU, XP distribution, micro‑task completion, reward redemption.",
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        entities: ["FCA", "FYA", "ADEK", "ACTVET", "NSRA", "MAWAHEB", "MAAN", "VOLAE", "KFED"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business", "wellbeing"]
+      },
+      {
+        id: "s7-community",
+        stageId: "S7",
+        title: "Youth communities, councils & alumni",
+        summary: "Youth communities, hubs and councils (FYA, NSRA, Volunteers, KFED) appear based on Omar’s path; he can join alumni groups and youth councils.",
+        kpi: "KPI: # youth joining councils/communities; event participation.",
+        goals: ["volunteering", "business", "wellbeing", "work"],
+        entities: ["FYA", "VOLAE", "NSRA", "KFED"],
+        domains: ["volunteering", "business", "wellbeing", "work"]
+      }
+    ];
+
+    // Parent data for two children
+    const parentChildren = {
+      omar: {
+        name: "Omar",
+        age: 18,
+        bannerTitle: "Omar is on track",
+        bannerText: "4 out of 5 goals active. National Service plan set, scholarships explored and first job path started.",
+        bannerBadges: [
+          { label: "Education 68%", color: "var(--domain-edu)" },
+          { label: "NS awareness complete", color: "var(--domain-ns)" },
+          { label: "Work path drafted", color: "var(--domain-work)" },
+          { label: "Ghaya Level 2", color: "var(--domain-money)" }
+        ],
+        engagement: 0.76,
+        volunteering: 0.24,
+        wellbeing: 0.64,
+        insightTag: "No urgent alerts",
+        cards: [
+          {
+            title: "Education & National Service",
+            text: "Omar is in his final school year, has shortlisted 3 ADEK scholarships and completed NS awareness. He prefers National Service after university.",
+            entities: [
+              { name: "ADEK", color: "var(--domain-edu)" },
+              { name: "ACTVET", color: "var(--domain-edu)" },
+              { name: "NSRA", color: "var(--domain-ns)" }
+            ],
+            next: "Next step: confirm final major choice with Omar.",
+            alert: null,
+            cta1: "Book guidance session",
+            cta2: "Review Omar’s study plan"
+          },
+          {
+            title: "Work, volunteering & skills",
+            text: "Omar has created his Mawaheb profile, explored 3 job families and registered interest in Yes2Work and Skills Hub. Volunteering hours are still low.",
+            entities: [
+              { name: "Mawaheb", color: "var(--domain-work)" },
+              { name: "Train for Work", color: "var(--domain-work)" },
+              { name: "Volunteers.ae", color: "var(--domain-vol)" }
+            ],
+            next: "Suggested: encourage one volunteering activity this month.",
+            alert: "Low volunteering",
+            cta1: "Send Omar a suggestion",
+            cta2: "Browse volunteering as a family"
+          },
+          {
+            title: "Money, Ghaya & wellbeing",
+            text: "Omar is in Ghaya Level 2 and has a saving goal of 15,000 AED over 18 months. Stress check‑ins are mostly in the “OK” range.",
+            entities: [
+              { name: "Ghaya / Ma’an", color: "var(--domain-money)" },
+              { name: "FCA wellbeing", color: "var(--domain-well)" },
+              { name: "Shory insurance", color: "var(--domain-money)" }
+            ],
+            next: "Next check‑in: after first salary or allowance change.",
+            alert: null,
+            cta1: "View Ghaya topics",
+            cta2: "Open wellbeing support"
+          }
+        ]
+      },
+      aisha: {
+        name: "Aisha",
+        age: 16,
+        bannerTitle: "Aisha is exploring options",
+        bannerText: "2 goals active. She has started exploring streams, TVET and volunteering, but has not yet set a clear NS or work plan.",
+        bannerBadges: [
+          { label: "Education 40%", color: "var(--domain-edu)" },
+          { label: "Volunteering 8 / 50h", color: "var(--domain-vol)" },
+          { label: "Life skills Level 1", color: "var(--domain-well)" }
+        ],
+        engagement: 0.62,
+        volunteering: 0.16,
+        wellbeing: 0.72,
+        insightTag: "Follow up gently",
+        cards: [
+          {
+            title: "School & early NS awareness",
+            text: "Aisha is in Grade 11, exploring streams and looking at TVET vs university. NS awareness module is only 20% complete.",
+            entities: [
+              { name: "ADEK", color: "var(--domain-edu)" },
+              { name: "ACTVET", color: "var(--domain-edu)" },
+              { name: "NSRA", color: "var(--domain-ns)" }
+            ],
+            next: "Next step: watch NS video together and discuss preferences.",
+            alert: "NS awareness low",
+            cta1: "Watch NS explainer with Aisha",
+            cta2: "Open study options"
+          },
+          {
+            title: "Volunteering & activities",
+            text: "Aisha has joined one school volunteering project and loves animal welfare. She has not linked volunteering to a clear hours target.",
+            entities: [
+              { name: "Volunteers.ae", color: "var(--domain-vol)" },
+              { name: "FCA youth spaces", color: "var(--domain-well)" }
+            ],
+            next: "Help Aisha choose a volunteering goal for this term.",
+            alert: null,
+            cta1: "Browse causes with Aisha",
+            cta2: "Set a volunteering goal"
+          },
+          {
+            title: "Life skills, Ghaya & wellbeing",
+            text: "Aisha completed Life Skills Level 1 and has started Ghaya intro. She sometimes reports exam stress but scores are within normal range.",
+            entities: [
+              { name: "FCA life skills", color: "var(--domain-well)" },
+              { name: "Ghaya / Ma’an", color: "var(--domain-money)" }
+            ],
+            next: "Prepare a simple money & wellbeing plan before Grade 12.",
+            alert: null,
+            cta1: "Review Life Skills topics",
+            cta2: "Plan next Ghaya step"
+          }
+        ]
+      }
+    };
+
+    // ------------------ YOUTH VIEW STATE & RENDERING ------------------
+
+    let yStage = "ALL";
+    let yGoal = "ALL";
+    let yEntity = "ALL";
+
+    function stageById(id) {
+      return stages.find(s => s.id === id);
+    }
+
+    function entityById(id) {
+      return entities.find(e => e.id === id);
+    }
+
+    function filterMoments() {
+      return moments.filter(m => {
+        if (yStage !== "ALL" && m.stageId !== yStage) return false;
+        if (yGoal !== "ALL" && !(m.goals || []).includes(yGoal)) return false;
+        if (yEntity !== "ALL" && !(m.entities || []).includes(yEntity)) return false;
+        return true;
+      });
+    }
+
+    function renderYouthStageChips() {
+      const container = document.getElementById("youthStageChips");
+      container.innerHTML = "";
+
+      const allBtn = document.createElement("button");
+      allBtn.type = "button";
+      allBtn.className = "stage-chip" + (yStage === "ALL" ? " active" : "");
+      allBtn.dataset.stage = "ALL";
+      allBtn.innerHTML = `
+        <span class="label">All stages</span>
+        <span class="meta">S1–S7 · ${moments.length} moments</span>
+      `;
+      allBtn.addEventListener("click", () => {
+        yStage = "ALL";
+        renderYouthStageChips();
+        renderYouthJourneys();
+      });
+      container.appendChild(allBtn);
+
+      const counts = {};
+      moments.forEach(m => {
+        counts[m.stageId] = (counts[m.stageId] || 0) + 1;
+      });
+
+      stages.forEach(s => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "stage-chip" + (yStage === s.id ? " active" : "");
+        btn.dataset.stage = s.id;
+        btn.innerHTML = `
+          <span class="label">${s.id} · ${s.short}</span>
+          <span class="meta">${counts[s.id] || 0} moments</span>
+        `;
+        btn.addEventListener("click", () => {
+          yStage = (yStage === s.id ? "ALL" : s.id);
+          renderYouthStageChips();
+          renderYouthJourneys();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function renderYouthEntityFilter() {
+      const sel = document.getElementById("youthEntityFilter");
+      sel.innerHTML = "";
+      const optAll = document.createElement("option");
+      optAll.value = "ALL";
+      optAll.textContent = "All entities";
+      sel.appendChild(optAll);
+      entities.forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e.id;
+        opt.textContent = e.name;
+        sel.appendChild(opt);
+      });
+      sel.value = yEntity;
+      sel.addEventListener("change", e => {
+        yEntity = e.target.value;
+        renderYouthJourneys();
+      });
+    }
+
+    function renderYouthFilterSummary() {
+      const el = document.getElementById("youthFilterSummary");
+      const parts = [];
+      if (yStage !== "ALL") {
+        const s = stageById(yStage);
+        parts.push("Stage: " + (s ? s.short : yStage));
+      }
+      if (yGoal !== "ALL") {
+        const g = goals.find(g => g.id === yGoal);
+        parts.push("Goal: " + (g ? g.label : yGoal));
+      }
+      if (yEntity !== "ALL") {
+        const e = entityById(yEntity);
+        parts.push("Entity: " + (e ? e.name : yEntity));
+      }
+      el.textContent = parts.length ? parts.join(" · ") : "All stages · all entities";
+    }
+
+    function renderYouthJourneys() {
+      const list = document.getElementById("youthJourneyList");
+      list.innerHTML = "";
+      const filtered = filterMoments();
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.textContent = "No journey moments match these filters. Try changing stage, goal or entity.";
+        empty.style.fontSize = "11px";
+        empty.style.color = "var(--text-soft)";
+        list.appendChild(empty);
+        renderYouthFilterSummary();
+        return;
+      }
+
+      filtered.forEach(m => {
+        const item = document.createElement("article");
+        item.className = "journey-item";
+
+        // domains as tags
+        const domainTags = (m.domains || []).map(d => {
+          const span = document.createElement("span");
+          span.className = "journey-tag";
+          span.innerHTML = `<span class="journey-dot" style="background:${domainColor(d)};"></span>${d}`;
+          return span;
+        });
+
+        // entity tags
+        const entityTags = (m.entities || []).map(id => {
+          const ent = entityById(id);
+          if (!ent) return null;
+          const span = document.createElement("span");
+          span.className = "journey-tag";
+          span.innerHTML = `<span class="journey-dot" style="background:${ent.color};"></span>${ent.name}`;
+          return span;
+        }).filter(Boolean);
+
+        const stage = stageById(m.stageId);
+
+        item.innerHTML = `
+          <div class="journey-header-line">
+            <div class="journey-title">${m.title}</div>
+            <div class="journey-stage">${m.stageId}</div>
+          </div>
+          <div class="journey-text">${m.summary}</div>
+        `;
+
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "journey-tags";
+        domainTags.concat(entityTags).forEach(t => tagsWrap.appendChild(t));
+        item.appendChild(tagsWrap);
+
+        const kpi = document.createElement("div");
+        kpi.className = "journey-kpi";
+        kpi.textContent = m.kpi || "";
+        item.appendChild(kpi);
+
+        list.appendChild(item);
+      });
+
+      renderYouthFilterSummary();
+    }
+
+    function setupYouthGoals() {
+      const container = document.getElementById("youthGoalPills");
+      container.querySelectorAll(".goal-pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const goal = btn.dataset.goal;
+          yGoal = (goal === "ALL" ? "ALL" : goal);
+          container.querySelectorAll(".goal-pill").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderYouthJourneys();
+        });
+      });
+    }
+
+    // ------------------ PARENT VIEW RENDERING ------------------
+
+    let currentChildId = "omar";
+
+    function renderParent() {
+      const child = parentChildren[currentChildId];
+      if (!child) return;
+
+      document.getElementById("parentBannerTitle").textContent = `${child.name} is ${child.age} – ${child.bannerTitle.replace(child.name, "").trim() || "status"}`;
+      document.getElementById("parentBannerText").textContent = child.bannerText;
+
+      const badgesWrap = document.getElementById("parentBannerBadges");
+      badgesWrap.innerHTML = "";
+      child.bannerBadges.forEach(b => {
+        const span = document.createElement("span");
+        span.className = "banner-badge";
+        span.innerHTML = `<span class="banner-dot" style="background:${b.color};"></span>${b.label}`;
+        badgesWrap.appendChild(span);
+      });
+
+      const engage = Math.round(child.engagement * 100);
+      const vol = Math.round(child.volunteering * 100);
+      const well = Math.round(child.wellbeing * 100);
+
+      const setProg = (idBar, idVal, pct, label) => {
+        const bar = document.getElementById(idBar);
+        const val = document.getElementById(idVal);
+        if (bar) bar.style.width = `${pct}%`;
+        if (val) val.textContent = label;
+      };
+
+      setProg("parentProgEngage", "parentProgEngageVal", engage, `${engage}%`);
+      setProg("parentProgVol", "parentProgVolVal", vol, child === parentChildren.omar ? "12 / 50h" : "8 / 50h");
+      setProg("parentProgWell", "parentProgWellVal", well, well >= 60 ? "Stable" : "Needs attention");
+
+      document.getElementById("parentInsightTag").textContent = child.insightTag;
+
+      const grid = document.getElementById("parentSummaryGrid");
+      grid.innerHTML = "";
+      child.cards.forEach((card, index) => {
+        const article = document.createElement("article");
+        article.className = "parent-summary-card";
+
+        const entitiesHtml = card.entities.map(e => {
+          return `<span class="entity-chip"><span class="entity-dot" style="background:${e.color};"></span>${e.name}</span>`;
+        }).join("");
+
+        const alertHtml = card.alert ? `<span class="alert-pill">${card.alert}</span>` : `<span></span>`;
+
+        article.innerHTML = `
+          <h4>${card.title}</h4>
+          <p>${card.text}</p>
+          <div class="entity-row">${entitiesHtml}</div>
+          <div class="alert-row" style="margin-top:6px;">
+            <span>${card.next}</span>
+            ${alertHtml}
+          </div>
+          <div class="parent-cta-row">
+            <button class="btn-outline">${card.cta1}</button>
+            <button class="btn-primary">${card.cta2}</button>
+          </div>
+        `;
+
+        // Simple interaction to show behaviour
+        const btns = article.querySelectorAll("button");
+        if (btns[0]) {
+          btns[0].addEventListener("click", () => {
+            alert(`In the real TAMM app this would open: "${card.cta1}" for ${child.name}.`);
+          });
+        }
+        if (btns[1]) {
+          btns[1].addEventListener("click", () => {
+            alert(`In the real TAMM app this would open: "${card.cta2}" for ${child.name}.`);
+          });
+        }
+
+        grid.appendChild(article);
+      });
+
+      // Update child pills active state
+      document.querySelectorAll(".child-pill").forEach(pill => {
+        pill.classList.toggle("active", pill.dataset.child === currentChildId);
+      });
+    }
+
+    // ------------------ MODAL RENDERING ------------------
+
+    function renderJourneyModal() {
+      const list = document.getElementById("journeyModalList");
+      list.innerHTML = "";
+      moments.forEach(m => {
+        const stage = stageById(m.stageId);
+        const item = document.createElement("article");
+        item.className = "modal-item";
+        const entitiesHtml = (m.entities || []).map(id => {
+          const ent = entityById(id);
+          if (!ent) return "";
+          return `<span class="modal-entity-chip"><span class="modal-dot" style="background:${ent.color};"></span>${ent.name}</span>`;
+        }).join("");
+
+        item.innerHTML = `
+          <div class="modal-item-header">
+            <div class="modal-item-title">${m.title}</div>
+            <div class="modal-stage">${m.stageId} · ${stage ? stage.short : ""}</div>
+          </div>
+          <div class="modal-text">${m.summary}</div>
+          <div class="modal-entities">${entitiesHtml}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // ------------------ INITIALISATION ------------------
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Youth view
+      setupYouthGoals();
+      renderYouthStageChips();
+      renderYouthEntityFilter();
+      renderYouthJourneys();
+
+      // Parent view
+      document.querySelectorAll(".child-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
+          currentChildId = pill.dataset.child;
+          renderParent();
+        });
+      });
+      renderParent();
+
+      // Modal
+      renderJourneyModal();
+      const modal = document.getElementById("journeyModal");
+      document.getElementById("openCatalogue").addEventListener("click", () => {
+        modal.classList.add("show");
+      });
+      document.getElementById("journeyModalClose").addEventListener("click", () => {
+        modal.classList.remove("show");
+      });
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>

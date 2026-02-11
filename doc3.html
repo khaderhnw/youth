@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Coming of Age – Interactive Journey Board (TAMM Family Space)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --board-bg: #f9fafb;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --accent: #0ea5e9;
+      --border: #e5e7eb;
+
+      /* sticky note colours by domain */
+      --sticky-cross: #fef9c3;
+      --sticky-edu: #fee2e2;
+      --sticky-ns: #e0f2fe;
+      --sticky-work: #dcfce7;
+      --sticky-vol: #e0f2fe;
+      --sticky-money: #fef3c7;
+      --sticky-wellbeing: #fae8ff;
+      --sticky-entre: #ede9fe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe 0, #f5f5f7 45%, #e5e7eb 100%);
+      color: var(--text-main);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 960px;
+      margin-bottom: 16px;
+    }
+
+    .page-shell {
+      background: rgba(255,255,255,0.9);
+      border-radius: 20px;
+      padding: 18px 20px 22px;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.15);
+      border: 1px solid rgba(148,163,184,0.25);
+    }
+
+    /* FILTER BAR */
+
+    .filter-bar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-soft);
+    }
+
+    .filter-select {
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      outline: none;
+    }
+
+    .filter-row-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      margin-top: 4px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 10px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .clear-btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .clear-btn span {
+      font-size: 13px;
+    }
+
+    /* GRID */
+
+    .sticky-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: var(--board-bg);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .sticky-card {
+      position: relative;
+      width: 260px;
+      min-height: 150px;
+      padding: 10px 12px 12px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(15,23,42,0.18);
+      border: 1px solid rgba(15,23,42,0.08);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transform-origin: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+    }
+
+    /* Slight messy sticky-note vibe */
+    .sticky-card:nth-child(4n+1) { transform: rotate(-1.3deg); }
+    .sticky-card:nth-child(4n+2) { transform: rotate(0.8deg); }
+    .sticky-card:nth-child(4n+3) { transform: rotate(-0.6deg); }
+    .sticky-card:nth-child(4n+4) { transform: rotate(1.1deg); }
+
+    .sticky-card strong {
+      font-size: 12px;
+    }
+
+    .sticky-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .stage-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.15);
+      background: rgba(255,255,255,0.7);
+    }
+
+    .age-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15,118,110,0.08);
+      border: 1px solid rgba(15,118,110,0.25);
+      white-space: nowrap;
+    }
+
+    .domain-pill {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px dashed rgba(51,65,85,0.4);
+      margin-top: 2px;
+    }
+
+    .entities-line {
+      font-size: 10px;
+      color: #4b5563;
+    }
+
+    .mini-list {
+      padding-left: 12px;
+      margin: 2px 0 0;
+    }
+
+    .mini-list li {
+      margin: 0;
+    }
+
+    .dimmed {
+      opacity: 0.18;
+      filter: grayscale(0.4);
+      box-shadow: 0 2px 4px rgba(15,23,42,0.08);
+      transform: rotate(0deg) scale(0.98) !important;
+    }
+
+    /* domain background colours */
+
+    .domain-cross { background: var(--sticky-cross); }
+    .domain-education { background: var(--sticky-edu); }
+    .domain-national-service { background: var(--sticky-ns); }
+    .domain-work { background: var(--sticky-work); }
+    .domain-volunteering { background: var(--sticky-vol); }
+    .domain-money { background: var(--sticky-money); }
+    .domain-wellbeing { background: var(--sticky-wellbeing); }
+    .domain-entrepreneurship { background: var(--sticky-entre); }
+
+    @media (max-width: 960px) {
+      .filter-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .sticky-card {
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="page-shell">
+    <header>
+      <h1>Coming of Age – Interactive Journey Board</h1>
+      <p class="subtitle">
+        Each sticky represents a <strong>moment</strong> in the youth journey (16–23) inside TAMM Family space.<br>
+        Use the filters to highlight where specific <strong>entities</strong>, <strong>domains</strong>, <strong>stages</strong>, <strong>journeys</strong> and <strong>age bands</strong> appear.
+      </p>
+    </header>
+
+    <!-- FILTERS -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Entity</span>
+        <select id="filter-entity" class="filter-select">
+          <option value="all">All entities</option>
+          <option value="fca">FCA – Family &amp; Youth owner</option>
+          <option value="dge">DGE / TAMM</option>
+          <option value="youth-platform">Youth Platform / Coming of Age</option>
+          <option value="adek">ADEK – Education &amp; Knowledge</option>
+          <option value="adek-scholarships">ADEK – ADS / Khotwa / Rize</option>
+          <option value="actvet">ACTVET – TVET</option>
+          <option value="emiratesskills">EmiratesSkills / Skills Challenge</option>
+          <option value="y2w">Y2W / YES2WORK</option>
+          <option value="nsra">NSRA – National Service</option>
+          <option value="mawaheb">Mawaheb Talent Hub</option>
+          <option value="train-for-work">Train for Work</option>
+          <option value="nafis">Nafis</option>
+          <option value="volae">VOLAE / Volunteers.ae</option>
+          <option value="takatof">Takatof</option>
+          <option value="sanid">Sanid</option>
+          <option value="ad-police">AD Police / We Are All Police</option>
+          <option value="adcd">ADCD – Civil Defence</option>
+          <option value="maan">Ma’an</option>
+          <option value="ghaya">Ma’an – Ghaya</option>
+          <option value="maan-msi">Ma’an Social Incubator</option>
+          <option value="shory">Shory Insurance</option>
+          <option value="kfed">KFED – Khalifa Fund</option>
+          <option value="health">Health sector / DOH</option>
+          <option value="icp">ICP – Identity</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Domain</span>
+        <select id="filter-domain" class="filter-select">
+          <option value="all">All domains</option>
+          <option value="cross-journey">Cross-journey</option>
+          <option value="education-skills">Education &amp; Skills</option>
+          <option value="national-service">National Service</option>
+          <option value="work-employability">Work &amp; Employability</option>
+          <option value="volunteering-civic">Volunteering &amp; Civic</option>
+          <option value="money-insurance">Money &amp; Insurance</option>
+          <option value="wellbeing-family">Wellbeing &amp; Family Support</option>
+          <option value="entrepreneurship">Entrepreneurship</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Stage (S1–S7)</span>
+        <select id="filter-stage" class="filter-select">
+          <option value="all">All stages</option>
+          <option value="S1">S1 – Onboard</option>
+          <option value="S2">S2 – Discover</option>
+          <option value="S3">S3 – Decide &amp; Plan</option>
+          <option value="S4">S4 – Apply</option>
+          <option value="S5">S5 – Participate &amp; Track</option>
+          <option value="S6">S6 – Transition</option>
+          <option value="S7">S7 – Ongoing</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Main Journey</span>
+        <select id="filter-journey" class="filter-select">
+          <option value="all">All journeys</option>
+          <option value="scholarship">Scholarship &amp; Study Abroad</option>
+          <option value="actvet-vocational">ACTVET / Vocational</option>
+          <option value="national-service">National Service</option>
+          <option value="first-job-uni">First Job – University</option>
+          <option value="first-job-hs-ns">First Job – HS &amp; NS</option>
+          <option value="money-independence">Money &amp; Independence</option>
+          <option value="volunteering-journey">Volunteering &amp; Civic</option>
+          <option value="entrepreneurship-journey">Entrepreneurship &amp; Business</option>
+          <option value="wellbeing-lifeskills">Wellbeing &amp; Life Skills</option>
+          <option value="cross-journey-main">Cross-journey (Vision Board &amp; Gamification)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Age Band</span>
+        <select id="filter-age" class="filter-select">
+          <option value="all">All ages (16–23)</option>
+          <option value="16-17">16–17</option>
+          <option value="18-21">18–21</option>
+          <option value="22-23">22–23</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-row-bottom">
+      <div class="pill-legend">
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-cross);"></span> Cross-journey
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-edu);"></span> Education &amp; Skills
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-ns);"></span> National Service
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-work);"></span> Work
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-vol);"></span> Volunteering
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-money);"></span> Money &amp; Insurance
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-wellbeing);"></span> Wellbeing
+        </span>
+        <span class="legend-pill">
+          <span class="legend-swatch" style="background: var(--sticky-entre);"></span> Entrepreneurship
+        </span>
+      </div>
+
+      <button id="clear-filters" class="clear-btn" type="button">
+        <span>⟳</span> Clear filters
+      </button>
+    </div>
+
+    <!-- STICKY GRID -->
+    <section class="sticky-grid">
+
+      <!-- S1: ENTER & VISION BOARD -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="fca,dge,youth-platform"
+        data-domain="cross-journey"
+        data-stage="S1"
+        data-journey="cross-journey-main"
+        data-ages="16-17 18-21">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S1 • Onboard to TAMM Youth / Family</div>
+            <strong>S1-A • Enter Coming of Age</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">16–17 • 18–21</div>
+        </div>
+        <div class="entities-line">
+          Entities: FCA (life moment owner), DGE / TAMM (Youth Platform / Family Space)
+        </div>
+        <ul class="mini-list">
+          <li>Youth or parent opens the Coming of Age card inside TAMM Family Space.</li>
+          <li>Gets a clear explainer: support across study, NS, work, volunteering, money, wellbeing, entrepreneurship.</li>
+          <li>Vision Board and gamification are introduced as the “spine” of the journey.</li>
+        </ul>
+      </article>
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="fca,youth-platform"
+        data-domain="cross-journey"
+        data-stage="S1"
+        data-journey="cross-journey-main"
+        data-ages="16-17 18-21">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S1 • Onboard</div>
+            <strong>S1-B • Profile &amp; Vision Board Setup</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">16–17</div>
+        </div>
+        <div class="entities-line">
+          Entities: Youth Platform (Youth 360 &amp; Vision Board), FCA
+        </div>
+        <ul class="mini-list">
+          <li>Short Youth 360 wizard: education level, interests, main worries (NS, money, work, grades, family, etc.).</li>
+          <li>Youth adds first goals: “finish NS”, “study health”, “get first job”, “volunteer 20 hours”, “save 10,000 AED”.</li>
+          <li>Daily micro-question is activated and tied to the Vision Board.</li>
+        </ul>
+      </article>
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="fca,dge,icp,adek,actvet,nsra,mawaheb,volae,maan,kfed,shory"
+        data-domain="cross-journey"
+        data-stage="S1"
+        data-journey="cross-journey-main"
+        data-ages="16-17 18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S1 • Onboard</div>
+            <strong>S1-C • Consents &amp; Data Sharing</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">16–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: ICP (identity), FCA, DGE / TAMM, ADEK, ACTVET, NSRA, Mawaheb, Volunteers.ae, Ma’an, KFED, Shory
+        </div>
+        <ul class="mini-list">
+          <li>One-screen consent wizard explains what data can be shared with ADEK, ACTVET, NSRA, MAWAHEB, VOLAE, Ma’an, KFED, Shory, etc.</li>
+          <li>Youth (and parent where relevant) toggle consents with simple language (“why we use your data”).</li>
+          <li>Consent flags feed dashboards so entities can see coverage and trust levels.</li>
+        </ul>
+      </article>
+
+      <!-- S2: EDUCATION & SKILLS -->
+
+      <article
+        class="sticky-card domain-education"
+        data-entity="adek,adek-scholarships,actvet,emiratesskills,y2w"
+        data-domain="education-skills"
+        data-stage="S2"
+        data-journey="scholarship actvet-vocational first-job-uni"
+        data-ages="16-17 18-21">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover &amp; Explore</div>
+            <strong>S2-A • Explore Education &amp; Skills</strong>
+            <div class="domain-pill">Education &amp; Skills</div>
+          </div>
+          <div class="age-tag">16–17 • 18–21</div>
+        </div>
+        <div class="entities-line">
+          Entities: ADEK (ADS, Khotwa, Rize), ACTVET (TVET, EmiratesSkills / Skills Challenge), Y2W / YES2WORK
+        </div>
+        <ul class="mini-list">
+          <li>“Life after Grade 12” shows three rails: University (ADS, Khotwa, Rize), TVET, Y2W / YES2WORK.</li>
+          <li>Youth explores Abu Dhabi Scholarships (ADS), Khotwa and Rize prep programmes, plus ACTVET diplomas and skills competitions.</li>
+          <li>Recommendations align with Vision Board goals (e.g. health science, engineering, technical trades).</li>
+        </ul>
+      </article>
+
+      <!-- S2: NATIONAL SERVICE -->
+
+      <article
+        class="sticky-card domain-national-service"
+        data-entity="nsra"
+        data-domain="national-service"
+        data-stage="S2"
+        data-journey="national-service"
+        data-ages="16-17 18-21">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover</div>
+            <strong>S2-B • Understand National Service</strong>
+            <div class="domain-pill">National Service</div>
+          </div>
+          <div class="age-tag">16–17 • 18–21</div>
+        </div>
+        <div class="entities-line">
+          Entities: NSRA – National Service &amp; Reserve Authority
+        </div>
+        <ul class="mini-list">
+          <li>NS explainer (obligations, duration, allowances, exemptions) with myth/fact quiz.</li>
+          <li>Youth indicates preferred timing: before or after study/work, stored for later NS planning.</li>
+          <li>NS awareness completion flag is visible to NSRA and in the Youth Record.</li>
+        </ul>
+      </article>
+
+      <!-- S2: WORK & MAWAHEB -->
+
+      <article
+        class="sticky-card domain-work"
+        data-entity="mawaheb,train-for-work,nafis,y2w,youth-platform"
+        data-domain="work-employability"
+        data-stage="S2"
+        data-journey="first-job-uni first-job-hs-ns"
+        data-ages="16-17 18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover</div>
+            <strong>S2-C • Explore Work &amp; MAWAHEB</strong>
+            <div class="domain-pill">Work &amp; Employability</div>
+          </div>
+          <div class="age-tag">17–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Mawaheb Talent Hub, Train for Work, Nafis, Y2W / YES2WORK, Youth Platform
+        </div>
+        <ul class="mini-list">
+          <li>Youth opens “Work &amp; Experience” and sees job families and entry-level roles.</li>
+          <li>Creates / updates MAWAHEB profile; job preferences sync to the Vision Board.</li>
+          <li>Sees Train for Work opportunities and Nafis-supported roles as recommended tiles.</li>
+        </ul>
+      </article>
+
+      <!-- S2: VOLUNTEERING -->
+
+      <article
+        class="sticky-card domain-volunteering"
+        data-entity="volae,takatof,sanid,ad-police,adcd"
+        data-domain="volunteering-civic"
+        data-stage="S2"
+        data-journey="volunteering-journey wellbeing-lifeskills"
+        data-ages="16-17 18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover</div>
+            <strong>S2-D • Volunteering &amp; Civic Roles</strong>
+            <div class="domain-pill">Volunteering &amp; Civic</div>
+          </div>
+          <div class="age-tag">16–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: VOLAE / Volunteers.ae, Takatof, Sanid, AD Police (We Are All Police), ADCD
+        </div>
+        <ul class="mini-list">
+          <li>Youth browses volunteering opportunities by cause (environment, sports, events, safety, etc.).</li>
+          <li>We Are All Police and ADCD safety volunteering appear as featured civic opportunities.</li>
+          <li>Youth bookmarks opportunities and sets a volunteering hours goal (e.g. 40 hours/year) on the Vision Board.</li>
+        </ul>
+      </article>
+
+      <!-- S2: MONEY & SHORY -->
+
+      <article
+        class="sticky-card domain-money"
+        data-entity="maan,ghaya,shory"
+        data-domain="money-insurance"
+        data-stage="S2"
+        data-journey="money-independence wellbeing-lifeskills"
+        data-ages="16-17 18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover</div>
+            <strong>S2-E • Money, Ghaya &amp; Shory (Insurance)</strong>
+            <div class="domain-pill">Money &amp; Insurance</div>
+          </div>
+          <div class="age-tag">16–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Ma’an (Ghaya financial literacy), Shory Insurance
+        </div>
+        <ul class="mini-list">
+          <li>Youth opens “Money &amp; Protection” and sketches a first saving goal (e.g. emergency fund, car, study gap).</li>
+          <li>Sees Ghaya financial literacy programme as the structured path to improve money decisions.</li>
+          <li>Shory content explains car/vehicle and other personal insurance basics in youth-friendly language, with links to compare options.</li>
+        </ul>
+      </article>
+
+      <!-- S2: WELLBEING & ENTREPRENEURSHIP -->
+
+      <article
+        class="sticky-card domain-wellbeing"
+        data-entity="maan,health,kfed,maan-msi"
+        data-domain="wellbeing-family entrepreneurship"
+        data-stage="S2"
+        data-journey="wellbeing-lifeskills entrepreneurship-journey"
+        data-ages="16-17 18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S2 • Discover</div>
+            <strong>S2-F • Wellbeing &amp; Entrepreneurship</strong>
+            <div class="domain-pill">Wellbeing &amp; Entrepreneurship</div>
+          </div>
+          <div class="age-tag">16–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Ma’an (wellbeing &amp; Social Incubator), Health sector / DOH, KFED – Khalifa Fund
+        </div>
+        <ul class="mini-list">
+          <li>Wellbeing topics (stress, sleep, exam anxiety, NS anxiety, family tension) with self-check tools and support options.</li>
+          <li>Entrepreneurship intro: local founder stories, Ma’an Social Incubator and KFED funding/training.</li>
+          <li>Daily mood slider; sustained high stress surfaces Ma’an / health support journeys.</li>
+        </ul>
+      </article>
+
+      <!-- S3: CHOOSE PATH -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="adek,actvet,nsra,mawaheb,train-for-work,nafis"
+        data-domain="cross-journey"
+        data-stage="S3"
+        data-journey="cross-journey-main scholarship actvet-vocational national-service first-job-uni first-job-hs-ns"
+        data-ages="16-17 18-21">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-A • Choose Path Scenario</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">17–21</div>
+        </div>
+        <div class="entities-line">
+          Entities: ADEK, ACTVET, NSRA, Mawaheb, Train for Work, Nafis
+        </div>
+        <ul class="mini-list">
+          <li>“Plan my path” wizard offers scenarios: Study-first, NS-first, Work-first, mixed (study + work, etc.).</li>
+          <li>Shows impact on timing of scholarships (ADS / Khotwa / Rize), TVET, NS, Train for Work and Nafis opportunities.</li>
+          <li>Selected scenario is pinned visually on the Vision Board timeline.</li>
+        </ul>
+      </article>
+
+      <!-- S3: LINK GOALS TO ACTIONS -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="adek,actvet,nsra,mawaheb,train-for-work,nafis,volae,takatof,sanid,ad-police,adcd,maan,ghaya,maan-msi,shory,kfed"
+        data-domain="cross-journey"
+        data-stage="S3"
+        data-journey="cross-journey-main scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-B • Link Goals to Programmes</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: ADEK, ACTVET, NSRA, Mawaheb, Train for Work, Nafis, VOLAE / Takatof / Sanid, AD Police, ADCD, Ma’an / Ghaya / MSI, Shory, KFED
+        </div>
+        <ul class="mini-list">
+          <li>For each Vision Board goal, youth chooses 1–3 concrete programmes (ADS / Khotwa / Rize, TVET, NS track, Train for Work, Nafis jobs, volunteering, Ghaya, Shory, KFED / MSI, etc.).</li>
+          <li>Goal–programme matrix highlights goals with no attached actions for follow-up.</li>
+          <li>Same matrix powers entity dashboards to see alignment between goals and their initiatives.</li>
+        </ul>
+      </article>
+
+      <!-- S3: MONEY PLAN -->
+
+      <article
+        class="sticky-card domain-money"
+        data-entity="maan,ghaya"
+        data-domain="money-insurance"
+        data-stage="S3"
+        data-journey="money-independence"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-C • Money Plan (Ghaya-linked)</strong>
+            <div class="domain-pill">Money &amp; Insurance</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Ma’an – Ghaya financial literacy
+        </div>
+        <ul class="mini-list">
+          <li>Youth sets a saving target (amount &amp; deadline) linked to Ghaya (e.g. “save 15k AED in 18 months”).</li>
+          <li>Sees a simple monthly saving breakdown and suggested Ghaya modules.</li>
+          <li>Money goal is locked on the Vision Board and tracked against Ghaya completion and self-reported behaviour.</li>
+        </ul>
+      </article>
+
+      <!-- S3: VOLUNTEERING & ENTREPRENEURSHIP PLANNING -->
+
+      <article
+        class="sticky-card domain-entrepreneurship"
+        data-entity="volae,takatof,sanid,ad-police,adcd,kfed,maan,maan-msi"
+        data-domain="volunteering-civic entrepreneurship"
+        data-stage="S3"
+        data-journey="volunteering-journey entrepreneurship-journey"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-D • Volunteer &amp; Entrepreneurship Planning</strong>
+            <div class="domain-pill">Volunteering &amp; Entrepreneurship</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: VOLAE / Takatof / Sanid, AD Police, ADCD, KFED, Ma’an Social Incubator
+        </div>
+        <ul class="mini-list">
+          <li>Youth sets an annual volunteering hours target and picks causes to focus on.</li>
+          <li>Completes an entrepreneurship readiness check; results suggest KFED programmes or Ma’an Social Incubator steps.</li>
+          <li>Both targets (hours and venture readiness) appear on the Vision Board and in entity dashboards.</li>
+        </ul>
+      </article>
+
+      <!-- S4: APPLY (MULTI-RAIL) -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="adek,adek-scholarships,actvet,emiratesskills,y2w,nsra,mawaheb,train-for-work,nafis,volae,takatof,sanid,maan,ghaya,maan-msi,shory,kfed,youth-platform,fca,dge"
+        data-domain="cross-journey"
+        data-stage="S4"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S4 • Apply</div>
+            <strong>S4-A • Multi-rail Applications</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: ADEK (ADS / Khotwa / Rize), ACTVET / EmiratesSkills / Y2W, NSRA, Mawaheb, Train for Work, Nafis, VOLAE / Takatof / Sanid, Ma’an / Ghaya / MSI, Shory, KFED, FCA, DGE / TAMM
+        </div>
+        <ul class="mini-list">
+          <li>Single TAMM-style apply shell reuses Youth 360 data across scholarships, TVET, NS, MAWAHEB jobs, Train for Work, Nafis, volunteering, Ghaya, Shory and KFED / MSI forms.</li>
+          <li>Each Vision Board step flips to “Applied” with a small progress indicator (view → started → submitted).</li>
+          <li>Dashboards see funnels per rail and can compare drop-off points across programmes.</li>
+        </ul>
+      </article>
+
+      <!-- S5: PARTICIPATE & TRACK (ONE VIEW) -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="fca,dge,adek,actvet,emiratesskills,y2w,nsra,mawaheb,train-for-work,nafis,volae,takatof,sanid,maan,ghaya,maan-msi,shory,kfed,health,ad-police,adcd"
+        data-domain="cross-journey"
+        data-stage="S5"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S5 • Participate &amp; Track</div>
+            <strong>S5-A • One View of Progress</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: FCA, DGE / TAMM, ADEK, ACTVET / EmiratesSkills / Y2W, NSRA, Mawaheb, Train for Work, Nafis, VOLAE / Takatof / Sanid, Ma’an / Ghaya / MSI, Shory, KFED, Health sector, AD Police, ADCD
+        </div>
+        <ul class="mini-list">
+          <li>“My Journey” dashboard shows tiles for scholarships / study, TVET &amp; skills, NS, MAWAHEB job pipeline, Train for Work, Nafis, volunteering hours, Ghaya progress, Shory protection, entrepreneurship ventures, wellbeing.</li>
+          <li>Youth sees progress vs. each Vision Board goal as a simple percentage or milestone stack.</li>
+          <li>Aggregate (anonymised) data powers FCA / entity dashboards for outcomes and gaps.</li>
+        </ul>
+      </article>
+
+      <!-- S6: TRANSITIONS -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="nsra,mawaheb,nafis,maan,health,youth-platform,fca,dge"
+        data-domain="cross-journey"
+        data-stage="S6"
+        data-journey="scholarship national-service first-job-uni first-job-hs-ns money-independence wellbeing-lifeskills cross-journey-main"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S6 • Transition &amp; Next Steps</div>
+            <strong>S6-A • After School / NS / Graduation</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">19–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: NSRA, Mawaheb, Nafis, Ma’an (support), Health sector, FCA, DGE / Youth Platform
+        </div>
+        <ul class="mini-list">
+          <li>Automatic triggers when youth completes Grade 12, NS or university.</li>
+          <li>Transition wizard offers tailored next steps: job search (Mawaheb / Nafis / Train for Work), further study, entrepreneurship (KFED / MSI), or support if stuck (Ma’an, health services).</li>
+          <li>Youth can generate a “Youth Record” (education, NS, work, volunteering, Ghaya, skills, XP) to share with employers or programmes.</li>
+        </ul>
+      </article>
+
+      <!-- S7: ONGOING SUPPORT / XP -->
+
+      <article
+        class="sticky-card domain-cross"
+        data-entity="youth-platform,fca,dge,adek,actvet,emiratesskills,y2w,nsra,mawaheb,train-for-work,nafis,volae,takatof,sanid,maan,ghaya,maan-msi,shory,kfed,health,ad-police,adcd"
+        data-domain="cross-journey"
+        data-stage="S7"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S7 • Ongoing Support &amp; Engagement</div>
+            <strong>S7-A • Daily Loop, Rewards &amp; Community</strong>
+            <div class="domain-pill">Cross-journey</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Youth Platform / TAMM, FCA, DGE, all partners via campaigns &amp; communities
+        </div>
+        <ul class="mini-list">
+          <li>On every TAMM open, youth sees one context-aware micro-task (NS next step, application nudge, volunteering reminder, Ghaya tip, wellbeing check, venture task, etc.).</li>
+          <li>XP tiers and rewards catalogue recognise real actions; alumni and interest-based communities connect youth across programmes.</li>
+          <li>Parent / family view summarises progress and upcoming milestones without exposing sensitive details.</li>
+        </ul>
+      </article>
+
+      <!-- ACTVET / VOCATIONAL SPECIFIC MOMENT -->
+
+      <article
+        class="sticky-card domain-education"
+        data-entity="actvet,emiratesskills,y2w,train-for-work,youth-platform"
+        data-domain="education-skills"
+        data-stage="S5"
+        data-journey="actvet-vocational first-job-hs-ns"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S5 • Participate &amp; Track</div>
+            <strong>V1 • ACTVET / Y2W Vocational Path</strong>
+            <div class="domain-pill">Education &amp; Skills</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: ACTVET (TVET, EmiratesSkills / Skills Challenge), Y2W / YES2WORK, Train for Work, Youth Platform
+        </div>
+        <ul class="mini-list">
+          <li>Youth sees current ACTVET / Y2W programme status and total training hours.</li>
+          <li>Skills Challenge / EmiratesSkills participation is recorded as part of their skills profile.</li>
+          <li>Once finished, Train for Work and other job pathways surface on the same screen as next steps.</li>
+        </ul>
+      </article>
+
+      <!-- FIRST JOB HS + NS MOMENT -->
+
+      <article
+        class="sticky-card domain-work"
+        data-entity="nsra,mawaheb,train-for-work,nafis,youth-platform"
+        data-domain="work-employability"
+        data-stage="S5"
+        data-journey="first-job-hs-ns"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S5 • Participate &amp; Track</div>
+            <strong>J1 • First Job – HS &amp; National Service</strong>
+            <div class="domain-pill">Work &amp; Employability</div>
+          </div>
+          <div class="age-tag">19–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: NSRA, Mawaheb Talent Hub, Train for Work, Nafis, Youth Platform
+        </div>
+        <ul class="mini-list">
+          <li>NS levels and HS streams map to job families; MAWAHEB shows matching roles in government and private sectors.</li>
+          <li>Youth sees which roles are supported by Nafis incentives and which require Train for Work or upskilling first.</li>
+          <li>Single “first job” view supports the youth, their family and coaches in tracking progress into employment.</li>
+        </ul>
+      </article>
+
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const cards = Array.from(document.querySelectorAll('.sticky-card'));
+      const selects = [
+        document.getElementById('filter-entity'),
+        document.getElementById('filter-domain'),
+        document.getElementById('filter-stage'),
+        document.getElementById('filter-journey'),
+        document.getElementById('filter-age')
+      ];
+
+      selects.forEach(sel => sel.addEventListener('change', applyFilters));
+      document.getElementById('clear-filters').addEventListener('click', clearFilters);
+
+      function applyFilters() {
+        const entity = document.getElementById('filter-entity').value;
+        const domain = document.getElementById('filter-domain').value;
+        const stage = document.getElementById('filter-stage').value;
+        const journey = document.getElementById('filter-journey').value;
+        const age = document.getElementById('filter-age').value;
+
+        cards.forEach(card => {
+          let visible = true;
+
+          if (entity !== 'all') {
+            const entities = (card.dataset.entity || '')
+              .split(',')
+              .map(e => e.trim())
+              .filter(Boolean);
+            if (!entities.includes(entity)) visible = false;
+          }
+
+          if (visible && domain !== 'all') {
+            const domains = (card.dataset.domain || '')
+              .split(' ')
+              .map(d => d.trim())
+              .filter(Boolean);
+            if (!domains.includes(domain)) visible = false;
+          }
+
+          if (visible && stage !== 'all') {
+            if ((card.dataset.stage || '') !== stage) visible = false;
+          }
+
+          if (visible && journey !== 'all') {
+            const journeys = (card.dataset.journey || '')
+              .split(' ')
+              .map(j => j.trim())
+              .filter(Boolean);
+            if (!journeys.includes(journey)) visible = false;
+          }
+
+          if (visible && age !== 'all') {
+            const ages = (card.dataset.ages || '')
+              .split(' ')
+              .map(a => a.trim())
+              .filter(Boolean);
+            if (!ages.includes(age)) visible = false;
+          }
+
+          if (visible) {
+            card.classList.remove('dimmed');
+          } else {
+            card.classList.add('dimmed');
+          }
+        });
+      }
+
+      function clearFilters() {
+        selects.forEach(sel => sel.value = 'all');
+        cards.forEach(card => card.classList.remove('dimmed'));
+      }
+    });
+  </script>
+
+</body>
+</html>

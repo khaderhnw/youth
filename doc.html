@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coming of Age – TAMM Youth Life Moment Dashboard Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-app: #020617;
+      --bg-main: #0b1120;
+      --bg-panel: #0f172a;
+      --bg-card: #020617;
+      --border-subtle: #1f2937;
+      --text-main: #f9fafb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.1);
+      --danger: #ef4444;
+      --chip-bg: #111827;
+      --chip-border: #1f2937;
+      --stage-s1: #38bdf8;
+      --stage-s2: #22c55e;
+      --stage-s3: #eab308;
+      --stage-s4: #f97316;
+      --stage-s5: #8b5cf6;
+      --stage-s6: #ec4899;
+      --stage-s7: #14b8a6;
+      --domain-edu: #3b82f6;
+      --domain-ns: #ef4444;
+      --domain-work: #22c55e;
+      --domain-vol: #0ea5e9;
+      --domain-money: #eab308;
+      --domain-well: #f97316;
+      --domain-ent: #a855f7;
+      --shadow-soft: 0 20px 45px rgba(15,23,42,0.85);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1d2536 0, #020617 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 16px;
+    }
+
+    .app-shell {
+      display: flex;
+      width: 100%;
+      max-width: 1440px;
+      min-height: calc(100vh - 32px);
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148,163,184,0.25);
+      position: relative;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 290px;
+      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
+      border-right: 1px solid var(--border-subtle);
+      padding: 20px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .logo-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: conic-gradient(from 210deg, #22c55e, #0ea5e9, #a855f7, #22c55e);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0b1120;
+    }
+
+    .logo-text-main {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .persona-select {
+      width: 100%;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 12px;
+      padding: 8px 9px;
+      margin-top: 6px;
+    }
+
+    .sidebar-section {
+      background: rgba(15,23,42,0.7);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 10px 12px;
+    }
+
+    .entity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .entity-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 7px;
+      border-radius: 10px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      font-size: 11px;
+      cursor: pointer;
+      transition: 0.15s ease;
+      color: var(--text-soft);
+    }
+
+    .entity-chip span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .entity-chip strong {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .entity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .entity-chip.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
+      color: #bbf7d0;
+      background: radial-gradient(circle at top left, #166534 0, #020617 55%);
+    }
+
+    .entity-chip.active strong {
+      color: #bbf7d0;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+      margin-top: 4px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .small-link {
+      font-size: 11px;
+      color: #93c5fd;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top right, #111827 0, #020617 60%);
+      padding: 16px 20px 18px;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .lm-title h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .lm-title p {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .kpi-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .kpi-pill {
+      background: rgba(15,23,42,0.9);
+      border-radius: var(--radius-pill);
+      padding: 5px 9px;
+      border: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kpi-pill span.value {
+      color: #bbf7d0;
+      font-weight: 600;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+    }
+
+    .filter-bar button {
+      font-size: 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(15,23,42,0.9);
+      padding: 5px 10px;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-badge {
+      font-size: 10px;
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--accent);
+      color: #bbf7d0;
+    }
+
+    /* VISION BOARD */
+
+    .vision-board {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(8,47,73,0.9));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(56,189,248,0.5);
+      padding: 10px 12px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .vision-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .vision-head h2 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .vision-head span {
+      font-size: 11px;
+      color: #e0f2fe;
+    }
+
+    .goal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .goal-chip {
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.8);
+      font-size: 11px;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s ease;
+    }
+
+    .goal-chip span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .goal-chip.active {
+      border-color: var(--accent);
+      background: rgba(22,163,74,0.95);
+      color: #ecfdf5;
+      box-shadow: 0 0 0 1px rgba(74,222,128,0.4);
+    }
+
+    .goal-chip.active span.dot {
+      background: #bbf7d0 !important;
+    }
+
+    /* TIMELINE */
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .timeline::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .timeline::-webkit-scrollbar-thumb {
+      background: #1f2933;
+      border-radius: 999px;
+    }
+
+    .stage-chip {
+      min-width: 115px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15,23,42,0.94);
+      font-size: 11px;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-chip span.label {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .stage-chip span.meta {
+      font-size: 10px;
+    }
+
+    .stage-chip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.24;
+      pointer-events: none;
+    }
+
+    .stage-chip[data-stage="S1"]::before { background: radial-gradient(circle at top left, var(--stage-s1), transparent 60%); }
+    .stage-chip[data-stage="S2"]::before { background: radial-gradient(circle at top left, var(--stage-s2), transparent 60%); }
+    .stage-chip[data-stage="S3"]::before { background: radial-gradient(circle at top left, var(--stage-s3), transparent 60%); }
+    .stage-chip[data-stage="S4"]::before { background: radial-gradient(circle at top left, var(--stage-s4), transparent 60%); }
+    .stage-chip[data-stage="S5"]::before { background: radial-gradient(circle at top left, var(--stage-s5), transparent 60%); }
+    .stage-chip[data-stage="S6"]::before { background: radial-gradient(circle at top left, var(--stage-s6), transparent 60%); }
+    .stage-chip[data-stage="S7"]::before { background: radial-gradient(circle at top left, var(--stage-s7), transparent 60%); }
+
+    .stage-chip.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
+      color: #bbf7d0;
+    }
+
+    .stage-chip.active span.label {
+      color: #bbf7d0;
+    }
+
+    .stage-chip .count {
+      font-size: 10px;
+      color: #bbf7d0;
+    }
+
+    /* GRID */
+
+    .grid-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding-bottom: 12px;
+    }
+
+    @media (max-width: 1100px) {
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 840px) {
+      body {
+        padding: 0;
+      }
+      .app-shell {
+        border-radius: 0;
+      }
+      .sidebar {
+        display: none;
+      }
+      .card-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .moment-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .moment-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(148,163,184,0.18), transparent 65%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .moment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .moment-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .moment-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .stage-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-soft);
+    }
+
+    .stage-tag span {
+      font-weight: 600;
+      margin-right: 3px;
+    }
+
+    .moment-body {
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.35;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .entity-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .entity-inline span {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid #1f2937;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-soft);
+    }
+
+    .entity-inline span strong {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .small-kpi {
+      font-size: 10px;
+      color: #a5b4fc;
+      margin-top: 3px;
+    }
+
+    .no-results {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div>
+        <div class="logo-block">
+          <div class="logo-mark">Y</div>
+          <div>
+            <div class="logo-text-main">Coming of Age</div>
+            <div class="logo-text-sub">TAMM Family · 16–23</div>
+          </div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Prototype · Workshop view</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Persona</div>
+        <select id="personaSelect" class="persona-select">
+          <option value="ALL">All personas</option>
+          <option value="grade12">Grade 12 Emirati (Hind)</option>
+          <option value="ns-grad">NS Graduate looking for job</option>
+          <option value="uni-grad">University Graduate (First Job)</option>
+          <option value="actvet">ACTVET / TVET youth</option>
+          <option value="vulnerable">At-risk / wellbeing support</option>
+        </select>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Entities in this life moment</div>
+        <div class="entity-list" id="entityList">
+          <!-- JS injects -->
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Domain legend</div>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-edu);"></div>
+            <span>Education &amp; skills</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-ns);"></div>
+            <span>National Service</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-work);"></div>
+            <span>Work &amp; jobs</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-vol);"></div>
+            <span>Volunteering</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-money);"></div>
+            <span>Money &amp; Ghaya</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-well);"></div>
+            <span>Wellbeing &amp; FCA</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background: var(--domain-ent);"></div>
+            <span>Entrepreneurship</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div>Filters here do not change data – they only change <em>what we show on screen</em> for the workshop.</div>
+        <div class="small-link" id="clearSidebarFilters">Reset persona &amp; entity</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="top-bar">
+        <div class="lm-title">
+          <h1>Life Moment: Coming of Age (16–23)</h1>
+          <p>Unified journey across education, National Service, work, volunteering, money, wellbeing &amp; entrepreneurship.</p>
+        </div>
+        <div>
+          <div class="kpi-row" id="kpiRow">
+            <!-- JS injects high-level KPIs -->
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span id="activeFilters" style="font-size:11px; color:var(--text-soft);"></span>
+        <button id="clearAllBtn">✕ Clear all filters</button>
+      </div>
+
+      <section class="vision-board">
+        <div class="vision-head">
+          <div>
+            <h2>Vision Board – youth goals</h2>
+            <span>Click a goal to see which initiatives and stages support it.</span>
+          </div>
+        </div>
+        <div class="goal-chips" id="goalChips">
+          <!-- JS injects -->
+        </div>
+      </section>
+
+      <section class="timeline" id="stageTimeline">
+        <!-- JS injects stage chips -->
+      </section>
+
+      <section class="grid-scroll">
+        <div class="card-grid" id="cardGrid">
+          <!-- JS injects cards -->
+        </div>
+        <div class="no-results" id="noResults" style="display:none;">
+          No journey moments match the current filters. Try clearing one or more filters.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ---------- DATA MODEL ----------
+
+    const stages = [
+      { id: "S1", short: "Onboard", label: "Onboard to TAMM Youth / Family", color: "var(--stage-s1)" },
+      { id: "S2", short: "Discover", label: "Discover & Explore", color: "var(--stage-s2)" },
+      { id: "S3", short: "Decide", label: "Decide & Plan", color: "var(--stage-s3)" },
+      { id: "S4", short: "Apply", label: "Apply", color: "var(--stage-s4)" },
+      { id: "S5", short: "Participate", label: "Participate & Track", color: "var(--stage-s5)" },
+      { id: "S6", short: "Transition", label: "Transition & Next Steps", color: "var(--stage-s6)" },
+      { id: "S7", short: "Ongoing", label: "Ongoing Support & Engagement", color: "var(--stage-s7)" },
+    ];
+
+    const goals = [
+      { id: "study", label: "Study & scholarships", color: "var(--domain-edu)" },
+      { id: "ns", label: "Complete National Service", color: "var(--domain-ns)" },
+      { id: "work", label: "Get my first job", color: "var(--domain-work)" },
+      { id: "volunteering", label: "Volunteer & civic role", color: "var(--domain-vol)" },
+      { id: "money", label: "Save & manage money", color: "var(--domain-money)" },
+      { id: "business", label: "Start a business", color: "var(--domain-ent)" },
+      { id: "wellbeing", label: "Wellbeing & support", color: "var(--domain-well)" },
+    ];
+
+    const entities = [
+      { id: "FCA", name: "FCA", description: "Life skills, citizenship, prevention, transitional homes", color: "var(--domain-well)" },
+      { id: "ADEK", name: "ADEK", description: "ADS scholarships, Khotwa, Rize, school guidance", color: "var(--domain-edu)" },
+      { id: "ACTVET", name: "ACTVET", description: "TVET paths, Yes2Work, Skills Hub, Skills Camp, EmiratesSkills", color: "var(--domain-edu)" },
+      { id: "NSRA", name: "NSRA", description: "National Service, Data Pioneers, Al Nokhba, Tumooh, NS Career Fair", color: "var(--domain-ns)" },
+      { id: "MAWAHEB", name: "Mawaheb (DGE)", description: "Talent hub & placement, upskilling, employment coaches", color: "var(--domain-work)" },
+      { id: "TRAIN4WORK", name: "Train for Work", description: "Bridging training leading to employment", color: "var(--domain-work)" },
+      { id: "NAFIS", name: "Nafis", description: "Federal Emiratisation & job support", color: "var(--domain-work)" },
+      { id: "MAAN", name: "Ma’an", description: "Ghaya financial literacy, wellbeing, Active Hub, social programmes", color: "var(--domain-money)" },
+      { id: "VOLAE", name: "Volunteers.ae", description: "Volunteering marketplace (Takatof, Sanid)", color: "var(--domain-vol)" },
+      { id: "ADPOLICE", name: "AD Police", description: "We Are All Police, traffic & safety, youth programmes", color: "var(--domain-vol)" },
+      { id: "ADCD", name: "ADCD", description: "Civil defence volunteering & safety education", color: "var(--domain-vol)" },
+      { id: "KFED", name: "Khalifa Fund", description: "Future Entrepreneur, Venturist, SME funding", color: "var(--domain-ent)" },
+      { id: "FYA", name: "FYA", description: "Youth Platform, hubs, youth councils, circles", color: "var(--domain-well)" },
+      { id: "SHORY", name: "Shory", description: "Insurance & financial literacy for youth", color: "var(--domain-money)" },
+    ];
+
+    // Moments = "dashboard rows" combining youth need, TAMM, initiatives, KPIs
+    // This is not exhaustive but covers the main rails across S1–S7.
+
+    const moments = [
+      // S1
+      {
+        id: "s1-profile",
+        stageId: "S1",
+        title: "Youth 360 onboarding & profile",
+        persona: ["grade12", "uni-grad", "actvet", "ns-grad"],
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        youthNeed: "“I want TAMM to know me and show only what fits my age, path and worries.”",
+        description: "Coming of Age card in Family Space triggers a Youth 360 onboarding: UAE Pass login, consents across entities, profile and interests (study, NS, work, volunteering, money, business, wellbeing). Vision Board is created with first goals.",
+        entities: ["FCA", "ADEK", "ACTVET", "NSRA", "MAWAHEB", "MAAN", "VOLAE", "KFED", "FYA"],
+        domains: ["education", "work", "ns", "volunteering", "money", "wellbeing", "business"],
+        kpi: "KPI: % youth 16–23 with completed Youth 360 profile & ≥1 goal on Vision Board."
+      },
+      {
+        id: "s1-lifeskills",
+        stageId: "S1",
+        title: "Life skills & prevention onboarding",
+        persona: ["grade12", "vulnerable"],
+        goals: ["wellbeing", "volunteering", "money"],
+        youthNeed: "“I want to feel prepared for adult life, not only exams.”",
+        description: "Youth get auto-enrolled or invited into Life Skills, Financial Literacy (Ghaya intro), Positive Citizenship and Community Awareness modules. High-risk youth can be flagged to transitional support (Biut Muntasaf al-Tariq).",
+        entities: ["FCA", "MAAN"],
+        domains: ["wellbeing", "money"],
+        kpi: "KPI: completion of core life-skills modules before graduation; early risk flags raised."
+      },
+
+      // S2
+      {
+        id: "s2-education",
+        stageId: "S2",
+        title: "Explore universities, TVET & Yes2Work",
+        persona: ["grade12", "actvet"],
+        goals: ["study", "work"],
+        youthNeed: "“I want to see all my study and skills options clearly, not hunt different websites.”",
+        description: "Under 'Life after Grade 12', youth see three rails: University, TVET/ACTVET, and Yes2Work. ADEK scholarships (ADS, Khotwa, Rize) and ACTVET programmes, Skills Hub, Skills Show, Skills Camp are visible with eligibility pre-filtered.",
+        entities: ["ADEK", "ACTVET"],
+        domains: ["education"],
+        kpi: "KPI: % Grade 12 youth exploring ≥2 rails; top programmes viewed."
+      },
+      {
+        id: "s2-ns-awareness",
+        stageId: "S2",
+        title: "National Service awareness & choices",
+        persona: ["grade12", "ns-grad"],
+        goals: ["ns", "work"],
+        youthNeed: "“I want to understand National Service properly and when to do it.”",
+        description: "NSRA module explains standard track, Data Pioneers, Al Nokhba, Tumooh and civilian options. Youth answer a short quiz and choose preferred timing (before/after study).",
+        entities: ["NSRA", "FYA"],
+        domains: ["ns"],
+        kpi: "KPI: % eligible youth completing NS awareness; distribution of preferred NS timing."
+      },
+      {
+        id: "s2-work-mawaheb",
+        stageId: "S2",
+        title: "Discover MAWAHEB & first job rails",
+        persona: ["uni-grad", "ns-grad"],
+        goals: ["work"],
+        youthNeed: "“I want to know what kind of jobs exist for me and how MAWAHEB can help.”",
+        description: "Work rail introduces MAWAHEB talent hub, Train for Work and Nafis, showing job families, internships and apprenticeships. Youth can preview how NS experience or ACTVET credits map to jobs.",
+        entities: ["MAWAHEB", "TRAIN4WORK", "NAFIS"],
+        domains: ["work"],
+        kpi: "KPI: # youth with MAWAHEB profile created; job families explored per persona."
+      },
+      {
+        id: "s2-volunteering",
+        stageId: "S2",
+        title: "Explore volunteering & civic roles",
+        persona: ["grade12", "uni-grad"],
+        goals: ["volunteering", "wellbeing"],
+        youthNeed: "“I want to volunteer in causes I care about and build my CV.”",
+        description: "Volunteers.ae, Takatof, Sanid, We Are All Police and ADCD opportunities are shown with filters by cause, location and hours. Youth can bookmark opportunities and see how they count towards school requirements and future jobs.",
+        entities: ["VOLAE", "ADPOLICE", "ADCD", "FCA"],
+        domains: ["volunteering"],
+        kpi: "KPI: # youth bookmarking ≥1 volunteering opportunity; volunteering interests by cause."
+      },
+      {
+        id: "s2-money",
+        stageId: "S2",
+        title: "Discover Ghaya & money basics",
+        persona: ["grade12", "uni-grad", "ns-grad"],
+        goals: ["money"],
+        youthNeed: "“I want to save money and avoid mistakes with my first salary or allowance.”",
+        description: "Money rail shows Ghaya financial literacy and Shory insurance literacy. Youth sketch a rough saving goal and see micro-content on budgeting, debt and insurance.",
+        entities: ["MAAN", "SHORY"],
+        domains: ["money"],
+        kpi: "KPI: # youth opening Ghaya/Shory; initial saving goals captured."
+      },
+      {
+        id: "s2-entrepreneurship",
+        stageId: "S2",
+        title: "Explore entrepreneurship paths",
+        persona: ["uni-grad", "actvet"],
+        goals: ["business"],
+        youthNeed: "“I’m curious about starting a business or side hustle.”",
+        description: "Entrepreneurship rail surfaces Khalifa Fund programmes (Future Entrepreneur, Venturist, SME funding) and FYA 'Done by Youth' stories. Youth can self-identify interest level.",
+        entities: ["KFED", "FYA"],
+        domains: ["business"],
+        kpi: "KPI: entrepreneurship interest flag; # youth clicking into KFED programmes."
+      },
+
+      // S3
+      {
+        id: "s3-path-choice",
+        stageId: "S3",
+        title: "Choose path scenario (Study / NS / Work)",
+        persona: ["grade12"],
+        goals: ["study", "ns", "work"],
+        youthNeed: "“I want one realistic path, not ten confusing options.”",
+        description: "Plan My Path wizard offers scenarios: Study-first, NS-first, Work-first, Mixed. It uses grades, interests and NS preferences to suggest a timeline and attaches relevant initiatives.",
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB"],
+        domains: ["education", "ns", "work"],
+        kpi: "KPI: distribution of chosen scenarios; % youth with saved path."
+      },
+      {
+        id: "s3-goal-linking",
+        stageId: "S3",
+        title: "Link Vision Board goals to initiatives",
+        persona: ["grade12", "uni-grad", "actvet", "ns-grad"],
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        youthNeed: "“For each goal I want clear next steps, not just a nice quote.”",
+        description: "For each Vision Board goal (study abroad, NS, first job, volunteering, savings, business, wellbeing), TAMM recommends 1–3 initiatives (e.g. ADS scholarship + Ghaya + Mawaheb), with ability to accept or swap.",
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "MAAN", "VOLAE", "KFED", "FCA"],
+        domains: ["education", "work", "ns", "volunteering", "money", "business", "wellbeing"],
+        kpi: "KPI: % goals with ≥1 attached initiative; average initiatives per goal."
+      },
+      {
+        id: "s3-money-plan",
+        stageId: "S3",
+        title: "Detailed saving plan with Ghaya",
+        persona: ["uni-grad", "ns-grad"],
+        goals: ["money"],
+        youthNeed: "“Help me calculate a realistic saving plan for my salary.”",
+        description: "Youth set a specific target (amount, date). Ghaya modules are attached, and monthly saving amounts are suggested; Shory can show protection options.",
+        entities: ["MAAN", "SHORY"],
+        domains: ["money"],
+        kpi: "KPI: avg saving target & duration; Ghaya enrolment from money goals."
+      },
+      {
+        id: "s3-vol-plan",
+        stageId: "S3",
+        title: "Volunteering & wellbeing planning",
+        persona: ["grade12", "uni-grad"],
+        goals: ["volunteering", "wellbeing"],
+        youthNeed: "“I want a volunteering plan that fits school/work and supports my wellbeing.”",
+        description: "Youth set annual volunteering hours and select preferred causes. TAMM schedules recommended opportunities and nudges wellbeing content if stress scores are high.",
+        entities: ["VOLAE", "ADPOLICE", "ADCD", "FCA"],
+        domains: ["volunteering", "wellbeing"],
+        kpi: "KPI: volunteering hours targets; high-stress youth enrolled in support flows."
+      },
+      {
+        id: "s3-ent-readiness",
+        stageId: "S3",
+        title: "Entrepreneurship readiness check",
+        persona: ["uni-grad", "actvet"],
+        goals: ["business"],
+        youthNeed: "“I want to know if I am ready to apply for funding.”",
+        description: "Simple readiness quiz produces a score and suggests next steps: KFED training only, small side hustle, or full loan preparation.",
+        entities: ["KFED"],
+        domains: ["business"],
+        kpi: "KPI: distribution of entrepreneurship readiness levels."
+      },
+
+      // S4
+      {
+        id: "s4-apply-multi",
+        stageId: "S4",
+        title: "Unified multi-rail application shell",
+        persona: ["grade12", "uni-grad", "actvet", "ns-grad"],
+        goals: ["study", "ns", "work", "volunteering", "money", "business"],
+        youthNeed: "“I don’t want 10 different forms asking me the same questions.”",
+        description: "Single TAMM application shell reuses Youth 360 data for ADS/Khotwa/Rize, ACTVET/Yes2Work, NSRA registration, Mawaheb/Nafis jobs, Ghaya, volunteering, KFED loans. Vision Board steps move to 'Applied'.",
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "TRAIN4WORK", "NAFIS", "MAAN", "VOLAE", "KFED"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business"],
+        kpi: "KPI: view→start→submit funnel per rail; cross-rail application patterns per youth."
+      },
+
+      // S5
+      {
+        id: "s5-my-journey",
+        stageId: "S5",
+        title: "My Journey dashboard – one view of progress",
+        persona: ["grade12", "uni-grad", "actvet", "ns-grad"],
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        youthNeed: "“I want to see everything I’m doing – NS, uni, work, volunteering, money – in one place.”",
+        description: "Timeline view shows active and completed items: scholarships, NS status, ACTVET modules, MAWAHEB placements, volunteering hours, Ghaya progress, entrepreneurship tasks and wellbeing check-ins.",
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "VOLAE", "MAAN", "KFED", "FCA"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        kpi: "KPI: programme completion; volunteering hours; NS completion; first-job outcomes."
+      },
+      {
+        id: "s5-yes2work",
+        stageId: "S5",
+        title: "Yes2Work & retail experience",
+        persona: ["grade12", "actvet"],
+        goals: ["work"],
+        youthNeed: "“I want real work experience while I’m still studying.”",
+        description: "ACTVET Yes2Work placements show orientation, store selection, attendance and certificates (including Fazaa volunteering hours) with visibility for future employers and credit recognition in ADVETI.",
+        entities: ["ACTVET"],
+        domains: ["education", "work"],
+        kpi: "KPI: # youth completing Yes2Work; hours and stores; conversion to jobs or diplomas."
+      },
+
+      // S6
+      {
+        id: "s6-grad-ns",
+        stageId: "S6",
+        title: "Transitions after school / NS / university",
+        persona: ["grade12", "ns-grad", "uni-grad", "actvet"],
+        goals: ["study", "ns", "work", "business", "wellbeing"],
+        youthNeed: "“When I finish a big step, I don’t want to feel lost.”",
+        description: "When ADEK marks graduation, NSRA marks NS completion, or university marks degree completion, TAMM triggers a 'What’s next?' journey: jobseeker flows (MAWAHEB/Nafis), further study, or entrepreneurship (KFED).",
+        entities: ["ADEK", "ACTVET", "NSRA", "MAWAHEB", "NAFIS", "KFED", "MAAN"],
+        domains: ["education", "ns", "work", "business"],
+        kpi: "KPI: time from graduation/NS completion to first job or next study; # 'stuck' youth flagged."
+      },
+      {
+        id: "s6-support",
+        stageId: "S6",
+        title: "Support when youth are stuck or in crisis",
+        persona: ["vulnerable", "uni-grad", "ns-grad"],
+        goals: ["wellbeing", "money", "work"],
+        youthNeed: "“If I’m stuck, anxious or in trouble, I want to know where to go – fast.”",
+        description: "From any screen youth can open a support panel to reach FCA, Ma’an wellbeing, AD Police/ADCD for safety, or financial counselling (Ghaya). Risk flags from daily questions prioritise outreach.",
+        entities: ["FCA", "MAAN", "ADPOLICE", "ADCD"],
+        domains: ["wellbeing", "money"],
+        kpi: "KPI: # support flows triggered; resolution rates; time to first response."
+      },
+
+      // S7
+      {
+        id: "s7-daily-loop",
+        stageId: "S7",
+        title: "Daily loop, XP & rewards",
+        persona: ["grade12", "uni-grad", "actvet", "ns-grad", "vulnerable"],
+        goals: ["study", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        youthNeed: "“Every time I open TAMM I want one small useful task and to see my progress.”",
+        description: "Daily micro-task engine asks context-aware questions (NS prep, job search, savings, wellbeing). Youth earn XP, see tiers (Bronze/Silver/Gold) and can redeem relevant rewards and experiences.",
+        entities: ["FCA", "FYA", "ADEK", "ACTVET", "NSRA", "MAWAHEB", "MAAN", "VOLAE", "KFED"],
+        domains: ["education", "ns", "work", "volunteering", "money", "business", "wellbeing"],
+        kpi: "KPI: DAU, XP distribution, reward redemption, daily micro-task completion."
+      },
+      {
+        id: "s7-community",
+        stageId: "S7",
+        title: "Youth communities, councils & alumni",
+        persona: ["uni-grad", "ns-grad"],
+        goals: ["work", "business", "wellbeing", "volunteering"],
+        youthNeed: "“I want to belong to a community of youth like me and have a voice.”",
+        description: "FYA Youth Hubs, Youth Councils and alumni groups are surfaced based on persona and path. Coming of Age shows how volunteering, NS and entrepreneurship feed into national youth roles.",
+        entities: ["FYA", "VOLAE", "NSRA", "KFED"],
+        domains: ["volunteering", "business", "wellbeing"],
+        kpi: "KPI: # youth joining youth councils/communities; engagement in events & circles."
+      },
+    ];
+
+    // ---------- STATE ----------
+
+    let selectedEntityId = "ALL";
+    let selectedStageId = "ALL";
+    let selectedGoalId = "ALL";
+    let selectedPersonaId = "ALL";
+
+    // ---------- RENDER HELPERS ----------
+
+    function countByStage() {
+      const counts = {};
+      moments.forEach(m => {
+        counts[m.stageId] = (counts[m.stageId] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function renderEntityList() {
+      const container = document.getElementById("entityList");
+      container.innerHTML = "";
+
+      const allChip = document.createElement("div");
+      allChip.className = "entity-chip" + (selectedEntityId === "ALL" ? " active" : "");
+      allChip.innerHTML = `<span><div class="entity-dot" style="background:linear-gradient(90deg,#22c55e,#0ea5e9);"></div><strong>All entities</strong></span><span style="font-size:10px;">${entities.length}</span>`;
+      allChip.addEventListener("click", () => {
+        selectedEntityId = "ALL";
+        renderEntityList();
+        renderAll();
+      });
+      container.appendChild(allChip);
+
+      entities.forEach(e => {
+        const chip = document.createElement("div");
+        chip.className = "entity-chip" + (selectedEntityId === e.id ? " active" : "");
+        chip.innerHTML = `
+          <span>
+            <div class="entity-dot" style="background:${e.color};"></div>
+            <strong>${e.name}</strong>
+          </span>
+          <span style="font-size:10px;">&rsaquo;</span>
+        `;
+        chip.title = e.description;
+        chip.addEventListener("click", () => {
+          selectedEntityId = (selectedEntityId === e.id) ? "ALL" : e.id;
+          renderEntityList();
+          renderAll();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function renderGoals() {
+      const container = document.getElementById("goalChips");
+      container.innerHTML = "";
+
+      const allChip = document.createElement("button");
+      allChip.type = "button";
+      allChip.className = "goal-chip" + (selectedGoalId === "ALL" ? " active" : "");
+      allChip.innerHTML = `<span class="dot" style="background:#22c55e;"></span>All goals`;
+      allChip.addEventListener("click", () => {
+        selectedGoalId = "ALL";
+        renderGoals();
+        renderAll();
+      });
+      container.appendChild(allChip);
+
+      goals.forEach(g => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "goal-chip" + (selectedGoalId === g.id ? " active" : "");
+        chip.innerHTML = `<span class="dot" style="background:${g.color};"></span>${g.label}`;
+        chip.addEventListener("click", () => {
+          selectedGoalId = (selectedGoalId === g.id) ? "ALL" : g.id;
+          renderGoals();
+          renderAll();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function renderStages() {
+      const container = document.getElementById("stageTimeline");
+      container.innerHTML = "";
+      const counts = countByStage();
+
+      const allChip = document.createElement("div");
+      allChip.className = "stage-chip" + (selectedStageId === "ALL" ? " active" : "");
+      allChip.dataset.stage = "ALL";
+      allChip.innerHTML = `
+        <span class="label">All stages</span>
+        <span class="meta">S1–S7 · ${moments.length} moments</span>
+      `;
+      allChip.addEventListener("click", () => {
+        selectedStageId = "ALL";
+        renderStages();
+        renderAll();
+      });
+      container.appendChild(allChip);
+
+      stages.forEach(s => {
+        const chip = document.createElement("div");
+        chip.className = "stage-chip" + (selectedStageId === s.id ? " active" : "");
+        chip.dataset.stage = s.id;
+        chip.innerHTML = `
+          <span class="label">${s.id} · ${s.short}</span>
+          <span class="meta">${s.label}</span>
+          <span class="count">${counts[s.id] || 0} moments</span>
+        `;
+        chip.addEventListener("click", () => {
+          selectedStageId = (selectedStageId === s.id) ? "ALL" : s.id;
+          renderStages();
+          renderAll();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function domainColor(domain) {
+      switch (domain) {
+        case "education": return "var(--domain-edu)";
+        case "ns": return "var(--domain-ns)";
+        case "work": return "var(--domain-work)";
+        case "volunteering": return "var(--domain-vol)";
+        case "money": return "var(--domain-money)";
+        case "wellbeing": return "var(--domain-well)";
+        case "business": return "var(--domain-ent)";
+        default: return "#6b7280";
+      }
+    }
+
+    function stageById(id) {
+      return stages.find(s => s.id === id);
+    }
+
+    function personaName(id) {
+      switch (id) {
+        case "grade12": return "Grade 12 (Hind)";
+        case "ns-grad": return "NS graduate";
+        case "uni-grad": return "University graduate";
+        case "actvet": return "ACTVET / TVET youth";
+        case "vulnerable": return "Youth needing support";
+        default: return "All personas";
+      }
+    }
+
+    function filterMoments() {
+      return moments.filter(m => {
+        if (selectedStageId !== "ALL" && m.stageId !== selectedStageId) return false;
+        if (selectedGoalId !== "ALL" && !(m.goals || []).includes(selectedGoalId)) return false;
+        if (selectedEntityId !== "ALL" && !(m.entities || []).includes(selectedEntityId)) return false;
+        if (selectedPersonaId !== "ALL" && !(m.persona || []).includes(selectedPersonaId)) return false;
+        return true;
+      });
+    }
+
+    function renderCards() {
+      const grid = document.getElementById("cardGrid");
+      const noRes = document.getElementById("noResults");
+      grid.innerHTML = "";
+      const filtered = filterMoments();
+
+      if (!filtered.length) {
+        noRes.style.display = "block";
+        return;
+      }
+      noRes.style.display = "none";
+
+      filtered.forEach(m => {
+        const stage = stageById(m.stageId);
+        const card = document.createElement("article");
+        card.className = "moment-card";
+
+        const domainsBadges = (m.domains || []).map(d => {
+          return `<span class="badge"><span class="dot" style="background:${domainColor(d)};"></span>${d}</span>`;
+        }).join("");
+
+        const entityBadges = (m.entities || []).map(id => {
+          const e = entities.find(en => en.id === id);
+          if (!e) return "";
+          return `<span><span class="dot" style="background:${e.color};"></span><strong>${e.name}</strong></span>`;
+        }).join("");
+
+        card.innerHTML = `
+          <div class="moment-header">
+            <div>
+              <div class="moment-title">${m.title}</div>
+              <div class="moment-subtitle">${m.youthNeed || ""}</div>
+            </div>
+            <div class="stage-tag">
+              <span>${m.stageId}</span>${stage ? stage.short : ""}
+            </div>
+          </div>
+          <div class="moment-body">
+            ${m.description}
+            <div class="badge-row">
+              ${domainsBadges}
+            </div>
+            <div class="entity-inline">
+              ${entityBadges}
+            </div>
+            <div class="small-kpi">${m.kpi || ""}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderKPIs() {
+      const row = document.getElementById("kpiRow");
+      row.innerHTML = "";
+
+      // Simple "fake" KPIs just for prototype visual – you can wire real numbers later.
+      const totalMoments = moments.length;
+      const eduCount = moments.filter(m => (m.domains || []).includes("education")).length;
+      const workCount = moments.filter(m => (m.domains || []).includes("work")).length;
+      const nsCount = moments.filter(m => (m.domains || []).includes("ns")).length;
+
+      const kpis = [
+        { label: "Journey moments mapped", value: totalMoments },
+        { label: "Education & skills touchpoints", value: eduCount },
+        { label: "Work & jobs touchpoints", value: workCount },
+        { label: "National Service touchpoints", value: nsCount },
+      ];
+
+      kpis.forEach(k => {
+        const pill = document.createElement("div");
+        pill.className = "kpi-pill";
+        pill.innerHTML = `<span class="value">${k.value}</span><span>${k.label}</span>`;
+        row.appendChild(pill);
+      });
+    }
+
+    function renderActiveFiltersLabel() {
+      const span = document.getElementById("activeFilters");
+      const parts = [];
+      if (selectedStageId !== "ALL") {
+        const s = stageById(selectedStageId);
+        parts.push("Stage: " + (s ? s.short : selectedStageId));
+      }
+      if (selectedGoalId !== "ALL") {
+        const g = goals.find(g => g.id === selectedGoalId);
+        parts.push("Goal: " + (g ? g.label : selectedGoalId));
+      }
+      if (selectedEntityId !== "ALL") {
+        const e = entities.find(e => e.id === selectedEntityId);
+        parts.push("Entity: " + (e ? e.name : selectedEntityId));
+      }
+      if (selectedPersonaId !== "ALL") {
+        parts.push("Persona: " + personaName(selectedPersonaId));
+      }
+      span.textContent = parts.length ? "Active filters → " + parts.join(" · ") : "Showing all stages, entities, personas & goals.";
+    }
+
+    function renderAll() {
+      renderKPIs();
+      renderActiveFiltersLabel();
+      renderCards();
+    }
+
+    // ---------- INIT & EVENTS ----------
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderEntityList();
+      renderGoals();
+      renderStages();
+      renderAll();
+
+      const personaSelect = document.getElementById("personaSelect");
+      personaSelect.addEventListener("change", (e) => {
+        selectedPersonaId = e.target.value;
+        renderAll();
+      });
+
+      const clearAllBtn = document.getElementById("clearAllBtn");
+      clearAllBtn.addEventListener("click", () => {
+        selectedEntityId = "ALL";
+        selectedStageId = "ALL";
+        selectedGoalId = "ALL";
+        selectedPersonaId = "ALL";
+        document.getElementById("personaSelect").value = "ALL";
+        renderEntityList();
+        renderGoals();
+        renderStages();
+        renderAll();
+      });
+
+      const clearSidebarFilters = document.getElementById("clearSidebarFilters");
+      clearSidebarFilters.addEventListener("click", () => {
+        selectedEntityId = "ALL";
+        selectedPersonaId = "ALL";
+        document.getElementById("personaSelect").value = "ALL";
+        renderEntityList();
+        renderAll();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,466 +1,1991 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Coming of Age – Unified To‑Be Journey on TAMM Youth</title>
+  <meta charset="UTF-8" />
+  <title>Coming of Age (16–23) – Interactive Journey Map (TAMM Family Space)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
+    :root {
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --tamm-teal: #06b6d4;
+      --highlight: #fef9c3;
+      --dimmed: 0.25;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.5;
-      margin: 20px;
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 35%, #e5e7eb 100%);
+      color: var(--text-main);
     }
-    h1, h2 {
-      margin-top: 24px;
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 4px;
     }
-    h2 {
-      background: #f2f2f2;
-      padding: 8px 12px;
-      border-radius: 4px;
+
+    p.lead {
+      font-size: 13px;
+      margin: 0 0 16px;
+      color: var(--text-soft);
+      max-width: 1100px;
     }
-    p.description {
-      max-width: 900px;
+
+    .board-shell {
+      max-width: 1240px;
+      margin: 0 auto;
     }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.08);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+    }
+
+    .filter-bar label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-soft);
+    }
+
+    .filter-select {
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      min-width: 180px;
+    }
+
+    .filter-pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed #cbd5f5;
+      color: #4b5563;
+      background: #f9fafb;
+    }
+
+    .stage-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 16px;
+      margin-top: 18px;
+    }
+
+    .stage-title {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .stage-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #fff;
+      background: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stage-name {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .stage-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 13px;
+      font-size: 11px;
     }
+
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       padding: 6px 8px;
       vertical-align: top;
     }
+
     th {
-      background: #fafafa;
-      font-weight: bold;
+      background: #f9fafb;
+      font-weight: 600;
       text-align: left;
+      white-space: nowrap;
     }
-    .subjourney {
-      font-weight: bold;
+
+    tr:nth-child(even) td {
+      background: #fdfdfd;
     }
-    .stage-block {
-      margin-bottom: 40px;
+
+    ul {
+      margin: 0;
+      padding-left: 16px;
     }
-    .stage-tag {
-      font-weight: bold;
-      color: #555;
+
+    li {
+      margin: 0 0 2px;
+    }
+
+    .domain-pill {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+      margin-top: 3px;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+
+    .moment-id {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .journey-row.highlight {
+      background: var(--highlight) !important;
+    }
+
+    .journey-row.dimmed {
+      opacity: var(--dimmed);
+    }
+
+    .entity-chip {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      margin: 1px 3px 1px 0;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .entity-chip.small {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .note {
+      font-size: 10px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+      table {
+        font-size: 10px;
+      }
+      th, td {
+        padding: 5px 6px;
+      }
     }
   </style>
 </head>
+
 <body>
+<div class="board-shell">
+  <h1>Coming of Age (16–23) – Interactive Journey Map</h1>
+  <p class="lead">
+    Youth life moment embedded in <strong>TAMM Family Space</strong>. Stages S1–S7 run left to right in time;
+    each row is a “moment” with <em>Youth Need → Youth Action → TAMM &amp; Vision Board &amp; Gamification →
+    Entities &amp; Initiatives → Data &amp; KPIs</em>. Use the filter to highlight where each entity appears.
+  </p>
 
-<h1>Coming of Age – Unified To‑Be Journey on TAMM Youth</h1>
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <label for="entity-filter">Highlight by entity</label>
+    <select id="entity-filter" class="filter-select" onchange="filterByEntity(this.value)">
+      <option value="">All entities</option>
+      <option value="ADEK">ADEK (Scholarships)</option>
+      <option value="ACTVET">ACTVET / ADVETI / ATS</option>
+      <option value="NSRA">NSRA (National Service)</option>
+      <option value="FCA">FCA</option>
+      <option value="Ma'an">Ma’an</option>
+      <option value="FYA">FYA (Youth Platform)</option>
+      <option value="Mawaheb">Mawaheb (DGE)</option>
+      <option value="Nafis">Nafis</option>
+      <option value="KFED">KFED (Khalifa Fund)</option>
+      <option value="AD Police">AD Police</option>
+      <option value="ADCD">ADCD / ADCDA</option>
+      <option value="Volunteers.ae">Volunteers.ae / Takatof / Sanid</option>
+      <option value="Emirates Foundation">Emirates Foundation</option>
+      <option value="Shory">Shory</option>
+    </select>
+    <span class="filter-pill">
+      Tip: rows with the selected entity go yellow, others fade. Choose “All entities” to reset.
+    </span>
+  </div>
 
-<p class="description">
-  This page shows the unified youth life‑moment journey across education, volunteering,
-  National Service, first job, entrepreneurship and wellbeing – all delivered through TAMM Youth.
-  Each row is a key touchpoint in the journey.
-</p>
+  <!-- ========== S1 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S1</span>
+      <span class="stage-name">Onboard to TAMM Youth / Family</span>
+    </div>
+    <div class="stage-sub">Enter Coming of Age, log in, set up profile, Vision Board and parents’ view.</div>
 
-<div class="stage-block" id="stage-1">
-  <h2>Stage 1 – Onboard to TAMM Youth</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>1.1</td>
-      <td class="subjourney">Platform onboarding</td>
-      <td>P1–P3</td>
-      <td>Hears that TAMM Youth is the one place for education, National Service, volunteering, jobs and entrepreneurship.</td>
-      <td>Shows a Youth landing page with a simple narrative, explainer video, and tiles for key areas (Education, NS, Volunteering, First Job, Entrepreneurship, Wellbeing) plus a “Start your journey” button.</td>
-      <td>TAMM, FYA, ADEK, ACTVET, NSRA, KFED, volunteers.ae, AD Police, Ma’an, FCA, ADS/Nafis.</td>
-    </tr>
-    <tr>
-      <td>1.2</td>
-      <td class="subjourney">Platform onboarding</td>
-      <td>P1–P3</td>
-      <td>Logs in with UAE Pass / Emirates ID and expects personalised content.</td>
-      <td>Performs SSO with UAE Pass, reads age, gender and nationality, sets youth segment and language, and shows relevant tiles (e.g. “Grade 11 student”, “NS-eligible soon”).</td>
-      <td>TAMM, UAE Pass, population registry.</td>
-    </tr>
-    <tr>
-      <td>1.3</td>
-      <td class="subjourney">Data &amp; consent</td>
-      <td>P1–P3</td>
-      <td>Wants to share data once so they don’t keep re-entering education, volunteering, NS, job and business details.</td>
-      <td>Displays a single consent hub with toggles to connect ADEK, ACTVET, volunteers.ae, NSRA, ADS/Nafis, KFED, AD Police, FCA and Ma’an; clearly explains what is used and why.</td>
-      <td>ADEK, ACTVET, volunteers.ae, NSRA, ADS/Nafis, KFED, AD Police, FCA, Ma’an.</td>
-    </tr>
-    <tr>
-      <td>1.4</td>
-      <td class="subjourney">Youth 360 profile</td>
-      <td>P1–P3</td>
-      <td>Fills in interests, favourite subjects, work preferences, volunteering themes and entrepreneurship interest.</td>
-      <td>Runs a step‑by‑step Youth 360 wizard with an optional interest / personality quiz; only asks for data not available from connected systems.</td>
-      <td>FYA, ADEK, ACTVET, employers, KFED.</td>
-    </tr>
-    <tr>
-      <td>1.5</td>
-      <td class="subjourney">Youth dashboard</td>
-      <td>P1–P3</td>
-      <td>Wants a quick overview of where they are and what they can do next.</td>
-      <td>Presents a Youth Dashboard with tiles for Education &amp; Scholarships, Volunteering &amp; Hours, National Service, First Job &amp; Internships, Entrepreneurship, and Wellbeing &amp; Safety, each with status.</td>
-      <td>All integrated entities via TAMM.</td>
-    </tr>
-  </table>
-</div>
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
 
-<div class="stage-block" id="stage-2">
-  <h2>Stage 2 – Discover &amp; Explore Opportunities</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>2.1</td>
-      <td class="subjourney">Education &amp; scholarships</td>
-      <td>P1–P2</td>
-      <td>Clicks Education &amp; Scholarships and wants to see all options in one list.</td>
-      <td>Shows scholarships and programmes with filters for major, location, GPA, NS timing and EmSAT; clearly labels degree vs TVET vs foundation.</td>
-      <td>ADEK, ADS scholarships, universities, ACTVET.</td>
-    </tr>
-    <tr>
-      <td>2.2</td>
-      <td class="subjourney">TVET &amp; skills</td>
-      <td>P1–P2</td>
-      <td>Looks for vocational and skills‑based paths instead of only traditional degrees.</td>
-      <td>Displays TVET and skills catalogue (ACTVET, ADVETI, accredited providers, Emirates Skills) with entry requirements and pathways from grade 12.</td>
-      <td>ACTVET, ADVETI, ADEK, private training centres.</td>
-    </tr>
-    <tr>
-      <td>2.3</td>
-      <td class="subjourney">Volunteering &amp; community</td>
-      <td>P1–P3</td>
-      <td>Searches for volunteering opportunities to reach required hours and build a CV.</td>
-      <td>Provides a volunteering explorer fed from volunteers.ae and partners, with filters for location, cause, skills and format; shows current hours total and target.</td>
-      <td>volunteers.ae, ADEK, Ma’an, NGOs, school systems.</td>
-    </tr>
-    <tr>
-      <td>2.4</td>
-      <td class="subjourney">National Service awareness</td>
-      <td>P1–P2</td>
-      <td>Wants to understand what National Service is, when it applies, and how it affects studies and work.</td>
-      <td>Shows an NSRA information card with personalised call‑up window, service type options, simple timeline and FAQs.</td>
-      <td>NSRA, MOD, ADEK, employers.</td>
-    </tr>
-    <tr>
-      <td>2.5</td>
-      <td class="subjourney">First job &amp; work experience</td>
-      <td>P1–P3</td>
-      <td>Looks for safe first work experiences (Yes to Work, internships, part‑time jobs).</td>
-      <td>Lists youth‑friendly programmes (Yes to Work, internships, part‑time roles) with age, eligibility and NS implications labelled.</td>
-      <td>ACTVET, ADS job portals, Nafis/Tawteen, employers.</td>
-    </tr>
-    <tr>
-      <td>2.6</td>
-      <td class="subjourney">Entrepreneurship &amp; wellbeing</td>
-      <td>P2–P4</td>
-      <td>Is curious about entrepreneurship and wants life skills and safety guidance.</td>
-      <td>Shows an Entrepreneurship hub with KFED programmes and an “Am I ready?” quiz, plus a Wellbeing &amp; Safety hub (financial literacy, cyber safety, anti‑drugs, helplines).</td>
-      <td>KFED, FCA, AD Police, Ma’an, FYA.</td>
-    </tr>
-  </table>
-</div>
+      <tr class="journey-row" data-stage="S1" data-entities="FCA,DGE">
+        <td>
+          <div class="moment-id">S1‑01</div>
+          <strong>Enter Coming of Age space</strong><br/>
+          <span class="domain-pill">Cross‑journey</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want something for <strong>my age</strong>, not for little kids.”</li>
+            <li>“Explain what this <strong>Coming of Age</strong> thing is in 30 seconds.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens TAMM Family, taps <strong>Coming of Age</strong> card.</li>
+            <li>Scrolls short intro and taps <strong>Start my journey</strong>.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Hero screen with a simple “From Grade 12 to first job &amp; beyond” storyline.</li>
+            <li>Micro‑question on first open: “What worries you most right now?” (study / NS / job / money / wellbeing / other).</li>
+            <li>XP seed: +10 XP for first answer.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">DGE</span>
+          <div class="note">Life‑moment owner and TAMM experience owner.</div>
+        </td>
+        <td>
+          <ul>
+            <li># youth 16–23 who open Coming of Age.</li>
+            <li>Distribution of first “worry” tag.</li>
+          </ul>
+        </td>
+      </tr>
 
-<div class="stage-block" id="stage-3">
-  <h2>Stage 3 – Decide &amp; Apply</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>3.1</td>
-      <td class="subjourney">Education &amp; scholarships</td>
-      <td>P1–P2</td>
-      <td>Shortlists a few universities or scholarships and needs help comparing.</td>
-      <td>Provides a compare view (GPA, EmSAT, cost, location, NS timing, job prospects) and a button to talk to a counsellor.</td>
-      <td>ADEK, ADS scholarships, universities, ACTVET, schools.</td>
-    </tr>
-    <tr>
-      <td>3.2</td>
-      <td class="subjourney">Education &amp; scholarships</td>
-      <td>P1–P2</td>
-      <td>Books a session with a counsellor to choose major or path.</td>
-      <td>Enables booking of school counsellor / career advisor sessions (virtual or in‑person) and shares the Youth 360 profile.</td>
-      <td>ADEK, schools, ACTVET, FYA.</td>
-    </tr>
-    <tr>
-      <td>3.3</td>
-      <td class="subjourney">Volunteering</td>
-      <td>P1–P3</td>
-      <td>Chooses a volunteering opportunity and submits an application, sometimes needing parent consent.</td>
-      <td>Uses a unified application form with Emirates ID / UAE Pass and digital parent consent, showing expected hours and how they will be recognised.</td>
-      <td>volunteers.ae, ADEK, Ma’an, event organisers.</td>
-    </tr>
-    <tr>
-      <td>3.4</td>
-      <td class="subjourney">National Service</td>
-      <td>P2–P3</td>
-      <td>Prepares to register for NS and wants to avoid multiple centre visits.</td>
-      <td>Embeds NSRA pre‑registration with a clear doc checklist, upload capability and booking for NS centre and medical tests.</td>
-      <td>NSRA, NS medical clinics, population registry.</td>
-    </tr>
-    <tr>
-      <td>3.5</td>
-      <td class="subjourney">First job &amp; work experience</td>
-      <td>P2–P3</td>
-      <td>Needs a strong CV and wants to apply for internships or first jobs.</td>
-      <td>Offers a CV and profile builder that pulls education, volunteering, NS status and certificates, with one‑click apply to jobs on ADS/Nafis/Tawteen.</td>
-      <td>ADS job portals, Nafis/Tawteen, employers, ACTVET, volunteers.ae.</td>
-    </tr>
-    <tr>
-      <td>3.6</td>
-      <td class="subjourney">Entrepreneurship</td>
-      <td>P2–P4</td>
-      <td>Has a business idea and wants to submit it to KFED and speak to someone.</td>
-      <td>Provides a simple KFED idea wizard and appointment booking with a KFED advisor.</td>
-      <td>KFED, banks, incubators.</td>
-    </tr>
-    <tr>
-      <td>3.7</td>
-      <td class="subjourney">Wellbeing &amp; safety</td>
-      <td>P1–P3</td>
-      <td>Feels stressed or at risk and looks for confidential support.</td>
-      <td>Shows a discreet “Need help?” entry to FCA, Ma’an and health support, plus registration for AD Police and FCA awareness programmes.</td>
-      <td>FCA, Ma’an, AD Police, health / mental health partners.</td>
-    </tr>
-    <tr>
-      <td>3.8</td>
-      <td class="subjourney">Cross‑journey documents</td>
-      <td>P1–P3</td>
-      <td>Is confused by different documentation requirements across scholarships, NS, jobs and KFED.</td>
-      <td>Provides a smart checklist that aggregates document requirements, shows what’s already on file and what’s missing, and allows direct upload.</td>
-      <td>ADEK, NSRA, ADS/Nafis, KFED, volunteers.ae.</td>
-    </tr>
-  </table>
-</div>
+      <tr class="journey-row" data-stage="S1" data-entities="FCA">
+        <td>
+          <div class="moment-id">S1‑02</div>
+          <strong>Login, consent &amp; basic profile</strong><br/>
+          <span class="domain-pill">Cross‑journey</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I only want to log in <strong>once</strong>.”</li>
+            <li>“I want to control which entities see my data.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Logs in with UAE Pass.</li>
+            <li>Reviews consents: study, NS, jobs, volunteering, money, entrepreneurship.</li>
+            <li>Answers 5 quick questions on current grade, region, interests.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>One‑page consent wizard (ADEK, ACTVET, NSRA, Mawaheb, Volunteers.ae, Ma’an, KFED, Shory, FYA…).</li>
+            <li>“About me” mini‑wizard for Youth 360 basics (school, stream, region, preferred language).</li>
+            <li>XP: +40 XP for full completion.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">KFED</span>
+          <span class="entity-chip">Shory</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Consent flags per entity.</li>
+            <li>% youth with full Youth 360 profile.</li>
+            <li>Breakdown by school type, region, gender.</li>
+          </ul>
+        </td>
+      </tr>
 
-<div class="stage-block" id="stage-4">
-  <h2>Stage 4 – Participate &amp; Track</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>4.1</td>
-      <td class="subjourney">Education &amp; scholarships</td>
-      <td>P1–P2</td>
-      <td>Wants to see scholarship and admission status without calling different entities.</td>
-      <td>Displays a consolidated “Track my education applications” view with statuses, missing documents and deadlines.</td>
-      <td>ADEK, ADS scholarships, universities, ACTVET.</td>
-    </tr>
-    <tr>
-      <td>4.2</td>
-      <td class="subjourney">Volunteering</td>
-      <td>P1–P3</td>
-      <td>Attends volunteering events and needs proof of hours.</td>
-      <td>Offers QR / OTP check‑in and automatically updates volunteering hours and certificates in the Youth Record.</td>
-      <td>volunteers.ae, event organisers, ADEK, NSRA, Ma’an.</td>
-    </tr>
-    <tr>
-      <td>4.3</td>
-      <td class="subjourney">National Service</td>
-      <td>P2–P3</td>
-      <td>During NS, wants to know where they are in the process and what comes next.</td>
-      <td>Shows an NS tracker card with current phase, benefits and a countdown to completion, plus links to allowed TAMM services.</td>
-      <td>NSRA, MOD, partner universities and employers.</td>
-    </tr>
-    <tr>
-      <td>4.4</td>
-      <td class="subjourney">First job &amp; work experience</td>
-      <td>P2–P3</td>
-      <td>Has multiple job applications and wants to track them in one place.</td>
-      <td>Provides a pipeline of applications with statuses and required actions (interview, medical, contract signing, onboarding tasks).</td>
-      <td>ADS job portals, Nafis/Tawteen, employers, health checks, insurance providers.</td>
-    </tr>
-    <tr>
-      <td>4.5</td>
-      <td class="subjourney">Entrepreneurship</td>
-      <td>P2–P4</td>
-      <td>Joined KFED training or loan process and wants to track progress.</td>
-      <td>Shows stages such as pre‑screening, training, feasibility, committee, disbursement and mentoring, with due dates and tasks.</td>
-      <td>KFED, banks, training partners.</td>
-    </tr>
-    <tr>
-      <td>4.6</td>
-      <td class="subjourney">Wellbeing &amp; safety</td>
-      <td>P1–P3</td>
-      <td>Attends safety, life skills or prevention sessions and wants recognition.</td>
-      <td>Provides a calendar of sessions (road safety, cyber safety, anti‑drugs, financial literacy), handles registration and adds digital badges to the Youth Record.</td>
-      <td>AD Police, FCA, Ma’an, schools, health partners.</td>
-    </tr>
-    <tr>
-      <td>4.7</td>
-      <td class="subjourney">Cross‑journey visibility</td>
-      <td>P1–P4</td>
-      <td>Wants to see all education, NS, volunteering, job and entrepreneurship activities together.</td>
-      <td>Shows a “My Journey” timeline combining milestones and highlighting completed, active and upcoming items.</td>
-      <td>All integrated entities via TAMM.</td>
-    </tr>
-    <tr>
-      <td>4.8</td>
-      <td class="subjourney">Cross‑journey nudges</td>
-      <td>P1–P3</td>
-      <td>Needs reminders to avoid missing important deadlines or appointments.</td>
-      <td>Runs a smart notification engine that sends reminders for deadlines and allows quick actions (reschedule, upload, confirm).</td>
-      <td>TAMM notifications, ADEK, NSRA, volunteers.ae, ADS/Nafis, KFED, AD Police, FCA.</td>
-    </tr>
-  </table>
-</div>
+      <tr class="journey-row" data-stage="S1" data-entities="FCA,Ma'an,FYA">
+        <td>
+          <div class="moment-id">S1‑03</div>
+          <strong>Vision Board – first goals</strong><br/>
+          <span class="domain-pill">Vision Board</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want to see my <strong>goals</strong> in one place.”</li>
+            <li>“I want to save money / finish NS / get a job / volunteer / maybe start a business.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Selects templates: Study, NS, First job, Volunteering, Save X AED, Start a project, Wellbeing.</li>
+            <li>Sets rough target dates (e.g., “finish NS by 2028”).</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Vision Board canvas with goal tiles and sliders for “How important?” and “By when?”.</li>
+            <li>Daily question cycles through goals: “Which one should we focus on this month?”</li>
+            <li>XP bonus for connecting at least 3 different domains (study, NS, work, money, community).</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">FYA</span>
+          <div class="note">Later linked to Ghaya (money), FYA Youth Platform and other initiatives.</div>
+        </td>
+        <td>
+          <ul>
+            <li>% youth with ≥1 Vision Board goal.</li>
+            <li>Average # goals per youth by age band.</li>
+            <li>Goal mix: NS / study / work / volunteering / money / business / wellbeing.</li>
+          </ul>
+        </td>
+      </tr>
 
-<div class="stage-block" id="stage-5">
-  <h2>Stage 5 – Transition &amp; Next Steps</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>5.1</td>
-      <td class="subjourney">School graduation → next</td>
-      <td>P1</td>
-      <td>Finishes grade 12 and is unsure what to do next.</td>
-      <td>Detects graduation and triggers a “What’s next?” wizard suggesting NS, higher education, TVET, Yes to Work, volunteering and entrepreneurship based on their profile.</td>
-      <td>ADEK, NSRA, ACTVET, ADS, volunteers.ae, KFED.</td>
-    </tr>
-    <tr>
-      <td>5.2</td>
-      <td class="subjourney">NS completion → next</td>
-      <td>P2–P3</td>
-      <td>Completes National Service and needs to transition to studies or work.</td>
-      <td>Uses NS completion to unlock tiles for jobs, education and entrepreneurship, and highlights NS‑friendly roles.</td>
-      <td>NSRA, ADEK, ADS/Nafis, KFED, volunteers.ae.</td>
-    </tr>
-    <tr>
-      <td>5.3</td>
-      <td class="subjourney">Higher education completion → job</td>
-      <td>P2–P3</td>
-      <td>Graduates from university/TVET and wants a first long‑term job.</td>
-      <td>Detects graduation and recommends job matches, alumni networks and upskilling, converting Youth Record into a professional profile.</td>
-      <td>Universities, ACTVET, ADS/Nafis, employers.</td>
-    </tr>
-    <tr>
-      <td>5.4</td>
-      <td class="subjourney">Job search → alternative paths</td>
-      <td>P2–P3</td>
-      <td>Has been searching for jobs for a long time and feels stuck.</td>
-      <td>After repeated rejections, suggests alternative paths such as reskilling, apprenticeships and entrepreneurship via KFED.</td>
-      <td>ADS/Nafis, ACTVET, KFED, FYA.</td>
-    </tr>
-    <tr>
-      <td>5.5</td>
-      <td class="subjourney">Volunteering → leadership</td>
-      <td>P1–P3</td>
-      <td>Has high volunteering hours and wants to take on leadership roles.</td>
-      <td>Recognises high contribution and proposes roles as youth leader, mentor, or member of youth councils and national campaigns.</td>
-      <td>volunteers.ae, FYA, schools, Ma’an.</td>
-    </tr>
-    <tr>
-      <td>5.6</td>
-      <td class="subjourney">Risk &amp; support</td>
-      <td>P1–P3</td>
-      <td>Shows patterns such as NS dropout or repeated job rejections and may need support.</td>
-      <td>Offers wellbeing check‑ins and directs youth to support programmes rather than penalties, with clear privacy safeguards.</td>
-      <td>FCA, Ma’an, AD Police (awareness), health and mental health partners, schools.</td>
-    </tr>
-    <tr>
-      <td>5.7</td>
-      <td class="subjourney">Youth Record → external use</td>
-      <td>P2–P4</td>
-      <td>Needs to show history to employers, scholarship committees or visa processes.</td>
-      <td>Generates a sharable digital Youth Record summarising education, NS, volunteering, work and entrepreneurship achievements.</td>
-      <td>All data‑providing entities; visa and employer systems.</td>
-    </tr>
-  </table>
-</div>
+      <tr class="journey-row" data-stage="S1" data-entities="FCA">
+        <td>
+          <div class="moment-id">S1‑04</div>
+          <strong>Connect parent &amp; family view</strong><br/>
+          <span class="domain-pill">Family</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want my parents to <strong>understand</strong> my plan, without controlling it.”</li>
+            <li>Parent: “I want to see if my child is <strong>on track</strong>.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Youth shares a “family view link” with parent from TAMM Family Space.</li>
+            <li>Parent logs in and sees a simplified version of the Vision Board and key milestones.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Parent view card under Family space with traffic‑light view per domain (study, NS, work, money, wellbeing).</li>
+            <li>Micro‑prompts for parents: “Ask about X”, “Celebrate Y”.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+        </td>
+        <td>
+          <ul>
+            <li>% youth with at least one linked parent.</li>
+            <li>Usage of parent view (logins, screens viewed).</li>
+          </ul>
+        </td>
+      </tr>
 
-<div class="stage-block" id="stage-6">
-  <h2>Stage 6 – Ongoing Support &amp; Engagement</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Subjourney</th>
-      <th>Persona</th>
-      <th>Youth touchpoint</th>
-      <th>TAMM frontstage</th>
-      <th>Entities / systems</th>
-    </tr>
-    <tr>
-      <td>6.1</td>
-      <td class="subjourney">Continuous learning</td>
-      <td>P2–P4</td>
-      <td>Already working or studying and wants to keep learning.</td>
-      <td>Recommends relevant micro‑credentials, online courses and competitions, all linked back to their Youth Record.</td>
-      <td>ACTVET, universities, competition organisers, EdTech partners.</td>
-    </tr>
-    <tr>
-      <td>6.2</td>
-      <td class="subjourney">Volunteering &amp; community</td>
-      <td>P1–P4</td>
-      <td>Wants to stay active in community service.</td>
-      <td>Suggests long‑term volunteering roles, committees and community projects according to history and interests.</td>
-      <td>volunteers.ae, Ma’an, NGOs, FYA.</td>
-    </tr>
-    <tr>
-      <td>6.3</td>
-      <td class="subjourney">NS &amp; youth alumni networks</td>
-      <td>P2–P4</td>
-      <td>Wants to remain involved after NS or youth programmes.</td>
-      <td>Connects them to alumni networks, NS youth councils and national initiatives under a dedicated “Communities” section.</td>
-      <td>NSRA, FYA, Emirates Youth Council, Ma’an, employers.</td>
-    </tr>
-    <tr>
-      <td>6.4</td>
-      <td class="subjourney">Career progression</td>
-      <td>P2–P4</td>
-      <td>Has a job but wants to progress or change sector.</td>
-      <td>Provides career pathway suggestions, mentoring and targeted opportunities through Nafis/Tawteen and employer programmes.</td>
-      <td>ADS/Nafis, employers, ACTVET, universities, FYA.</td>
-    </tr>
-    <tr>
-      <td>6.5</td>
-      <td class="subjourney">Entrepreneurship growth</td>
-      <td>P3–P4</td>
-      <td>Has started a business and wants to grow or expand.</td>
-      <td>Shows growth‑stage services such as additional KFED support, export programmes and hiring incentives.</td>
-      <td>KFED, economic departments, banks, chambers of commerce.</td>
-    </tr>
-    <tr>
-      <td>6.6</td>
-      <td class="subjourney">Ongoing wellbeing &amp; safety</td>
-      <td>P1–P4</td>
-      <td>Needs ongoing support to stay safe, resilient and financially literate.</td>
-      <td>Runs continuous campaigns in the Youth feed around safety, mental health and financial literacy, triggered by key life moments.</td>
-      <td>AD Police, FCA, Ma’an, health / mental health partners, FYA.</td>
-    </tr>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S2 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S2</span>
+      <span class="stage-name">Discover &amp; Explore</span>
+    </div>
+    <div class="stage-sub">
+      Youth explores all rails: scholarships, TVET &amp; ACTVET, National Service, work &amp; Mawaheb, volunteering,
+      money &amp; Ghaya, wellbeing &amp; Active Hub, entrepreneurship &amp; KFED, FYA Youth Platform.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S2" data-entities="ADEK">
+        <td>
+          <div class="moment-id">S2‑01</div>
+          <strong>Explore study options &amp; scholarships</strong><br/>
+          <span class="domain-pill">Education</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Which universities and majors actually fit me?”</li>
+            <li>“Which ones are <strong>recognised</strong> and have scholarships?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Life after Grade 12” tile.</li>
+            <li>Uses simple filters: grades, field of interest, location (UAE / abroad).</li>
+            <li>Views recommended options and scholarship cards.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>3 rails layout: University, Police/Military Colleges, Study Abroad.</li>
+            <li>Shows <em>recognised</em> institutions list + “Scholarships you likely qualify for”.</li>
+            <li>Quick quiz: “Which learning style describes you most?” to refine suggestions.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">Universities</span>
+        </td>
+        <td>
+          <ul>
+            <li># youth exploring scholarship rail.</li>
+            <li>Clicks on each scholarship type (ADS, Khotwa, Rize, etc.).</li>
+            <li>Top majors saved to Vision Board.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="ACTVET">
+        <td>
+          <div class="moment-id">S2‑02</div>
+          <strong>Explore TVET &amp; ACTVET skills ecosystem</strong><br/>
+          <span class="domain-pill">TVET &amp; Skills</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want something <strong>hands‑on</strong>, not only theory.”</li>
+            <li>“What is Yes2Work, Skills Hub, Skills Camp, Emirates Skills, etc.?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Skills &amp; TVET” tile.</li>
+            <li>Reads about ACTVET institutes (ADVETI, FCHS, ATS) and private ATP/LTP providers.</li>
+            <li>Browses Yes2Work, Skills Hub, Skills Camp, Skills Show, Skills Challenge cards.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Visual map of vocational routes (school → ATS / ADVETI / FCHS → NAPO → NQC/MOHESR → jobs).</li>
+            <li>Micro‑explainers for each programme:
+              <ul>
+                <li><strong>Yes2Work</strong>: 10‑day paid retail work experience (2x/year, orientation, 8/10 days attendance → certificate on TAMM).</li>
+                <li><strong>Skills Hub / Camp</strong>: 150–300 training hours by skill; camps twice per year.</li>
+                <li><strong>Emirates Skills / Skills Challenge</strong>: national competitions, minimum training hours.</li>
+              </ul>
+            </li>
+            <li>Daily question: “Do you prefer building, fixing, serving, designing, or analysing?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">ADVETI</span>
+          <span class="entity-chip small">ATS / ATP / LTP</span>
+        </td>
+        <td>
+          <ul>
+            <li>Programme page views per youth.</li>
+            <li>Saved interest flags (Yes2Work, Skills Hub, Skills Camp, competitions).</li>
+            <li>Intended location preference (Abu Dhabi, Al Ain, Al Dhafra, Dubai, etc.).</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="NSRA,FYA">
+        <td>
+          <div class="moment-id">S2‑03</div>
+          <strong>Explore National Service &amp; advanced tracks</strong><br/>
+          <span class="domain-pill">National Service</span>
+        </td>
+        <td>
+          <ul>
+            <li>“What exactly happens in NS?”</li>
+            <li>“Are there tracks like tech, data, research?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “National Service” module.</li>
+            <li>Watches simple NS explainer (duration, obligations, L1–L3 levels, alternatives).</li>
+            <li>Reads about advanced tracks and career fair.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Timeline view from registration → training → specialised track → completion.</li>
+            <li>Cards for advanced programmes (e.g. data / research / teacher pipelines) with “Link to my Vision Board”.</li>
+            <li>Daily question: “When would you prefer to do NS – before study, during, or after?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li># eligible youth who complete NS awareness module.</li>
+            <li>Preferred timing (before / after study / unsure).</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="Mawaheb,Nafis">
+        <td>
+          <div class="moment-id">S2‑04</div>
+          <strong>Explore work, Mawaheb &amp; job platforms</strong><br/>
+          <span class="domain-pill">Work &amp; Employability</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Can I get a <strong>real job or internship</strong> while studying / after graduation?”</li>
+            <li>“Which job platforms should I actually care about?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Work &amp; First Job” area.</li>
+            <li>Creates or updates Mawaheb profile (CV, skills, preferred region).</li>
+            <li>Sees TAMM as main entry point, with clearly signposted links to Nafis and private portals (LinkedIn, etc.).</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Talent card: “You are an <strong>explorer / builder / helper / analyst</strong>; here are job families that fit.”</li>
+            <li>Shows aggregated jobs/internships from Mawaheb/TAMM + Nafis; highlights those matching youth’s skills and region.</li>
+            <li>Daily question: “What matters most in your first job – salary, learning, stability, impact, or flexibility?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Nafis</span>
+          <span class="entity-chip small">DGE</span>
+        </td>
+        <td>
+          <ul>
+            <li># youth with 100% complete Mawaheb profile.</li>
+            <li>Job families viewed vs. region.</li>
+            <li>Cross‑platform usage: TAMM only vs TAMM+Nafis vs TAMM+private sites.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="Volunteers.ae,Emirates Foundation,AD Police,ADCD">
+        <td>
+          <div class="moment-id">S2‑05</div>
+          <strong>Explore volunteering &amp; civic pathways</strong><br/>
+          <span class="domain-pill">Volunteering &amp; Civic</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want to <strong>volunteer</strong> and help, but I don’t know where to start.”</li>
+            <li>“Can this count as hours for school and my CV?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Volunteering &amp; Civic Role” tile.</li>
+            <li>Filters by cause (environment, sports, events, safety, community, youth councils), location and time.</li>
+            <li>Bookmarks opportunities for later.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Shows minimum 100 volunteering hours required for public/ATS graduation, and how to log them.</li>
+            <li>Highlights:
+              <ul>
+                <li>Volunteers.ae, Takatof, Sanid missions.</li>
+                <li>AD Police programmes (e.g. We Are All Police, youth safety campaigns).</li>
+                <li>ADCD/ADCDA community awareness &amp; safety volunteering.</li>
+              </ul>
+            </li>
+            <li>Daily question: “Which cause matters most to you right now?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">Emirates Foundation</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+        </td>
+        <td>
+          <ul>
+            <li># youth with at least one saved volunteering opportunity.</li>
+            <li>Causes by popularity.</li>
+            <li>Projected volunteering hours vs required minimum.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="Ma'an,Shory">
+        <td>
+          <div class="moment-id">S2‑06</div>
+          <strong>Explore money, Ghaya &amp; Shory</strong><br/>
+          <span class="domain-pill">Money &amp; Financial Literacy</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I don’t want to be broke after my first salary.”</li>
+            <li>“What is insurance and do I need it?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Money &amp; Saving” tile.</li>
+            <li>Sets a first rough saving goal (e.g. 10,000 AED in 18 months).</li>
+            <li>Opens Ghaya and Shory info cards.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Simple calculator: <em>If you save X per month → you reach your goal by Y</em>.</li>
+            <li>Ghaya programme card (financial literacy journey) linked to money goal.</li>
+            <li>Shory basics on insurance and future financial protection.</li>
+            <li>Daily question: “If you got 5,000 AED tomorrow, what’s the first thing you’d do?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">Ghaya</span>
+          <span class="entity-chip">Shory</span>
+        </td>
+        <td>
+          <ul>
+            <li># youth with an active saving goal.</li>
+            <li>Ghaya interest and registration.</li>
+            <li>Shory literacy content views.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="FCA,Ma'an,AD Police,ADCD">
+        <td>
+          <div class="moment-id">S2‑07</div>
+          <strong>Explore wellbeing, life skills &amp; prevention</strong><br/>
+          <span class="domain-pill">Wellbeing &amp; Life Skills</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want to feel okay mentally and physically.”</li>
+            <li>“I’m seeing things (drugs / bullying / online risks) and don’t know who to talk to.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Wellbeing &amp; Life Skills” tile.</li>
+            <li>Browses topics: stress, sleep, digital safety, relationships, substance abuse, bullying.</li>
+            <li>Sees Active Hub and life‑skills programmes.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Programme stack:
+              <ul>
+                <li>Life Skills Programme.</li>
+                <li>Ghaya (financial wellbeing) as part of overall wellbeing.</li>
+                <li>Active Hub for sports and activities.</li>
+                <li>Positive citizenship &amp; identity modules.</li>
+                <li>Mobile awareness / prevention of risky programmes.</li>
+                <li>“Mid‑way homes” for post‑rehab support where appropriate.</li>
+              </ul>
+            </li>
+            <li>Stress slider (1–5) as part of daily question loop.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+        </td>
+        <td>
+          <ul>
+            <li>Self‑reported stress levels.</li>
+            <li>Usage of life‑skills content and Active Hub.</li>
+            <li># referrals to support services.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S2" data-entities="KFED,FYA">
+        <td>
+          <div class="moment-id">S2‑08</div>
+          <strong>Explore entrepreneurship &amp; youth platform</strong><br/>
+          <span class="domain-pill">Entrepreneurship</span>
+          <span class="domain-pill">Youth Platform</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I’m curious about starting a business or side‑hustle.”</li>
+            <li>“I want to know how others my age did it.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Start a Business / Project” tile.</li>
+            <li>Sees stories from youth entrepreneurs and KFED programmes.</li>
+            <li>Checks events and opportunities through FYA Youth Platform.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Short explainer on:
+              <ul>
+                <li>KFED loans and grace periods.</li>
+                <li>Future Entrepreneur / Venturist style camps.</li>
+                <li>FYA hubs and events for youth founders.</li>
+              </ul>
+            </li>
+            <li>Daily question: “If you had a business, what would you sell or build?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">KFED</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Entrepreneurship interest flags.</li>
+            <li>Clicks on KFED and youth‑platform business content.</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S3 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S3</span>
+      <span class="stage-name">Decide &amp; Plan</span>
+    </div>
+    <div class="stage-sub">
+      Youth turns options into a realistic path: integrated plan across study, NS, TVET, work, volunteering,
+      money, entrepreneurship and wellbeing.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S3" data-entities="ADEK,ACTVET,NSRA,Mawaheb">
+        <td>
+          <div class="moment-id">S3‑01</div>
+          <strong>Choose integrated path scenario</strong><br/>
+          <span class="domain-pill">Path Planning</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I need a <strong>realistic plan</strong>, not 10 separate ideas.”</li>
+            <li>“How do NS, university, TVET and work fit together in time?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Starts “Plan my path” wizard.</li>
+            <li>Chooses first draft scenario: Study‑first, NS‑first, Work‑first, TVET‑first, or Mixed.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Shows timeline from now to age 23 with blocks for:
+              <ul>
+                <li>School completion.</li>
+                <li>NS timing.</li>
+                <li>University/TVET.</li>
+                <li>First job / entrepreneurship.</li>
+              </ul>
+            </li>
+            <li>Highlights feasibility checks (e.g. NS windows, scholarship deadlines, TVET intakes).</li>
+            <li>Daily question: “What is your biggest worry about this plan?”</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">Mawaheb</span>
+        </td>
+        <td>
+          <ul>
+            <li>Distribution of chosen scenarios by segment (school type, gender, region).</li>
+            <li>NS timing choice vs. scholarship and TVET interest.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S3" data-entities="ADEK,ACTVET,NSRA,Mawaheb,Ma'an,KFED,Volunteers.ae,AD Police,ADCD,Nafis,Shory,FCA,FYA">
+        <td>
+          <div class="moment-id">S3‑02</div>
+          <strong>Link Vision Board goals to concrete actions</strong><br/>
+          <span class="domain-pill">Vision Board</span>
+        </td>
+        <td>
+          <ul>
+            <li>“For each goal, tell me <strong>what to actually do</strong> this year.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “Align my Vision Board”.</li>
+            <li>For each goal, chooses 1–3 programmes, events or tasks from suggestions.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Vision Board tiles expand into:
+              <ul>
+                <li>Study goal → ADEK scholarships, university fairs, FYA knowledge pages.</li>
+                <li>NS goal → NS awareness, registration window, advanced tracks.</li>
+                <li>Work goal → Mawaheb onboarding, job families, internships.</li>
+                <li>Money goal → Ghaya cohort, saving challenge, Shory literacy.</li>
+                <li>Volunteer goal → Volunteers.ae, AD Police / ADCD awareness events.</li>
+                <li>Business goal → KFED pre‑screen, entrepreneurship camps.</li>
+              </ul>
+            </li>
+            <li>Gamification: XP streak for completing at least one action per goal per month.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">Ghaya</span>
+          <span class="entity-chip">Shory</span>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+          <span class="entity-chip">KFED</span>
+          <span class="entity-chip">Nafis</span>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>% goals that have at least one attached initiative.</li>
+            <li>Average # actions per goal.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S3" data-entities="ACTVET">
+        <td>
+          <div class="moment-id">S3‑03</div>
+          <strong>Plan TVET / Yes2Work / Skills route</strong><br/>
+          <span class="domain-pill">TVET &amp; Skills</span>
+        </td>
+        <td>
+          <ul>
+            <li>“If I choose TVET / retail / skills, what’s my <strong>path</strong> to a good job?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Confirms intention to join:
+              <ul>
+                <li>Yes2Work (timing: summer/winter, location, store type).</li>
+                <li>Skills Hub or Skills Camp (skill and site selection).</li>
+                <li>Emirates Skills competition (for advanced youth).</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Generates a mini‑plan:
+              <ul>
+                <li>This year: Yes2Work session + Skills Camp.</li>
+                <li>Next year: Skills Hub extended training.</li>
+                <li>Later: Emirates Skills competition and employer pipeline.</li>
+              </ul>
+            </li>
+            <li>Shows recognition of prior learning into ADVETI diploma if they continue.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li># youth who commit to at least one ACTVET skills programme.</li>
+            <li>Planned training hours per youth.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S3" data-entities="Ma'an,Shory">
+        <td>
+          <div class="moment-id">S3‑04</div>
+          <strong>Money &amp; savings plan (Ghaya &amp; Shory)</strong><br/>
+          <span class="domain-pill">Money</span>
+        </td>
+        <td>
+          <ul>
+            <li>“What is a <strong>realistic</strong> savings plan for me?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Sets monthly saving amount and target date.</li>
+            <li>Opts in to a Ghaya group or cohort if available.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Ghaya modules mapped against Vision Board money goal.</li>
+            <li>Optional nudges on insurance literacy and risk via Shory cards.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">Ghaya</span>
+          <span class="entity-chip">Shory</span>
+        </td>
+        <td>
+          <ul>
+            <li>Average saving target vs. age and employment status.</li>
+            <li>Ghaya participation vs. goal completion.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S3" data-entities="Volunteers.ae,AD Police,ADCD,Emirates Foundation">
+        <td>
+          <div class="moment-id">S3‑05</div>
+          <strong>Volunteer &amp; civic plan</strong><br/>
+          <span class="domain-pill">Volunteering</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I need a plan to complete my required hours and do things that <strong>matter</strong> to me.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Sets volunteering hours target and deadline.</li>
+            <li>Bookmarks 3–5 opportunities across the year.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Calendar view showing volunteering slots for the year (school, weekends, holidays).</li>
+            <li>Shows how hours connect to:
+              <ul>
+                <li>Graduation requirement.</li>
+                <li>CV &amp; Mawaheb profile (experience + skills).</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">Emirates Foundation</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+        </td>
+        <td>
+          <ul>
+            <li>Target volunteering hours by cohort.</li>
+            <li># youth whose target meets or exceeds required 100 hours.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S3" data-entities="KFED,FYA">
+        <td>
+          <div class="moment-id">S3‑06</div>
+          <strong>Entrepreneurship readiness &amp; plan</strong><br/>
+          <span class="domain-pill">Entrepreneurship</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Am I really ready to start a business, or should I wait?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Completes entrepreneurship readiness quiz.</li>
+            <li>Chooses between “explore &amp; learn” or “prepare to apply to KFED”.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Readiness score with personalised suggestions:
+              <ul>
+                <li>If low → courses, FYA hub events, Future Entrepreneur‑style programmes.</li>
+                <li>If high → KFED consultation booking, feasibility study template.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">KFED</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Readiness distribution (e.g. “explorers”, “experimenters”, “launch‑ready”).</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S4 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S4</span>
+      <span class="stage-name">Apply</span>
+    </div>
+    <div class="stage-sub">
+      Unified “Apply” shell across education, NS, TVET, jobs, volunteering, Ghaya, entrepreneurship, ACTVET skills programmes.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S4" data-entities="ADEK,ACTVET,NSRA,Mawaheb,Volunteers.ae,Ma'an,KFED,Nafis">
+        <td>
+          <div class="moment-id">S4‑01</div>
+          <strong>Multi‑rail applications through one shell</strong><br/>
+          <span class="domain-pill">Apply – All Rails</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I don’t want to fill the same data in 10 forms.”</li>
+            <li>“Please tell me if I’m <strong>missing documents</strong> before I submit.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Uses a unified “Apply” flow in Coming of Age.</li>
+            <li>Submits applications for:
+              <ul>
+                <li>Scholarships / universities.</li>
+                <li>TVET / ACTVET programmes.</li>
+                <li>NS registration.</li>
+                <li>Jobs / internships via Mawaheb/TAMM &amp; Nafis.</li>
+                <li>Volunteering events.</li>
+                <li>Ghaya cohort / other Ma’an programmes.</li>
+                <li>KFED entrepreneurship funding or training.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Single data pack re‑used across applications (identity, education, CV, contact details).</li>
+            <li>Pre‑submission checklist per rail (e.g. Emsat / IELTS, NS medical, documents for KFED, etc.).</li>
+            <li>Vision Board steps move from “Planned” to “In progress”.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Nafis</span>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">KFED</span>
+        </td>
+        <td>
+          <ul>
+            <li>Applications started vs submitted per rail.</li>
+            <li>Drop‑off points in the generic shell (by field or step).</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S4" data-entities="ACTVET">
+        <td>
+          <div class="moment-id">S4‑02</div>
+          <strong>Apply for Yes2Work, Skills Hub, Skills Camp, competitions</strong><br/>
+          <span class="domain-pill">TVET &amp; Skills</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Make it easy to join skills programmes without lost forms and emails.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Submits Yes2Work application (selects location, store type, preferred period).</li>
+            <li>Applies to Skills Hub/Camp with preferred skill and site.</li>
+            <li>Registers interest for Emirates Skills / Skills Challenge.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Checks for missing documents (e.g. ID, school letter, consent) before submission.</li>
+            <li>Confirms minimum attendance commitments (e.g. 8/10 days for Yes2Work).</li>
+            <li>Shows potential recognition of prior learning into diplomas.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li>Applicants per programme, per region.</li>
+            <li>Acceptance / waiting‑list status by cohort.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S4" data-entities="FYA">
+        <td>
+          <div class="moment-id">S4‑03</div>
+          <strong>Apply for youth platform events &amp; councils</strong><br/>
+          <span class="domain-pill">Youth Platform</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want to join events, circles, programmes (not just services).”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Registers for youth events, circles, trainings and competitions via FYA Youth Platform layer.</li>
+            <li>Applies to youth councils or specific programmes where eligible.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Embedded events widget that:
+              <ul>
+                <li>Shows events by topic (career, wellbeing, business, identity, etc.).</li>
+                <li>One‑click registration and calendar integration.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Applications per event / circle / council.</li>
+            <li>No‑show vs attendance rate via QR check‑in.</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S5 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S5</span>
+      <span class="stage-name">Participate &amp; Track</span>
+    </div>
+    <div class="stage-sub">
+      Youth participates in programmes and sees everything in one “My Journey” view – education, NS, TVET, work,
+      volunteering, money, wellbeing, business.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S5" data-entities="FCA,DGE">
+        <td>
+          <div class="moment-id">S5‑01</div>
+          <strong>See one view of progress (“My Journey”)</strong><br/>
+          <span class="domain-pill">Cross‑journey</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Show me everything I’m doing in one place.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens “My Journey” dashboard.</li>
+            <li>Checks applications, statuses and completions across domains.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Timeline from S1 to S7 with coloured bands for each domain.</li>
+            <li>Tiles for:
+              <ul>
+                <li>Education / TVET.</li>
+                <li>NS.</li>
+                <li>Jobs / Mawaheb / Nafis.</li>
+                <li>Volunteering.</li>
+                <li>Money &amp; Ghaya.</li>
+                <li>Business &amp; KFED.</li>
+                <li>Life skills &amp; wellbeing.</li>
+              </ul>
+            </li>
+            <li>XP / level panel with current tier and next rewards.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">DGE</span>
+        </td>
+        <td>
+          <ul>
+            <li>Engagement by domain (which tiles are “active”).</li>
+            <li>Overall completion index per youth.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S5" data-entities="ADEK,ACTVET">
+        <td>
+          <div class="moment-id">S5‑02</div>
+          <strong>Participate in education / TVET</strong><br/>
+          <span class="domain-pill">Education &amp; TVET</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Is my study / TVET pathway on track?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Checks scholarship and university / TVET enrolment status.</li>
+            <li>Tracks attendance / performance indicators if available.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Study tile shows:
+              <ul>
+                <li>Where youth is enrolled.</li>
+                <li>Key milestones: semester completion, graduation date.</li>
+              </ul>
+            </li>
+            <li>TVET tile shows diploma progress and any micro‑credentials from ACTVET programmes.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li>Retention and completion rates by route (university vs TVET).</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S5" data-entities="ACTVET">
+        <td>
+          <div class="moment-id">S5‑03</div>
+          <strong>Participate in Yes2Work &amp; skills programmes</strong><br/>
+          <span class="domain-pill">TVET &amp; Skills</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Am I completing my Yes2Work / Skills Hub / Skills Camp journey?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Checks attendance days and training hours.</li>
+            <li>Views feedback from supervisors.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Tile summarises:
+              <ul>
+                <li>Days attended vs required (for Yes2Work).</li>
+                <li>Training hours achieved (for Skills Hub / Camp).</li>
+                <li>Competition participation and results (Skills Challenge / Emirates Skills).</li>
+              </ul>
+            </li>
+            <li>Shows when certificate will be issued to TAMM.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li>Completion rates per programme.</li>
+            <li>Regional distribution of participation.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S5" data-entities="Mawaheb,Nafis">
+        <td>
+          <div class="moment-id">S5‑04</div>
+          <strong>Participate in job search via Mawaheb &amp; Nafis</strong><br/>
+          <span class="domain-pill">Work &amp; Employability</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Who is actually looking at my CV?”</li>
+            <li>“How close am I to a job offer?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Checks:
+              <ul>
+                <li>Applications and statuses.</li>
+                <li>Interviews scheduled.</li>
+                <li>Upskilling sessions recommended by Mawaheb coaches.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Mawaheb tile shows:
+              <ul>
+                <li>Profile completeness (must be 100%).</li>
+                <li>Number of job families matched.</li>
+                <li>Interactions with employment coach.</li>
+              </ul>
+            </li>
+            <li>Displays reasons for rejection where provided and recommended next actions.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Nafis</span>
+        </td>
+        <td>
+          <ul>
+            <li>Job seekers onboarded to Mawaheb by age.</li>
+            <li># placed into jobs vs total active job seekers.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S5" data-entities="Volunteers.ae,Emirates Foundation,AD Police,ADCD">
+        <td>
+          <div class="moment-id">S5‑05</div>
+          <strong>Participate in volunteering / civic &amp; log hours</strong><br/>
+          <span class="domain-pill">Volunteering</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Am I hitting my volunteering hour target?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Completes events and confirms attendance via QR or check‑in.</li>
+            <li>Downloads volunteering certificates when needed.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Volunteer tile shows:
+              <ul>
+                <li>Total hours logged vs target.</li>
+                <li>Breakdown by cause / provider (Volunteers.ae, Emirate Foundation, AD Police, ADCD, etc.).</li>
+              </ul>
+            </li>
+            <li>Links hours to CV and possible NS / job benefits where relevant.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Volunteers.ae</span>
+          <span class="entity-chip">Emirates Foundation</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+        </td>
+        <td>
+          <ul>
+            <li>Average hours per youth.</li>
+            <li>Completion of mandatory thresholds.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S5" data-entities="Ma'an,Shory,KFED">
+        <td>
+          <div class="moment-id">S5‑06</div>
+          <strong>Track money &amp; business progress</strong><br/>
+          <span class="domain-pill">Money</span>
+          <span class="domain-pill">Entrepreneurship</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Is my saving and my business idea moving forward?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Updates savings progress monthly.</li>
+            <li>Checks KFED application status and tasks (e.g., feasibility, licences).</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Money tile:
+              <ul>
+                <li>Shows savings progress, Ghaya module completion.</li>
+                <li>Highlights any upcoming financial commitments (e.g. NS, study abroad costs).</li>
+              </ul>
+            </li>
+            <li>Business tile:
+              <ul>
+                <li>Shows KFED stage (screening, mentoring, funding, repayment).</li>
+                <li>Reminds of mentorship and training sessions.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">Ghaya</span>
+          <span class="entity-chip">Shory</span>
+          <span class="entity-chip">KFED</span>
+        </td>
+        <td>
+          <ul>
+            <li>Ghaya completion vs savings goal achievement.</li>
+            <li># youth projects supported through KFED vs applied.</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S6 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S6</span>
+      <span class="stage-name">Transition &amp; Next Steps</span>
+    </div>
+    <div class="stage-sub">
+      Transitions after school, NS, TVET, study abroad, unemployment, or crisis – ensuring nobody “falls between systems”.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S6" data-entities="ADEK,ACTVET,NSRA,Mawaheb">
+        <td>
+          <div class="moment-id">S6‑01</div>
+          <strong>School / NS / Graduation transitions</strong><br/>
+          <span class="domain-pill">Transitions</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I finished school / NS / university – what now?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Responds to “You graduated / completed NS” prompts.</li>
+            <li>Chooses preferred next step: further study, work, business, or a mixed path.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Trigger‑based flows:
+              <ul>
+                <li>School graduation → highlight study / NS / TVET / work options.</li>
+                <li>NS completion → show work, study and entrepreneurship routes, including recognition of NS skills.</li>
+              </ul>
+            </li>
+            <li>Vision Board auto‑updates: mark completed goals and propose new ones.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">Mawaheb</span>
+        </td>
+        <td>
+          <ul>
+            <li>Time from graduation/NS completion to next programme or job.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S6" data-entities="ADEK">
+        <td>
+          <div class="moment-id">S6‑02</div>
+          <strong>Return from study abroad</strong><br/>
+          <span class="domain-pill">Study Abroad</span>
+        </td>
+        <td>
+          <ul>
+            <li>“How do I convert my foreign degree into something recognised here and get a job?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Initiates “Return from study abroad” flow.</li>
+            <li>Uploads or confirms degree information.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Guided steps: attestation / equivalency → linking to Mawaheb / Nafis → relevant job families.</li>
+            <li>Shows what should happen by which date after return.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ADEK</span>
+        </td>
+        <td>
+          <ul>
+            <li>Average time from degree completion to equivalency and first job offer.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S6" data-entities="ACTVET">
+        <td>
+          <div class="moment-id">S6‑03</div>
+          <strong>ACTVET graduation → NAPO / NQC / MOHESR → jobs</strong><br/>
+          <span class="domain-pill">TVET Transition</span>
+        </td>
+        <td>
+          <ul>
+            <li>“What happens to my diploma after I finish ACTVET?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Triggers completion in ACTVET system → followed by attestation / registration steps.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Status tracker for:
+              <ul>
+                <li>NAPO / ADETI registration.</li>
+                <li>NQC attestation.</li>
+                <li>MOHESR recognition.</li>
+                <li>Notification to TAMM / TAWJIH about jobs.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li>Throughput time across the TVET recognition chain.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S6" data-entities="Mawaheb,Nafis">
+        <td>
+          <div class="moment-id">S6‑04</div>
+          <strong>Unemployed for a long time – intensify support</strong><br/>
+          <span class="domain-pill">Work &amp; Employability</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I’ve been job‑seeking for months – what else can I do?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Receives proactive nudge from Mawaheb / TAMM for deeper support.</li>
+            <li>Books session with employment coach.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Shows:
+              <ul>
+                <li>How long they’ve been searching.</li>
+                <li>Which jobs they’ve been rejected from and why (if available).</li>
+              </ul>
+            </li>
+            <li>Triggers tailored upskilling, mentoring, or re‑orientation (e.g., different job family).</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Mawaheb</span>
+          <span class="entity-chip">Nafis</span>
+        </td>
+        <td>
+          <ul>
+            <li>Number of “stuck” youth and % moved to jobs after intensified support.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S6" data-entities="Ma'an,FCA,AD Police,ADCD">
+        <td>
+          <div class="moment-id">S6‑05</div>
+          <strong>Crisis or risk – route back on track</strong><br/>
+          <span class="domain-pill">Wellbeing &amp; Safety</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Something serious happened (legal, addiction, mental‑health) – how do I get help and not be stuck forever?”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Uses “Need urgent help” button.</li>
+            <li>Gets options for safe contact and support.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Shows:
+              <ul>
+                <li>Anonymous helplines and chat.</li>
+                <li>Ma’an / FCA support programmes.</li>
+                <li>Police / civil defence channels for immediate risk.</li>
+                <li>Information on transitional homes / post‑rehab support where relevant.</li>
+              </ul>
+            </li>
+            <li>Removes gamification for crisis flows (focus on safety, not XP).</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">Ma'an</span>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">AD Police</span>
+          <span class="entity-chip">ADCD</span>
+        </td>
+        <td>
+          <ul>
+            <li># crisis journeys initiated and resolved.</li>
+            <li>Time to first human contact.</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== S7 ========== -->
+  <div class="stage-card">
+    <div class="stage-title">
+      <span class="stage-tag">S7</span>
+      <span class="stage-name">Ongoing Support &amp; Engagement</span>
+    </div>
+    <div class="stage-sub">
+      Daily micro‑loop, XP &amp; tiers, rewards, communities, alumni, parent view – all powered by TAMM + FYA + entities.
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Moment / Domain</th>
+        <th>Youth Need</th>
+        <th>Youth Action</th>
+        <th>TAMM &amp; Vision Board &amp; Gamification</th>
+        <th>Entities &amp; Initiatives</th>
+        <th>Data &amp; KPIs</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr class="journey-row" data-stage="S7" data-entities="FCA,DGE,FYA">
+        <td>
+          <div class="moment-id">S7‑01</div>
+          <strong>Daily loop, XP &amp; small wins</strong><br/>
+          <span class="domain-pill">Engagement</span>
+        </td>
+        <td>
+          <ul>
+            <li>“Each time I open TAMM, I want something small but useful.”</li>
+            <li>“I want to see my points and rewards.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Opens TAMM; gets context‑aware daily question or micro‑task.</li>
+            <li>Checks XP, tier and rewards catalogue.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Daily engine pulling from all domains (one micro‑task per day:
+              <ul>
+                <li>Confirm something (e.g., “Did you attend your NS session today?”).</li>
+                <li>Learn something (short tip or question).</li>
+                <li>Act on something (e.g., “Bookmark 1 volunteering opportunity”).</li>
+              </ul>
+            </li>
+            <li>XP &amp; tier system visible in profile; integrated with FYA Youth Platform gamification.</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+          <span class="entity-chip">DGE</span>
+          <span class="entity-chip">FYA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Daily active youth.</li>
+            <li>Daily task completion rate.</li>
+            <li>XP distribution across tiers.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S7" data-entities="KFED,Ma'an">
+        <td>
+          <div class="moment-id">S7‑02</div>
+          <strong>Ongoing entrepreneurship support</strong><br/>
+          <span class="domain-pill">Entrepreneurship</span>
+        </td>
+        <td>
+          <ul>
+            <li>“After I launch, I still need help to grow.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Receives nudges about:
+              <ul>
+                <li>Business events, exhibitions, competitions.</li>
+                <li>Mentoring sessions.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Business owner view:
+              <ul>
+                <li>Current KFED loan status and milestones.</li>
+                <li>Workshops and exhibitions relevant to their sector.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">KFED</span>
+          <span class="entity-chip">Ma'an</span>
+        </td>
+        <td>
+          <ul>
+            <li>Retention of youth‑led businesses over time.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S7" data-entities="FYA,NSRA,ADEK,ACTVET">
+        <td>
+          <div class="moment-id">S7‑03</div>
+          <strong>Alumni, councils &amp; role‑model loop</strong><br/>
+          <span class="domain-pill">Community &amp; Identity</span>
+        </td>
+        <td>
+          <ul>
+            <li>“I want to stay connected and maybe become a <strong>role‑model</strong> for others.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Joins alumni community for:
+              <ul>
+                <li>NS graduates.</li>
+                <li>Scholarship alumni.</li>
+                <li>ACTVET / Yes2Work / Skills alumni.</li>
+              </ul>
+            </li>
+            <li>Applies for youth councils or mentorship roles.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Community spaces (digital) linked to FYA platform and entity‑specific alumni initiatives.</li>
+            <li>Gamified recognition for mentoring and community contributions (badges, features).</li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FYA</span>
+          <span class="entity-chip">NSRA</span>
+          <span class="entity-chip">ADEK</span>
+          <span class="entity-chip">ACTVET</span>
+        </td>
+        <td>
+          <ul>
+            <li># alumni in each community.</li>
+            <li>Mentoring relationships formed and sustained.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="journey-row" data-stage="S7" data-entities="FCA">
+        <td>
+          <div class="moment-id">S7‑04</div>
+          <strong>Parent &amp; family understanding (long‑term)</strong><br/>
+          <span class="domain-pill">Family</span>
+        </td>
+        <td>
+          <ul>
+            <li>Parent: “I want to know if my son/daughter is okay and on a good path.”</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Parents occasionally open Family view, especially around big milestones.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Parent view shows:
+              <ul>
+                <li>Overall status per domain.</li>
+                <li>Upcoming milestones.</li>
+                <li>Suggestions for constructive support.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span class="entity-chip">FCA</span>
+        </td>
+        <td>
+          <ul>
+            <li>Parent engagement over time (logins, viewed sections).</li>
+          </ul>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div> <!-- /board-shell -->
+
+<script>
+  function filterByEntity(entity) {
+    const rows = document.querySelectorAll('.journey-row');
+
+    rows.forEach(row => {
+      // Reset state if no entity selected
+      if (!entity) {
+        row.classList.remove('highlight');
+        row.classList.remove('dimmed');
+        return;
+      }
+
+      const list = (row.dataset.entities || "")
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      if (list.includes(entity)) {
+        row.classList.add('highlight');
+        row.classList.remove('dimmed');
+      } else {
+        row.classList.remove('highlight');
+        row.classList.add('dimmed');
+      }
+    });
+  }
+</script>
 
 </body>
 </html>

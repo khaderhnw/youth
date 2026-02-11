@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Coming of Age – Initiatives & Programmes Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --shell-bg: #ffffff;
+      --board-bg: #f9fafb;
+      --text-main: #020617;
+      --text-soft: #6b7280;
+      --accent: #0ea5e9;
+      --accent-soft: rgba(14,165,233,0.08);
+      --border: #e5e7eb;
+      --danger: #f97373;
+      --success: #22c55e;
+
+      --sticky-cross: #fef9c3;
+      --sticky-edu: #fee2e2;
+      --sticky-ns: #e0f2fe;
+      --sticky-work: #dcfce7;
+      --sticky-vol: #e0f2fe;
+      --sticky-money: #fef3c7;
+      --sticky-wellbeing: #fae8ff;
+      --sticky-entre: #ede9fe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #dbeafe 0, #f5f5f7 40%, #e5e7eb 100%);
+      color: var(--text-main);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 960px;
+      margin-bottom: 16px;
+    }
+
+    .page-shell {
+      background: rgba(255,255,255,0.96);
+      border-radius: 20px;
+      padding: 18px 20px 24px;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.15);
+      border: 1px solid rgba(148,163,184,0.25);
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    /* FILTERS */
+
+    .filter-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-soft);
+    }
+
+    .filter-select {
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      outline: none;
+    }
+
+    .filter-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 10px;
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .clear-btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* KPI CARDS */
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: var(--board-bg);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .kpi-value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .kpi-meta {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    /* PROGRAM GRID */
+
+    .program-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: var(--board-bg);
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .program-card {
+      width: 280px;
+      min-height: 200px;
+      border-radius: 12px;
+      padding: 10px 12px 12px;
+      border: 1px solid rgba(15,23,42,0.09);
+      box-shadow: 0 8px 15px rgba(15,23,42,0.15);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* domain background tint on header only */
+    .program-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      margin: -4px -4px 4px;
+    }
+
+    .ph-cross { background: rgba(250,250,210,0.9); }
+    .ph-edu { background: rgba(254,226,226,0.9); }
+    .ph-ns { background: rgba(219,234,254,0.9); }
+    .ph-work { background: rgba(220,252,231,0.9); }
+    .ph-vol { background: rgba(219,234,254,0.9); }
+    .ph-money { background: rgba(254,243,199,0.9); }
+    .ph-wellbeing { background: rgba(250,232,255,0.9); }
+    .ph-entre { background: rgba(237,233,254,0.9); }
+
+    .program-title {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .program-entity {
+      font-size: 10px;
+      color: #4b5563;
+    }
+
+    .stage-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 2px;
+    }
+
+    .stage-chip {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.2);
+      background: rgba(255,255,255,0.85);
+    }
+
+    .domain-chip {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px dashed rgba(51,65,85,0.6);
+      margin-top: 2px;
+      display: inline-block;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 2px;
+    }
+
+    .tag {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #ffffff;
+    }
+
+    .tag-gap {
+      border-color: rgba(248,113,113,0.9);
+      background: rgba(254,242,242,0.9);
+      color: #b91c1c;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .mini-list {
+      padding-left: 12px;
+      margin: 2px 0 4px;
+    }
+
+    .mini-list li {
+      margin: 0;
+    }
+
+    .kpi-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      font-size: 9px;
+    }
+
+    .kpi-badge {
+      padding: 2px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #f9fafb;
+    }
+
+    .kpi-badge.core {
+      border-color: rgba(34,197,94,0.9);
+      background: rgba(220,252,231,0.9);
+    }
+
+    @media (max-width: 1100px) {
+      .filter-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .program-card {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .filter-bar {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      .kpi-row {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-shell">
+  <header>
+    <h1>Coming of Age – Initiatives &amp; Programmes Dashboard</h1>
+    <p class="subtitle">
+      Each card represents a <strong>programme or initiative cluster</strong> from the ecosystem (ADEK, ACTVET, NSRA,
+      Ma’an, Mawaheb, Volunteers.ae, Ghaya, Shory, KFED, etc.).<br>
+      Use the filters to see where a partner plays in the <strong>16–23 Coming of Age life moment</strong>,
+      what the current <strong>challenges/gaps</strong> are, and how the <strong>TO‑BE design</strong> addresses them.
+    </p>
+  </header>
+
+  <!-- FILTERS -->
+  <section class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Domain</span>
+      <select id="filter-domain" class="filter-select">
+        <option value="all">All domains</option>
+        <option value="cross-journey">Cross-journey</option>
+        <option value="education-skills">Education &amp; Skills</option>
+        <option value="national-service">National Service</option>
+        <option value="work-employability">Work &amp; Employability</option>
+        <option value="volunteering-civic">Volunteering &amp; Civic</option>
+        <option value="money-insurance">Money &amp; Insurance</option>
+        <option value="wellbeing-family">Wellbeing &amp; Family Support</option>
+        <option value="entrepreneurship">Entrepreneurship</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Entity</span>
+      <select id="filter-entity" class="filter-select">
+        <option value="all">All entities</option>
+        <option value="fca">FCA</option>
+        <option value="dge">DGE / TAMM</option>
+        <option value="youth-platform">Youth Platform / Coming of Age</option>
+        <option value="adek">ADEK</option>
+        <option value="adek-scholarships">ADEK – ADS / Khotwa / Rize</option>
+        <option value="actvet">ACTVET</option>
+        <option value="emiratesskills">EmiratesSkills / Skills Challenge</option>
+        <option value="y2w">Y2W / YES2WORK</option>
+        <option value="nsra">NSRA</option>
+        <option value="mawaheb">Mawaheb Talent Hub</option>
+        <option value="train-for-work">Train for Work</option>
+        <option value="nafis">Nafis</option>
+        <option value="volae">VOLAE / Volunteers.ae</option>
+        <option value="takatof">Takatof</option>
+        <option value="sanid">Sanid</option>
+        <option value="ad-police">AD Police / We Are All Police</option>
+        <option value="adcd">ADCD</option>
+        <option value="maan">Ma’an</option>
+        <option value="ghaya">Ma’an – Ghaya</option>
+        <option value="maan-msi">Ma’an Social Incubator</option>
+        <option value="shory">Shory Insurance</option>
+        <option value="kfed">KFED</option>
+        <option value="health">Health sector / DOH</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Stage (S1–S7)</span>
+      <select id="filter-stage" class="filter-select">
+        <option value="all">All stages</option>
+        <option value="S1">S1 – Onboard</option>
+        <option value="S2">S2 – Discover</option>
+        <option value="S3">S3 – Decide &amp; Plan</option>
+        <option value="S4">S4 – Apply</option>
+        <option value="S5">S5 – Participate</option>
+        <option value="S6">S6 – Transition</option>
+        <option value="S7">S7 – Ongoing</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Challenge / Gap</span>
+      <select id="filter-challenge" class="filter-select">
+        <option value="all">All challenges</option>
+        <option value="awareness">Low awareness</option>
+        <option value="access-ux">Fragmented access / UX</option>
+        <option value="data-sharing">Data &amp; integration gaps</option>
+        <option value="parent-view">Parent visibility</option>
+        <option value="risk-support">Risk &amp; support</option>
+        <option value="transition">Transitions / handover</option>
+        <option value="overlap">Programme overlap</option>
+      </select>
+    </div>
+  </section>
+
+  <div class="filter-bottom-row">
+    <div class="chips-row">
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-cross);"></span> Cross-journey
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-edu);"></span> Education &amp; Skills
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-ns);"></span> NS
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-work);"></span> Work
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-vol);"></span> Volunteering
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-money);"></span> Money &amp; Insurance
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-wellbeing);"></span> Wellbeing
+      </span>
+      <span class="legend-chip">
+        <span class="legend-swatch" style="background: var(--sticky-entre);"></span> Entrepreneurship
+      </span>
+    </div>
+
+    <button id="clear-filters" class="clear-btn" type="button">
+      <span>⟳</span> Clear filters
+    </button>
+  </div>
+
+  <!-- KPI CARDS -->
+  <section class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Total initiatives mapped</div>
+      <div class="kpi-value">18</div>
+      <div class="kpi-meta">Clusters covering all domains &amp; entities</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Domains covered</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-meta">Education, NS, Work, Volunteering, Money, Wellbeing, Entrepreneurship</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Key gaps addressed</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-meta">Awareness, access, data, parents, risk, transitions, overlap</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">S1–S7 coverage</div>
+      <div class="kpi-value">Full</div>
+      <div class="kpi-meta">Every programme positioned along the life moment stages</div>
+    </div>
+  </section>
+
+  <!-- PROGRAM CARDS -->
+  <section class="program-grid">
+
+    <!-- CROSS-JOURNEY: YOUTH PLATFORM / COMING OF AGE -->
+    <article
+      class="program-card"
+      data-domain="cross-journey"
+      data-entity="fca dge youth-platform"
+      data-stage="S1 S2 S3 S4 S5 S6 S7"
+      data-challenges="awareness access-ux data-sharing parent-view risk-support transition overlap">
+      <div class="program-header ph-cross">
+        <div>
+          <div class="program-title">Coming of Age / Youth Platform</div>
+          <div class="program-entity">FCA + DGE / TAMM – Family Space</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S1–S7</span>
+          </div>
+        </div>
+        <span class="domain-chip">Cross-journey spine</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Fragmented journeys</span>
+        <span class="tag tag-gap">Data silo</span>
+        <span class="tag">Vision Board</span>
+        <span class="tag">Micro-tasks &amp; XP</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Single entry point for 16–23 life moment in TAMM Family Space.</li>
+        <li>Hosts Vision Board, Youth 360 profile, unified Apply shell and Youth Record.</li>
+        <li>Daily micro-tasks, XP, parent view and FCA/entity dashboards.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth journeys and data split across many portals with no single story.</li>
+        <li>Parents and entities see only fragments of youth progress.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Every programme plugs into a common spine (S1–S7) and shared data model.</li>
+        <li>Dashboards show how all initiatives contribute to outcomes across the life moment.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Onboarded youth</span>
+        <span class="kpi-badge">Vision Boards created</span>
+        <span class="kpi-badge">Daily active youth</span>
+      </div>
+    </article>
+
+    <!-- ADEK SCHOLARSHIPS (ADS / KHOTWA / RIZE) -->
+    <article
+      class="program-card"
+      data-domain="education-skills"
+      data-entity="adek adek-scholarships"
+      data-stage="S2 S3 S4 S5 S6"
+      data-challenges="awareness access-ux data-sharing transition">
+      <div class="program-header ph-edu">
+        <div>
+          <div class="program-title">ADEK Scholarships (ADS, Khotwa, Rize)</div>
+          <div class="program-entity">ADEK – Education &amp; Knowledge</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Decide</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Education &amp; Skills</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Low awareness</span>
+        <span class="tag tag-gap">Eligibility confusion</span>
+        <span class="tag">Unified catalogue</span>
+        <span class="tag">NS coordination</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Abu Dhabi Scholarships (ADS), Khotwa and Rize study support &amp; bridging programmes.</li>
+        <li>Fund and prepare youth for local &amp; international higher education.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth discover ADS/Khotwa/Rize unevenly via schools, social media, word of mouth.</li>
+        <li>Eligibility and test/document requirements can be unclear and spread across sites.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Scholarships surfaced in Coming of Age as personalised “for you” cards with eligibility badges.</li>
+        <li>Unified apply shell and NS timing coordination via Vision Board path planning.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Eligible youth reached</span>
+        <span class="kpi-badge">Applications started / submitted</span>
+        <span class="kpi-badge">Offer acceptance rate</span>
+      </div>
+    </article>
+
+    <!-- ACTVET TVET PROGRAMMES -->
+    <article
+      class="program-card"
+      data-domain="education-skills"
+      data-entity="actvet y2w"
+      data-stage="S2 S3 S4 S5"
+      data-challenges="awareness access-ux transition">
+      <div class="program-header ph-edu">
+        <div>
+          <div class="program-title">ACTVET TVET Programmes</div>
+          <div class="program-entity">ACTVET – TVET &amp; applied education</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Decide</span>
+            <span class="stage-chip">S4 Apply</span>
+          </div>
+        </div>
+        <span class="domain-chip">Education &amp; Skills</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Academic bias</span>
+        <span class="tag tag-gap">Fragmented info</span>
+        <span class="tag">Rail next to university</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Provides vocational diplomas and applied training as alternatives to purely academic routes.</li>
+        <li>Linked to Y2W / YES2WORK for smoother school‑to‑work transitions.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>TVET often perceived as “second choice”; information scattered across separate channels.</li>
+        <li>Path from ACTVET completion to jobs or further study not always visible to youth &amp; parents.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>ACTVET appears alongside university as an equal rail in “Life after Grade 12”.</li>
+        <li>Programme status and progression visible in Youth Record and “first job” flows.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">TVET rail views</span>
+        <span class="kpi-badge">Applications to ACTVET</span>
+        <span class="kpi-badge">Completion &amp; job outcomes</span>
+      </div>
+    </article>
+
+    <!-- EMIRATESSKILLS / SKILLS CHALLENGE -->
+    <article
+      class="program-card"
+      data-domain="education-skills"
+      data-entity="emiratesskills actvet"
+      data-stage="S2 S3 S5"
+      data-challenges="awareness transition">
+      <div class="program-header ph-edu">
+        <div>
+          <div class="program-title">EmiratesSkills / Skills Challenge</div>
+          <div class="program-entity">ACTVET – Skills competitions</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Education &amp; Skills</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Underused for career stories</span>
+        <span class="tag">Experience builder</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Skills competitions and challenges for young Emiratis in technical and vocational fields.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Participation is strong but not always connected back to career planning and job search.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Shown as “experience builders” in career rail and Work rail (e.g. IT, engineering, trades job families).</li>
+        <li>Results and participation recorded in Youth Record and CV builder.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Participants by domain</span>
+        <span class="kpi-badge">Conversion to TVET / jobs</span>
+      </div>
+    </article>
+
+    <!-- Y2W / YES2WORK -->
+    <article
+      class="program-card"
+      data-domain="education-skills"
+      data-entity="y2w actvet"
+      data-stage="S2 S3 S4 S5"
+      data-challenges="awareness transition">
+      <div class="program-header ph-edu">
+        <div>
+          <div class="program-title">Y2W / YES2WORK</div>
+          <div class="program-entity">ACTVET – School-to-work transition</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Decide</span>
+            <span class="stage-chip">S4 Apply</span>
+          </div>
+        </div>
+        <span class="domain-chip">Education &amp; Skills</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Awareness</span>
+        <span class="tag">Alternative path</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Supports Grade 12 leavers into vocational training and early work experience.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Not always visible early enough to youth who are unsure about university or are at risk academically.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Appears inside “What if I don’t go to university?” scenarios in Coming of Age planner.</li>
+        <li>Y2W status flows into First Job &amp; ACTVET progress dashboards.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Y2W awareness rate</span>
+        <span class="kpi-badge core">Y2W enrolments</span>
+      </div>
+    </article>
+
+    <!-- NSRA / NATIONAL SERVICE -->
+    <article
+      class="program-card"
+      data-domain="national-service"
+      data-entity="nsra"
+      data-stage="S2 S3 S4 S5 S6"
+      data-challenges="awareness access-ux data-sharing risk-support transition">
+      <div class="program-header ph-ns">
+        <div>
+          <div class="program-title">NSRA – National Service &amp; Reserve</div>
+          <div class="program-entity">NSRA – National Service</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Decide</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+            <span class="stage-chip">S6 Transition</span>
+          </div>
+        </div>
+        <span class="domain-chip">National Service</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Anxiety &amp; myths</span>
+        <span class="tag">Timing with study/work</span>
+        <span class="tag">One NS status view</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Manages call‑up, medical, service and completion of National Service for eligible youth.</li>
+        <li>Runs NS awareness events, NS Career Fair, Hama campaigns.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Information often arrives late or via SMS; service timing not integrated with education / job planning.</li>
+        <li>Registration and status checks are separate from other youth services.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>NS appears as one rail inside Coming of Age with awareness modules, timing preference and unified status.</li>
+        <li>NS completion feeds Youth Record and triggers dedicated “after NS” transitions (job, study, entrepreneurship).</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">NS awareness completion</span>
+        <span class="kpi-badge">NS registration completion</span>
+        <span class="kpi-badge">Time from NS completion to next step</span>
+      </div>
+    </article>
+
+    <!-- MAWAHEB TALENT HUB -->
+    <article
+      class="program-card"
+      data-domain="work-employability"
+      data-entity="mawaheb train-for-work nafis"
+      data-stage="S2 S3 S4 S5 S6 S7"
+      data-challenges="awareness access-ux data-sharing transition">
+      <div class="program-header ph-work">
+        <div>
+          <div class="program-title">Mawaheb Talent Hub</div>
+          <div class="program-entity">Mawaheb – talent &amp; jobs</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Plan</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Work &amp; Employability</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Fragmented job search</span>
+        <span class="tag">Unified CV &amp; profile</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Central platform for internships, graduate roles and jobs for Emiratis.</li>
+        <li>Hosts profiles that employers and government partners search against.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth maintain CVs separately; Mawaheb profile creation is not always integrated with scholarships, NS or volunteering histories.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>CV builder in Coming of Age auto‑populates Mawaheb using Youth Record (education, NS, volunteering, Ghaya, skills).</li>
+        <li>Job search outcomes tied to Vision Board goals and “First Job” dashboard.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Active Mawaheb profiles (16–23)</span>
+        <span class="kpi-badge">Interviews / offers via Mawaheb</span>
+      </div>
+    </article>
+
+    <!-- TRAIN FOR WORK -->
+    <article
+      class="program-card"
+      data-domain="work-employability"
+      data-entity="train-for-work"
+      data-stage="S2 S3 S4 S5 S6"
+      data-challenges="awareness transition">
+      <div class="program-header ph-work">
+        <div>
+          <div class="program-title">Train for Work</div>
+          <div class="program-entity">DGE / partners – job readiness</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Plan</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Work &amp; Employability</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Disconnected from job search</span>
+        <span class="tag">Bridges to Mawaheb / Nafis</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Provides structured training and work‑readiness programmes for youth.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Training completion is not always visible when youth later apply for jobs; impact on employment outcomes is hard to see.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Train for Work is suggested within Work rail and “First Job” path as a recommended step where skills gaps exist.</li>
+        <li>Completion sits in Youth Record and is visible to MAWAHEB/Nafis employers.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Enrolments</span>
+        <span class="kpi-badge core">Completion</span>
+        <span class="kpi-badge">Job outcomes post‑programme</span>
+      </div>
+    </article>
+
+    <!-- NAFIS -->
+    <article
+      class="program-card"
+      data-domain="work-employability"
+      data-entity="nafis"
+      data-stage="S2 S4 S5 S6 S7"
+      data-challenges="awareness access-ux data-sharing transition">
+      <div class="program-header ph-work">
+        <div>
+          <div class="program-title">Nafis – Private Sector Employment</div>
+          <div class="program-entity">Nafis programme</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Work &amp; Employability</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Fragmented with Mawaheb</span>
+        <span class="tag">Single job view</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Supports Emiratis to join and stay in private sector roles with incentives and programmes.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth experience Nafis and Mawaheb as separate channels; hard to see an integrated job pipeline.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Nafis‑tagged roles appear within the unified job list in Coming of Age; youth see which roles are backed by Nafis.</li>
+        <li>Job outcomes via Nafis feed into dashboards as a key success metric of the life moment.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Youth in Nafis‑supported roles</span>
+        <span class="kpi-badge">Retention after 12/24 months</span>
+      </div>
+    </article>
+
+    <!-- VOLUNTEERS.AE / VOLAE -->
+    <article
+      class="program-card"
+      data-domain="volunteering-civic"
+      data-entity="volae takatof sanid"
+      data-stage="S2 S3 S4 S5 S6 S7"
+      data-challenges="awareness access-ux data-sharing transition">
+      <div class="program-header ph-vol">
+        <div>
+          <div class="program-title">VOLAE / Volunteers.ae (Takatof, Sanid)</div>
+          <div class="program-entity">VOLAE – volunteer ecosystem</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Volunteering &amp; Civic</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Scattered discovery</span>
+        <span class="tag">One volunteering rail</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>National volunteering platform (Volunteers.ae) and flagship programmes Takatof and Sanid.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth find opportunities via campaigns and separate platforms; hours not always consolidated for reuse.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Single volunteering rail inside Coming of Age aggregating Volunteers.ae, Takatof, Sanid missions.</li>
+        <li>Hours and roles flow into Youth Record, NS planning, scholarships and job applications.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Youth with ≥20 hours/year</span>
+        <span class="kpi-badge">Repeat volunteers</span>
+      </div>
+    </article>
+
+    <!-- WE ARE ALL POLICE / AD POLICE -->
+    <article
+      class="program-card"
+      data-domain="volunteering-civic"
+      data-entity="ad-police"
+      data-stage="S2 S4 S5"
+      data-challenges="awareness transition">
+      <div class="program-header ph-vol">
+        <div>
+          <div class="program-title">AD Police – We Are All Police</div>
+          <div class="program-entity">Abu Dhabi Police</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Volunteering &amp; Civic</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Niche awareness</span>
+        <span class="tag">Safety &amp; civic engagement</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Engages citizens in supporting community safety and policing awareness.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth may see it as separate from other volunteering and not understand how it counts for NS, CV, scholarships.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Surfaced as a featured civic volunteering stream within the volunteering rail.</li>
+        <li>Participation recorded in Youth Record as civic engagement and safety awareness.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Youth enrolled in We Are All Police</span>
+      </div>
+    </article>
+
+    <!-- ADCD -->
+    <article
+      class="program-card"
+      data-domain="volunteering-civic"
+      data-entity="adcd"
+      data-stage="S2 S5"
+      data-challenges="awareness">
+      <div class="program-header ph-vol">
+        <div>
+          <div class="program-title">ADCD – Civil Defence Volunteering</div>
+          <div class="program-entity">Abu Dhabi Civil Defence</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Volunteering &amp; Civic</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Awareness</span>
+        <span class="tag">Safety skills</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Offers volunteering opportunities and safety education with Civil Defence.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth interested in safety / emergency work may not see ADCD opportunities in the same place as other volunteering.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Featured within volunteering rail, linked to safety‑related job families and NS preparation content.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Youth trained in safety roles</span>
+      </div>
+    </article>
+
+    <!-- G H A Y A -->
+    <article
+      class="program-card"
+      data-domain="money-insurance"
+      data-entity="maan ghaya"
+      data-stage="S2 S3 S4 S5 S7"
+      data-challenges="awareness access-ux risk-support transition">
+      <div class="program-header ph-money">
+        <div>
+          <div class="program-title">Ghaya – Financial Literacy</div>
+          <div class="program-entity">Ma’an – Financial education</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Plan</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Money &amp; Insurance</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Not tied to real goals</span>
+        <span class="tag">Money rail spine</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Delivers structured financial literacy content to support better money decisions.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth may see financial education as generic and not connected to their own saving challenges.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Ghaya attached to specific Vision Board goals (car, study, emergency fund) with goal‑aligned modules.</li>
+        <li>Money stress risk flags route youth to Ma’an support where needed.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Ghaya completion</span>
+        <span class="kpi-badge">% youth with realistic money plans</span>
+      </div>
+    </article>
+
+    <!-- SHORY -->
+    <article
+      class="program-card"
+      data-domain="money-insurance"
+      data-entity="shory"
+      data-stage="S2 S3 S4 S5"
+      data-challenges="awareness access-ux">
+      <div class="program-header ph-money">
+        <div>
+          <div class="program-title">Shory – Insurance Literacy &amp; Quotes</div>
+          <div class="program-entity">Shory Insurance</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S4 Apply</span>
+          </div>
+        </div>
+        <span class="domain-chip">Money &amp; Insurance</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Price-only choices</span>
+        <span class="tag">Education + quotes</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Provides digital channels to understand and compare car and other insurance products.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>First-time buyers often focus only on price, buying insurance outside structured, educational journeys.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Shory content appears in Money rail and “first car” life event in Coming of Age.</li>
+        <li>Quotes can be initiated from TAMM with simplified coverage explanations.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Youth using Shory journeys</span>
+      </div>
+    </article>
+
+    <!-- MA'AN WELLBEING -->
+    <article
+      class="program-card"
+      data-domain="wellbeing-family"
+      data-entity="maan health"
+      data-stage="S2 S3 S4 S5 S6 S7"
+      data-challenges="awareness risk-support parent-view">
+      <div class="program-header ph-wellbeing">
+        <div>
+          <div class="program-title">Ma’an &amp; Health – Youth Wellbeing</div>
+          <div class="program-entity">Ma’an &amp; Health sector / DOH</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Plan</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Wellbeing &amp; Family</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">Hidden distress</span>
+        <span class="tag">Self-checks &amp; referrals</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Offers wellbeing programmes, counselling and crisis support for youth.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Need often identified late; no integrated mood / stress tracking across journeys.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Wellbeing rail, mood micro‑checks and risk signals embedded across Coming of Age.</li>
+        <li>Gentle prompts into Ma’an / health support flows, plus parent guidance where appropriate.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge">Youth completing self‑checks</span>
+        <span class="kpi-badge core">Timely access to support</span>
+      </div>
+    </article>
+
+    <!-- KFED & MA'AN SOCIAL INCUBATOR -->
+    <article
+      class="program-card"
+      data-domain="entrepreneurship"
+      data-entity="kfed maan-msi"
+      data-stage="S2 S3 S4 S5 S6 S7"
+      data-challenges="awareness access-ux transition">
+      <div class="program-header ph-entre">
+        <div>
+          <div class="program-title">KFED &amp; Ma’an Social Incubator</div>
+          <div class="program-entity">KFED + Ma’an MSI</div>
+          <div class="stage-chips">
+            <span class="stage-chip">S2 Discover</span>
+            <span class="stage-chip">S3 Plan</span>
+            <span class="stage-chip">S4 Apply</span>
+            <span class="stage-chip">S5 Participate</span>
+          </div>
+        </div>
+        <span class="domain-chip">Entrepreneurship</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-gap">“Too big a leap” perception</span>
+        <span class="tag">Readiness ladder</span>
+      </div>
+      <div class="section-label">What it does</div>
+      <ul class="mini-list">
+        <li>Supports commercial and social ventures with incubation, mentoring and financing.</li>
+      </ul>
+      <div class="section-label">Key challenges today</div>
+      <ul class="mini-list">
+        <li>Youth may not know if/when they are ready; pre‑incubation steps and venture journey are not integrated with other paths.</li>
+      </ul>
+      <div class="section-label">TO‑BE impact</div>
+      <ul class="mini-list">
+        <li>Entrepreneurship rail inside Coming of Age, with readiness check and pre‑incubation activities.</li>
+        <li>Unified apply flow into KFED / MSI and “My ventures” view tied to Youth Record.</li>
+      </ul>
+      <div class="kpi-badges">
+        <span class="kpi-badge core">Youth ventures accepted</span>
+        <span class="kpi-badge">Jobs created by youth ventures</span>
+      </div>
+    </article>
+
+  </section>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const cards = Array.from(document.querySelectorAll('.program-card'));
+    const domainSel = document.getElementById('filter-domain');
+    const entitySel = document.getElementById('filter-entity');
+    const stageSel = document.getElementById('filter-stage');
+    const challengeSel = document.getElementById('filter-challenge');
+    const clearBtn = document.getElementById('clear-filters');
+
+    function applyFilters() {
+      const domainVal = domainSel.value;
+      const entityVal = entitySel.value;
+      const stageVal = stageSel.value;
+      const challengeVal = challengeSel.value;
+
+      cards.forEach(card => {
+        let visible = true;
+
+        const cardDomain = card.dataset.domain || '';
+        const cardEntities = (card.dataset.entity || '').split(' ').map(t => t.trim()).filter(Boolean);
+        const cardStages = (card.dataset.stage || '').split(' ').map(t => t.trim()).filter(Boolean);
+        const cardChallenges = (card.dataset.challenges || '').split(' ').map(t => t.trim()).filter(Boolean);
+
+        if (domainVal !== 'all' && cardDomain !== domainVal) {
+          visible = false;
+        }
+
+        if (visible && entityVal !== 'all') {
+          if (!cardEntities.includes(entityVal)) visible = false;
+        }
+
+        if (visible && stageVal !== 'all') {
+          if (!cardStages.includes(stageVal)) visible = false;
+        }
+
+        if (visible && challengeVal !== 'all') {
+          if (!cardChallenges.includes(challengeVal)) visible = false;
+        }
+
+        card.style.display = visible ? '' : 'none';
+      });
+    }
+
+    function clearFilters() {
+      domainSel.value = 'all';
+      entitySel.value = 'all';
+      stageSel.value = 'all';
+      challengeSel.value = 'all';
+      applyFilters();
+    }
+
+    domainSel.addEventListener('change', applyFilters);
+    entitySel.addEventListener('change', applyFilters);
+    stageSel.addEventListener('change', applyFilters);
+    challengeSel.addEventListener('change', applyFilters);
+    clearBtn.addEventListener('click', clearFilters);
+
+    applyFilters();
+  });
+</script>
+
+</body>
+</html>

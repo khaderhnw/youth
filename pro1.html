@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coming of Age – TAMM Prototype (Youth & Parent Views)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --tamm-teal: #00b3a4;
+      --tamm-teal-soft: #35c8bb;
+      --bg-page: #f4f7fb;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --chip-bg: #eef2ff;
+      --border-subtle: #e5e7eb;
+      --card-bg: #ffffff;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.18);
+      --radius-card: 22px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f4f7fb 35%, #e5fdf8 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+
+    .page {
+      max-width: 1240px;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 18px;
+      padding: 0 6px;
+    }
+
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .phones {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .phone-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .phone {
+      width: 360px;
+      height: 760px;
+      background: #ffffff;
+      border-radius: 38px;
+      padding: 10px 10px 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .status-bar {
+      height: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 11px;
+      color: #111827;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .status-pill {
+      width: 23px;
+      height: 13px;
+      border-radius: 6px;
+      border: 1px solid #111827;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-pill::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 5px;
+      background: #111827;
+    }
+
+    .wifi {
+      width: 14px;
+      height: 10px;
+      border-radius: 0 0 12px 12px;
+      border: 2px solid #111827;
+      border-top: none;
+      position: relative;
+    }
+
+    .wifi::after,
+    .wifi::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      border: 2px solid #111827;
+      border-top: none;
+    }
+
+    .wifi::after {
+      width: 10px;
+      height: 8px;
+      top: -6px;
+    }
+
+    .wifi::before {
+      width: 6px;
+      height: 5px;
+      top: -10px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 2px;
+    }
+
+    .dots span {
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: #111827;
+    }
+
+    .screen {
+      flex: 1;
+      border-radius: 30px;
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #f7fafc 40%,
+        #e7fdf7 100%
+      );
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-content {
+      flex: 1;
+      padding: 14px 16px 80px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 13px;
+      background: radial-gradient(circle at 30% 20%, #e0f2fe 0, #00b3a4 70%);
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .logo-mark span {
+      transform: translateY(0.5px);
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title span:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #94a3b8;
+    }
+
+    .header-title span:last-child {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .icon-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 16px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+      cursor: default;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0f172a, #6b7280);
+    }
+
+    .welcome-block {
+      margin-bottom: 14px;
+    }
+
+    .welcome-block h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .welcome-block p {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .vision-card,
+    .summary-card {
+      background: linear-gradient(135deg, #e0fbf7, #ffffff);
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .vision-header,
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .vision-header h3,
+    .summary-header h3 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .small-tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 179, 164, 0.08);
+      color: #0f766e;
+      border: 1px solid rgba(34, 197, 178, 0.35);
+    }
+
+    .goal-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .goal-pill {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      background: #f3f4ff;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .goal-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    .goal-pill[data-domain="study"] span.dot { background: #3b82f6; }
+    .goal-pill[data-domain="ns"] span.dot { background: #ef4444; }
+    .goal-pill[data-domain="work"] span.dot { background: #22c55e; }
+    .goal-pill[data-domain="vol"] span.dot { background: #0ea5e9; }
+    .goal-pill[data-domain="money"] span.dot { background: #eab308; }
+    .goal-pill[data-domain="biz"] span.dot { background: #a855f7; }
+    .goal-pill[data-domain="well"] span.dot { background: #fb923c; }
+
+    .progress-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .progress-label {
+      min-width: 85px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.3);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+    }
+
+    .progress-value {
+      min-width: 34px;
+      text-align: right;
+    }
+
+    .quick-actions {
+      margin-bottom: 12px;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .section-title-row h3 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .see-all {
+      font-size: 11px;
+      color: #0f766e;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .chip-row::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .chip-row::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .action-chip {
+      flex-shrink: 0;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(148, 163, 184, 0.35);
+    }
+
+    .action-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      background: radial-gradient(circle at 30% 20%, #e0f2fe 0, #0ea5e9 60%);
+    }
+
+    .today-cards {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .primary-card,
+    .secondary-card {
+      border-radius: var(--radius-card);
+      padding: 10px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(135deg, #0f766e, #00b3a4);
+      color: #ecfeff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      right: -30px;
+      bottom: -50px;
+    }
+
+    .primary-card h4 {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .primary-card p {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .primary-meta {
+      font-size: 10px;
+      margin-top: 6px;
+      opacity: 0.95;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .primary-meta span.badge {
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.2);
+      font-size: 10px;
+    }
+
+    .secondary-card {
+      background: linear-gradient(135deg, #ecfeff, #dbeafe);
+      color: #0f172a;
+    }
+
+    .secondary-card h4 {
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .secondary-card p {
+      font-size: 11px;
+      color: #111827;
+      opacity: 0.8;
+    }
+
+    .rail-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 9px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      font-size: 11px;
+    }
+
+    .rail-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rail-main span:first-child {
+      font-weight: 500;
+    }
+
+    .rail-main span:last-child {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .rail-right {
+      text-align: right;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .rail-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      margin-left: auto;
+      margin-bottom: 2px;
+    }
+
+    /* Parent view specific */
+
+    .family-chip {
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .child-selector {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .child-pill {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .child-pill.active {
+      background: rgba(0, 179, 164, 0.08);
+      border-color: rgba(0, 179, 164, 0.5);
+      color: #065f46;
+    }
+
+    .avatar-mini {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0f172a, #6b7280);
+    }
+
+    .parent-banner {
+      background: linear-gradient(135deg, #ecfdf5, #e0f2fe);
+      border-radius: var(--radius-card);
+      padding: 11px 12px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      margin-bottom: 14px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+    }
+
+    .parent-banner h2 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .parent-banner p {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .banner-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .banner-badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .banner-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .parent-summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .parent-summary-card {
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      padding: 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .parent-summary-card h4 {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .parent-summary-card p {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .entity-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .entity-chip {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: var(--radius-pill);
+      background: #f9fafb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .entity-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .alert-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .alert-pill {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      background: rgba(239, 68, 68, 0.06);
+      color: #b91c1c;
+      border: 1px solid rgba(248, 113, 113, 0.5);
+    }
+
+    .parent-cta-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-outline,
+    .btn-primary {
+      flex: 1;
+      font-size: 11px;
+      padding: 7px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      text-align: center;
+      background: #ffffff;
+      color: var(--text-main);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00b3a4, #35c8bb);
+      color: #ecfeff;
+      border: none;
+    }
+
+    /* bottom nav */
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 6px;
+      padding: 6px 22px 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .nav-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .nav-pill.active {
+      color: #111827;
+    }
+
+    .nav-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 14px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav-pill.active .nav-icon {
+      background: var(--tamm-teal);
+      color: white;
+    }
+
+    .home-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 3px;
+      border-radius: 999px;
+      background: #111827;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 840px) {
+      body {
+        padding: 12px 8px;
+      }
+      .phone {
+        width: min(360px, 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <h1>Coming of Age – TAMM Family Space Prototype</h1>
+      <p>High‑fidelity mobile preview of the youth and parent views for the 16–23 Coming of Age life moment inside TAMM.</p>
+    </header>
+
+    <div class="phones">
+      <!-- YOUTH VIEW -->
+      <section class="phone-wrapper">
+        <div class="phone-label">Youth view – Logged in as Omar</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>5:55</span>
+            <div class="status-icons">
+              <div class="dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="wifi"></div>
+              <div class="status-pill"></div>
+            </div>
+          </div>
+
+          <div class="screen">
+            <div class="screen-content">
+              <div class="screen-header">
+                <div class="header-left">
+                  <div class="logo-mark"><span>ت</span></div>
+                  <div class="header-title">
+                    <span>TAMM · Family Space</span>
+                    <span>Coming of Age</span>
+                  </div>
+                </div>
+                <div class="header-actions">
+                  <div class="icon-button">
+                    <!-- magnifying glass -->
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="6.5" stroke="#4b5563" stroke-width="1.6" fill="none"></circle>
+                      <line x1="15" y1="15" x2="20" y2="20" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></line>
+                    </svg>
+                  </div>
+                  <div class="icon-button">
+                    <!-- bell -->
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M12 4a4 4 0 0 1 4 4v3.2c0 .5.2 1 .5 1.4l1.4 1.8H6.1l1.4-1.8c.3-.4.5-.9.5-1.4V8a4 4 0 0 1 4-4z" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linejoin="round"></path>
+                      <path d="M10 18a2 2 0 0 0 4 0" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></path>
+                    </svg>
+                  </div>
+                  <div class="avatar"></div>
+                </div>
+              </div>
+
+              <div class="welcome-block">
+                <h2>Hi Omar 👋</h2>
+                <p>Your Coming of Age journey brings together study, National Service, work, money, volunteering and wellbeing – all in one place.</p>
+              </div>
+
+              <section class="vision-card">
+                <div class="vision-header">
+                  <h3>Vision Board overview</h3>
+                  <span class="small-tag">4 active goals · Level 3</span>
+                </div>
+                <div class="goal-pills">
+                  <div class="goal-pill" data-domain="study">
+                    <span class="dot"></span>Finish Grade 12 &amp; apply ADS
+                  </div>
+                  <div class="goal-pill" data-domain="ns">
+                    <span class="dot"></span>Plan National Service
+                  </div>
+                  <div class="goal-pill" data-domain="work">
+                    <span class="dot"></span>First job by 2027
+                  </div>
+                  <div class="goal-pill" data-domain="money">
+                    <span class="dot"></span>Save 15,000 AED
+                  </div>
+                  <div class="goal-pill" data-domain="vol">
+                    <span class="dot"></span>50 volunteering hours
+                  </div>
+                  <div class="goal-pill" data-domain="well">
+                    <span class="dot"></span>Stay well &amp; active
+                  </div>
+                </div>
+
+                <div class="progress-rows">
+                  <div class="progress-row">
+                    <div class="progress-label">Education &amp; skills</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:68%;"></div>
+                    </div>
+                    <div class="progress-value">68%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">National Service</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:40%;"></div>
+                    </div>
+                    <div class="progress-value">40%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Work &amp; experience</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:24%;"></div>
+                    </div>
+                    <div class="progress-value">24%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Money &amp; wellbeing</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:55%;"></div>
+                    </div>
+                    <div class="progress-value">55%</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="quick-actions">
+                <div class="section-title-row">
+                  <h3>Quick actions</h3>
+                  <span class="see-all">View all journeys</span>
+                </div>
+                <div class="chip-row">
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Continue NS awareness</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Plan my study &amp; scholarship</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Explore MAWAHEB jobs</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Update Ghaya money plan</span>
+                  </div>
+                  <div class="action-chip">
+                    <div class="action-icon"></div>
+                    <span>Find volunteering today</span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="today-cards">
+                <article class="primary-card">
+                  <h4>Today for you</h4>
+                  <p>Finish the last 3 questions in your National Service myth‑busting module and confirm if you prefer NS before or after university.</p>
+                  <div class="primary-meta">
+                    <span class="badge">NSRA · FCA · 6 XP</span>
+                    <span>~ 3 minutes</span>
+                  </div>
+                </article>
+
+                <article class="secondary-card">
+                  <h4>Money &amp; Ghaya</h4>
+                  <p>You are on track to save 900 AED this month. Complete the next Ghaya step to unlock your “Money Basics” badge.</p>
+                </article>
+              </section>
+
+              <section>
+                <div class="section-title-row">
+                  <h3>Your rails</h3>
+                  <span class="see-all">Open full journey</span>
+                </div>
+                <div class="rail-cards">
+                  <div class="rail-row">
+                    <div class="rail-main">
+                      <span>Education &amp; scholarships</span>
+                      <span>ADEK · ACTVET · FYA</span>
+                    </div>
+                    <div class="rail-right">
+                      <div class="rail-dot" style="background:#3b82f6;"></div>
+                      <div>2 apps in progress</div>
+                    </div>
+                  </div>
+                  <div class="rail-row">
+                    <div class="rail-main">
+                      <span>National Service</span>
+                      <span>NSRA · NS career paths</span>
+                    </div>
+                    <div class="rail-right">
+                      <div class="rail-dot" style="background:#ef4444;"></div>
+                      <div>Awareness 60% done</div>
+                    </div>
+                  </div>
+                  <div class="rail-row">
+                    <div class="rail-main">
+                      <span>Work &amp; MAWAHEB</span>
+                      <span>MAWAHEB · Train for Work · Nafis</span>
+                    </div>
+                    <div class="rail-right">
+                      <div class="rail-dot" style="background:#22c55e;"></div>
+                      <div>3 job families saved</div>
+                    </div>
+                  </div>
+                  <div class="rail-row">
+                    <div class="rail-main">
+                      <span>Volunteering &amp; civic</span>
+                      <span>Volunteers.ae · AD Police · ADCD</span>
+                    </div>
+                    <div class="rail-right">
+                      <div class="rail-dot" style="background:#0ea5e9;"></div>
+                      <div>12 / 50 hours</div>
+                    </div>
+                  </div>
+                  <div class="rail-row">
+                    <div class="rail-main">
+                      <span>Money, Ghaya &amp; wellbeing</span>
+                      <span>Ma’an · FCA · Shory</span>
+                    </div>
+                    <div class="rail-right">
+                      <div class="rail-dot" style="background:#eab308;"></div>
+                      <div>Level 2 · 3 badges</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <nav class="bottom-nav">
+              <div class="nav-pill active">
+                <div class="nav-icon">
+                  <!-- grid -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6" height="6" rx="1.4" fill="white"></rect>
+                    <rect x="14" y="4" width="6" height="6" rx="1.4" fill="white" opacity="0.85"></rect>
+                    <rect x="4" y="14" width="6" height="6" rx="1.4" fill="white" opacity="0.85"></rect>
+                    <rect x="14" y="14" width="6" height="6" rx="1.4" fill="white" opacity="0.75"></rect>
+                  </svg>
+                </div>
+                <span>Services</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <!-- user -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="9" r="3.2" fill="#4b5563"></circle>
+                    <path d="M6 19c.8-2.4 3-4 6-4s5.2 1.6 6 4" fill="none" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <span>My TAMM</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <!-- dots -->
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="6" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="12" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="18" cy="12" r="1.8" fill="#4b5563"></circle>
+                  </svg>
+                </div>
+                <span>Support</span>
+              </div>
+              <div class="home-indicator"></div>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARENT VIEW -->
+      <section class="phone-wrapper">
+        <div class="phone-label">Parent view – Family Space</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>5:55</span>
+            <div class="status-icons">
+              <div class="dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="wifi"></div>
+              <div class="status-pill"></div>
+            </div>
+          </div>
+
+          <div class="screen">
+            <div class="screen-content">
+              <div class="screen-header">
+                <div class="header-left">
+                  <div class="logo-mark"><span>ت</span></div>
+                  <div class="header-title">
+                    <span>TAMM · Family Space</span>
+                    <span>Coming of Age overview</span>
+                  </div>
+                </div>
+                <div class="header-actions">
+                  <div class="family-chip">Parent · Fatima</div>
+                </div>
+              </div>
+
+              <div class="child-selector">
+                <div class="child-pill active">
+                  <div class="avatar-mini"></div>
+                  <span>Omar · 18</span>
+                </div>
+                <div class="child-pill">
+                  <div class="avatar-mini" style="background:linear-gradient(135deg,#f97316,#fb7185);"></div>
+                  <span>Aisha · 16</span>
+                </div>
+              </div>
+
+              <section class="parent-banner">
+                <h2>Omar is on track</h2>
+                <p>4 out of 5 goals active. National Service plan set, scholarships explored and first job path started.</p>
+                <div class="banner-badges">
+                  <span class="banner-badge">
+                    <span class="banner-dot" style="background:#3b82f6;"></span>Education 68%
+                  </span>
+                  <span class="banner-badge">
+                    <span class="banner-dot" style="background:#ef4444;"></span>NS awareness complete
+                  </span>
+                  <span class="banner-badge">
+                    <span class="banner-dot" style="background:#22c55e;"></span>Work path drafted
+                  </span>
+                  <span class="banner-badge">
+                    <span class="banner-dot" style="background:#eab308;"></span>Ghaya Level 2
+                  </span>
+                </div>
+              </section>
+
+              <section class="summary-card">
+                <div class="summary-header">
+                  <h3>Parent insights</h3>
+                  <span class="small-tag">No urgent alerts</span>
+                </div>
+                <div class="progress-rows">
+                  <div class="progress-row">
+                    <div class="progress-label">Engagement (last 30 days)</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:76%;"></div>
+                    </div>
+                    <div class="progress-value">76%</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Volunteering progress</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:24%;"></div>
+                    </div>
+                    <div class="progress-value">12 / 50h</div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-label">Wellbeing check‑ins</div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:64%;"></div>
+                    </div>
+                    <div class="progress-value">Stable</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="parent-summary-grid">
+                <article class="parent-summary-card">
+                  <h4>Education &amp; National Service</h4>
+                  <p>Omar is in his final school year, has shortlisted 3 ADEK scholarships and completed NS awareness. He prefers National Service after university.</p>
+                  <div class="entity-row">
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#3b82f6;"></span>ADEK
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#3b82f6;"></span>ACTVET
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#ef4444;"></span>NSRA
+                    </span>
+                  </div>
+                  <div class="alert-row" style="margin-top:6px;">
+                    <span>Next step: confirm final major choice with Omar.</span>
+                    <span class="alert-pill" style="display:none;">Alert</span>
+                  </div>
+                  <div class="parent-cta-row">
+                    <div class="btn-outline">Book guidance session</div>
+                    <div class="btn-primary">Review Omar’s study plan</div>
+                  </div>
+                </article>
+
+                <article class="parent-summary-card">
+                  <h4>Work, volunteering &amp; skills</h4>
+                  <p>Omar has created his MAWAHEB profile, explored 3 job families and registered interest in Yes2Work and Skills Hub. Volunteering hours are still low.</p>
+                  <div class="entity-row">
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#22c55e;"></span>Mawaheb
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#22c55e;"></span>Train for Work
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#0ea5e9;"></span>Volunteers.ae
+                    </span>
+                  </div>
+                  <div class="alert-row" style="margin-top:6px;">
+                    <span>Suggested: encourage one volunteering activity this month.</span>
+                    <span class="alert-pill">Low volunteering</span>
+                  </div>
+                  <div class="parent-cta-row">
+                    <div class="btn-outline">Send Omar a suggestion</div>
+                    <div class="btn-primary">Browse volunteering as a family</div>
+                  </div>
+                </article>
+
+                <article class="parent-summary-card">
+                  <h4>Money, Ghaya &amp; wellbeing</h4>
+                  <p>Omar is in Ghaya Level 2 and has a saving goal of 15,000 AED over 18 months. Stress check‑ins are mostly in the “OK” range.</p>
+                  <div class="entity-row">
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#eab308;"></span>Ghaya / Ma’an
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#fb923c;"></span>FCA wellbeing
+                    </span>
+                    <span class="entity-chip">
+                      <span class="entity-dot" style="background:#eab308;"></span>Shory insurance</span>
+                  </div>
+                  <div class="alert-row" style="margin-top:6px;">
+                    <span>Next check‑in: after first salary or allowance change.</span>
+                    <span class="alert-pill" style="display:none;">Alert</span>
+                  </div>
+                  <div class="parent-cta-row">
+                    <div class="btn-outline">View Ghaya topics</div>
+                    <div class="btn-primary">Open wellbeing support</div>
+                  </div>
+                </article>
+              </section>
+            </div>
+
+            <nav class="bottom-nav">
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6" height="6" rx="1.4" fill="#4b5563"></rect>
+                    <rect x="14" y="4" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.85"></rect>
+                    <rect x="4" y="14" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.85"></rect>
+                    <rect x="14" y="14" width="6" height="6" rx="1.4" fill="#4b5563" opacity="0.75"></rect>
+                  </svg>
+                </div>
+                <span>Services</span>
+              </div>
+              <div class="nav-pill active">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="9" r="3.2" fill="white"></circle>
+                    <path d="M6 19c.8-2.4 3-4 6-4s5.2 1.6 6 4" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <span>My Family</span>
+              </div>
+              <div class="nav-pill">
+                <div class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="6" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="12" cy="12" r="1.8" fill="#4b5563"></circle>
+                    <circle cx="18" cy="12" r="1.8" fill="#4b5563"></circle>
+                  </svg>
+                </div>
+                <span>Support</span>
+              </div>
+              <div class="home-indicator"></div>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

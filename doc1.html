@@ -258,7 +258,7 @@
       <h1>Coming of Age – Interactive Journey Board</h1>
       <p class="subtitle">
         Each sticky represents a <strong>moment</strong> in the youth journey (16–23) inside TAMM Family space.<br>
-        Use the filters to highlight where specific <strong>entities</strong>, <strong>stages</strong>, <strong>journeys</strong> and <strong>age bands</strong> appear.
+        Use the filters to highlight where specific <strong>entities</strong>, <strong>domains</strong>, <strong>stages</strong>, <strong>journeys</strong> and <strong>age bands</strong> appear.
       </p>
     </header>
 
@@ -318,14 +318,15 @@
         <select id="filter-journey" class="filter-select">
           <option value="all">All journeys</option>
           <option value="scholarship">Scholarship &amp; Study Abroad</option>
+          <option value="actvet-vocational">ACTVET / Vocational</option>
+          <option value="national-service">National Service</option>
           <option value="first-job-uni">First Job – University</option>
           <option value="first-job-hs-ns">First Job – HS &amp; NS</option>
-          <option value="actvet-vocational">ACTVET / Vocational</option>
           <option value="money-independence">Money &amp; Independence</option>
           <option value="volunteering-journey">Volunteering &amp; Civic</option>
           <option value="entrepreneurship-journey">Entrepreneurship &amp; Business</option>
           <option value="wellbeing-lifeskills">Wellbeing &amp; Life Skills</option>
-          <option value="cross-journey-main">Cross-journey (Vision Board, Gamification)</option>
+          <option value="cross-journey-main">Cross-journey (Vision Board &amp; Gamification)</option>
         </select>
       </div>
 
@@ -435,7 +436,7 @@
         data-entity="adek,actvet,yes2work"
         data-domain="education-skills"
         data-stage="S2"
-        data-journey="scholarship"
+        data-journey="scholarship actvet-vocational first-job-uni"
         data-ages="16-17 18-21">
         <div class="sticky-header-row">
           <div>
@@ -470,7 +471,7 @@
             <strong>S2-B • Understand National Service</strong>
             <div class="domain-pill">National Service</div>
           </div>
-          <div class="age-tag">17–21 (via 16–17 • 18–21)</div>
+          <div class="age-tag">16–17 • 18–21</div>
         </div>
         <div class="entities-line">
           Entities: NSRA
@@ -489,7 +490,7 @@
         data-entity="mawaheb,yes2work,youth-platform"
         data-domain="work-employability"
         data-stage="S2"
-        data-journey="first-job-uni"
+        data-journey="first-job-uni first-job-hs-ns"
         data-ages="16-17 18-21">
         <div class="sticky-header-row">
           <div>
@@ -516,7 +517,7 @@
         data-entity="volae,ad-police,adcd"
         data-domain="volunteering-civic"
         data-stage="S2"
-        data-journey="volunteering-journey"
+        data-journey="volunteering-journey wellbeing-lifeskills"
         data-ages="16-17 18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -543,7 +544,7 @@
         data-entity="maan,shory"
         data-domain="money-insurance"
         data-stage="S2"
-        data-journey="money-independence"
+        data-journey="money-independence wellbeing-lifeskills"
         data-ages="16-17 18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -568,9 +569,9 @@
       <article
         class="sticky-card domain-wellbeing"
         data-entity="maan,health,kfed"
-        data-domain="wellbeing-family"
+        data-domain="wellbeing-family entrepreneurship"
         data-stage="S2"
-        data-journey="wellbeing-lifeskills"
+        data-journey="wellbeing-lifeskills entrepreneurship-journey"
         data-ages="16-17 18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -644,14 +645,68 @@
         </ul>
       </article>
 
+      <!-- S3: MONEY PLAN -->
+
+      <article
+        class="sticky-card domain-money"
+        data-entity="maan"
+        data-domain="money-insurance"
+        data-stage="S3"
+        data-journey="money-independence"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-C • Money Plan (Ghaya-linked)</strong>
+            <div class="domain-pill">Money &amp; Insurance</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: Ma’an (Ghaya)
+        </div>
+        <ul class="mini-list">
+          <li>Youth sets a saving target (amount &amp; deadline) linked to Ghaya content.</li>
+          <li>Sees simple monthly saving breakdown and tips.</li>
+          <li>Money goal is locked to Vision Board and later progress tracking.</li>
+        </ul>
+      </article>
+
+      <!-- S3: VOLUNTEERING & ENTREPRENEURSHIP PLANNING -->
+
+      <article
+        class="sticky-card domain-entrepreneurship"
+        data-entity="volae,ad-police,adcd,kfed,maan"
+        data-domain="volunteering-civic entrepreneurship"
+        data-stage="S3"
+        data-journey="volunteering-journey entrepreneurship-journey"
+        data-ages="18-21 22-23">
+        <div class="sticky-header-row">
+          <div>
+            <div class="stage-tag">S3 • Decide &amp; Plan</div>
+            <strong>S3-D • Volunteer &amp; Entrepreneurship Planning</strong>
+            <div class="domain-pill">Volunteering &amp; Entrepreneurship</div>
+          </div>
+          <div class="age-tag">18–23</div>
+        </div>
+        <div class="entities-line">
+          Entities: VOLAE, AD Police, ADCD, KFED, Ma’an
+        </div>
+        <ul class="mini-list">
+          <li>Youth sets an annual volunteering hours target.</li>
+          <li>Completes a short entrepreneurship readiness quiz.</li>
+          <li>Sees suggested volunteering missions and KFED / Ma’an incubator steps.</li>
+        </ul>
+      </article>
+
       <!-- S4: APPLY (MULTI-RAIL) -->
 
       <article
         class="sticky-card domain-cross"
-        data-entity="adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,youth-platform"
+        data-entity="adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,youth-platform,yes2work"
         data-domain="cross-journey"
         data-stage="S4"
-        data-journey="cross-journey-main"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
         data-ages="18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -662,7 +717,7 @@
           <div class="age-tag">18–23</div>
         </div>
         <div class="entities-line">
-          Entities: ADEK, ACTVET, NSRA, MAWAHEB, VOLAE, Ma’an, Shory, KFED, Youth Platform
+          Entities: ADEK, ACTVET, NSRA, MAWAHEB, VOLAE, Ma’an, Shory, KFED, YES2WORK, Youth Platform
         </div>
         <ul class="mini-list">
           <li>Single TAMM-style shell reuses Youth 360 data across scholarships, NS, jobs, volunteering, Ghaya, Shory and KFED forms.</li>
@@ -671,14 +726,14 @@
         </ul>
       </article>
 
-      <!-- S5: PARTICIPATE & TRACK -->
+      <!-- S5: PARTICIPATE & TRACK (ONE VIEW) -->
 
       <article
         class="sticky-card domain-cross"
-        data-entity="adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,youth-platform"
+        data-entity="adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,youth-platform,health,yes2work"
         data-domain="cross-journey"
         data-stage="S5"
-        data-journey="cross-journey-main"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
         data-ages="18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -705,7 +760,7 @@
         data-entity="nsra,mawaheb,maan,health,youth-platform"
         data-domain="cross-journey"
         data-stage="S6"
-        data-journey="cross-journey-main"
+        data-journey="scholarship national-service first-job-uni first-job-hs-ns money-independence wellbeing-lifeskills cross-journey-main"
         data-ages="18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -729,10 +784,10 @@
 
       <article
         class="sticky-card domain-cross"
-        data-entity="youth-platform,adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,health"
+        data-entity="youth-platform,adek,actvet,nsra,mawaheb,volae,maan,shory,kfed,health,yes2work"
         data-domain="cross-journey"
         data-stage="S7"
-        data-journey="cross-journey-main"
+        data-journey="scholarship actvet-vocational national-service first-job-uni first-job-hs-ns volunteering-journey money-independence entrepreneurship-journey wellbeing-lifeskills cross-journey-main"
         data-ages="18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -756,10 +811,10 @@
 
       <article
         class="sticky-card domain-education"
-        data-entity="actvet,youth-platform"
+        data-entity="actvet,yes2work,youth-platform"
         data-domain="education-skills"
         data-stage="S5"
-        data-journey="actvet-vocational"
+        data-journey="actvet-vocational first-job-hs-ns"
         data-ages="18-21 22-23">
         <div class="sticky-header-row">
           <div>
@@ -770,7 +825,7 @@
           <div class="age-tag">18–23</div>
         </div>
         <div class="entities-line">
-          Entities: ACTVET (ATS, ADVETI, FCHS), Youth Platform
+          Entities: ACTVET (ATS, ADVETI, FCHS), YES2WORK, Youth Platform
         </div>
         <ul class="mini-list">
           <li>Youth sees their vocational programme status and total training hours.</li>
@@ -834,12 +889,19 @@
           let visible = true;
 
           if (entity !== 'all') {
-            const entities = (card.dataset.entity || '').split(',').map(e => e.trim());
+            const entities = (card.dataset.entity || '')
+              .split(',')
+              .map(e => e.trim())
+              .filter(Boolean);
             if (!entities.includes(entity)) visible = false;
           }
 
           if (visible && domain !== 'all') {
-            if ((card.dataset.domain || '') !== domain) visible = false;
+            const domains = (card.dataset.domain || '')
+              .split(' ')
+              .map(d => d.trim())
+              .filter(Boolean);
+            if (!domains.includes(domain)) visible = false;
           }
 
           if (visible && stage !== 'all') {
@@ -847,11 +909,18 @@
           }
 
           if (visible && journey !== 'all') {
-            if ((card.dataset.journey || '') !== journey) visible = false;
+            const journeys = (card.dataset.journey || '')
+              .split(' ')
+              .map(j => j.trim())
+              .filter(Boolean);
+            if (!journeys.includes(journey)) visible = false;
           }
 
           if (visible && age !== 'all') {
-            const ages = (card.dataset.ages || '').split(' ').map(a => a.trim());
+            const ages = (card.dataset.ages || '')
+              .split(' ')
+              .map(a => a.trim())
+              .filter(Boolean);
             if (!ages.includes(age)) visible = false;
           }
 

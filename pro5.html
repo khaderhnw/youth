@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coming of Age – To‑Be Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --accent: #06b6d4;
+      --bg-app: #f8fafc;
+      --surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --warning: #f97316;
+      --card-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #e0f2fe 0, #e5e7eb 40%, #cbd5f5 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+    }
+
+    /* PHONE FRAME --------------------------------------------------------- */
+    .device {
+      width: 390px;
+      height: 844px;
+      border-radius: 48px;
+      background: #000;
+      border: 10px solid #111827;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .device-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 120px;
+      height: 30px;
+      transform: translateX(-50%);
+      background: #000;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+      z-index: 30;
+    }
+
+    .app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 60%),
+                  radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.1), transparent 55%),
+                  var(--bg-app);
+      overflow-y: auto;
+      padding-bottom: 90px;
+      scrollbar-width: none;
+    }
+    .app::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* HEADER -------------------------------------------------------------- */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 52px 20px 10px;
+      background: rgba(248, 250, 252, 0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .title-block h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .title-block p {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .persona-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 11px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .persona-pill span {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #3b82f6, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* AI COMPANION BANNER ------------------------------------------------- */
+    .ai-banner {
+      margin: 14px 20px 10px;
+      position: relative;
+      border-radius: 22px;
+      padding: 16px 14px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #eff6ff;
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+      overflow: hidden;
+    }
+
+    .ai-banner::before,
+    .ai-banner::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(191, 219, 254, 0.18);
+    }
+
+    .ai-banner::before {
+      width: 120px;
+      height: 120px;
+      right: -40px;
+      top: -50px;
+    }
+
+    .ai-banner::after {
+      width: 80px;
+      height: 80px;
+      right: 10px;
+      bottom: -40px;
+    }
+
+    .ai-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      margin-bottom: 6px;
+    }
+
+    .ai-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .ai-banner h2 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .ai-banner p {
+      font-size: 12px;
+      line-height: 1.4;
+      max-width: 80%;
+    }
+
+    .ai-quick {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.4);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    /* SECTION TITLES ------------------------------------------------------ */
+    .section-title {
+      margin: 18px 20px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 600;
+    }
+
+    .section-title span:last-child {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* PERSONA STRIP ------------------------------------------------------- */
+    .persona-strip {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .persona-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .persona-chip {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      font-size: 11px;
+      font-weight: 500;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.18s;
+    }
+
+    .persona-chip small {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4b5563;
+    }
+
+    .persona-chip.active {
+      background: #111827;
+      color: #f9fafb;
+      border-color: #111827;
+    }
+
+    /* STAGE CARDS --------------------------------------------------------- */
+    .stage-row {
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stage-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 12px 12px 12px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #1d4ed8;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .stage-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .stage-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .stage-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stage-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+    }
+
+    .stage-badge {
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #ecfdf3;
+      color: #15803d;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stage-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: #eff6ff;
+      flex-shrink: 0;
+    }
+
+    .stage-progress {
+      margin-top: 8px;
+    }
+
+    .stage-progress-bar {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .stage-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      width: 0%;
+    }
+
+    .stage-progress-meta {
+      margin-top: 3px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ENTITY GRID --------------------------------------------------------- */
+    .entity-grid {
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .entity-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 14px;
+      padding: 10px;
+      color: #e5e7eb;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .entity-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.32), transparent 55%);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .entity-card:hover::after {
+      opacity: 1;
+    }
+
+    .entity-name {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .entity-chip {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+
+    .entity-focus {
+      font-size: 10px;
+      color: #cbd5f5;
+    }
+
+    /* CURRENT FOCUS CARDS ------------------------------------------------- */
+    .focus-column {
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .focus-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+    }
+
+    .focus-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .focus-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .focus-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .focus-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .focus-tag {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    /* TASK LIST ----------------------------------------------------------- */
+    .tasks-card {
+      margin: 0 20px 16px;
+      background: #fffbeb;
+      border-radius: 18px;
+      padding: 12px;
+      border: 1px solid #facc15;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tasks-card::before {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.35);
+      right: -30px;
+      top: -30px;
+    }
+
+    .tasks-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .tasks-header h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    .tasks-header span {
+      font-size: 10px;
+      color: #b45309;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .task-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 11px;
+      color: #b45309;
+    }
+
+    .task-bullet {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid #fed7aa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* BOTTOM NAV ---------------------------------------------------------- */
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 82px;
+      padding-top: 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      z-index: 25;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+
+    .nav-item span:first-child {
+      font-size: 19px;
+    }
+
+    .nav-item.active {
+      color: #e5e7eb;
+    }
+
+    /* MODAL --------------------------------------------------------------- */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+      z-index: 40;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-height: 82%;
+      background: #f9fafb;
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      padding: 18px 20px 20px;
+      box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.4);
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 0.84, 0.44, 1);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .modal-sheet::-webkit-scrollbar {
+      display: none;
+    }
+
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-handle {
+      width: 46px;
+      height: 4px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      margin: 0 auto 12px;
+    }
+
+    .modal-pill {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .modal-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .modal-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #1d4ed8;
+      border: 1px solid rgba(191, 219, 254, 0.9);
+    }
+
+    .modal-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .modal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #374151;
+    }
+
+    .modal-bullet {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .modal-footer {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .modal-footer button {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #f9fafb;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+    <div class="device-notch"></div>
+
+    <div class="app">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="title-block">
+          <h1>Coming of Age</h1>
+          <p>Joined‑up journey · 16–23 · Abu Dhabi</p>
+        </div>
+        <div class="persona-pill">
+          <span>H</span>
+          Hind · Grade 12
+        </div>
+      </header>
+
+      <!-- AI COMPANION -->
+      <section class="ai-banner">
+        <div class="ai-badge">
+          <span class="ai-badge-dot"></span>
+          AI Journey Coach
+        </div>
+        <h2>Let’s line up your next 12 months.</h2>
+        <p>
+          I’ve connected your school, national service and first job options
+          into one plan. Where do you want to focus first?
+        </p>
+        <div class="ai-quick">
+          <div class="ai-chip" onclick="openJourney('hind')">🎓 Scholarship fit check</div>
+          <div class="ai-chip" onclick="openStage('transition')">🪖 NS & university timing</div>
+          <div class="ai-chip" onclick="openJourney('firstJobGrad')">💼 First job readiness</div>
+        </div>
+      </section>
+
+      <!-- PERSONAS -->
+      <div class="section-title">
+        <span>Personas in this life moment</span>
+        <span>View all</span>
+      </div>
+
+      <div class="persona-strip">
+        <button class="persona-chip active" onclick="openJourney('hind')">
+          <div>
+            Hind
+            <br />
+            <small>Scholarship · Health Science</small>
+          </div>
+        </button>
+        <button class="persona-chip" onclick="openJourney('complexAbroad')">
+          <div>
+            Saif
+            <br />
+            <small>Study abroad · complex path</small>
+          </div>
+        </button>
+        <button class="persona-chip" onclick="openJourney('actvetPath')">
+          <div>
+            Amna
+            <br />
+            <small>ACTVET · Yes to Work</small>
+          </div>
+        </button>
+        <button class="persona-chip" onclick="openJourney('firstJobGrad')">
+          <div>
+            Khalid
+            <br />
+            <small>First job · uni graduate</small>
+          </div>
+        </button>
+      </div>
+
+      <!-- STAGES -->
+      <div class="section-title">
+        <span>Life stages · To‑Be</span>
+        <span>Roadmap</span>
+      </div>
+
+      <div class="stage-row">
+        <article class="stage-card" onclick="openStage('school')">
+          <div class="stage-icon">🏫</div>
+          <div style="flex: 1;">
+            <div class="stage-pill">
+              Stage 1 · 16–18
+            </div>
+            <div class="stage-title">School & Preparation</div>
+            <div class="stage-subtitle">
+              Streams, exams, early guidance, financial basics & digital safety.
+            </div>
+            <div class="stage-meta">
+              <div class="stage-badge">Youth + Parents</div>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <span class="stage-dot"></span>
+                <span>Guidance & awareness heavy</span>
+              </div>
+            </div>
+            <div class="stage-progress">
+              <div class="stage-progress-bar">
+                <div class="stage-progress-fill" style="width: 55%;"></div>
+              </div>
+              <div class="stage-progress-meta">
+                <span>Core journey defined</span>
+                <span>55% modelled</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stage-card" onclick="openStage('transition')">
+          <div class="stage-icon">🧭</div>
+          <div style="flex: 1;">
+            <div class="stage-pill" style="background:#dcfce7;color:#15803d;">
+              Stage 2 · 18–22
+            </div>
+            <div class="stage-title">University / Workforce / NS</div>
+            <div class="stage-subtitle">
+              Higher education, TVET, police/military, first internships & managing first income.
+            </div>
+            <div class="stage-meta">
+              <div class="stage-badge" style="background:#fefce8;color:#854d0e;">
+                High complexity
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <span class="stage-dot" style="background:#f97316;"></span>
+                <span>Multiple entities</span>
+              </div>
+            </div>
+            <div class="stage-progress">
+              <div class="stage-progress-bar">
+                <div class="stage-progress-fill" style="width: 40%;background:linear-gradient(90deg,#f97316,#fb923c);"></div>
+              </div>
+              <div class="stage-progress-meta">
+                <span>Design in progress</span>
+                <span>40% modelled</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stage-card" onclick="openStage('earlyCareer')">
+          <div class="stage-icon">💼</div>
+          <div style="flex: 1;">
+            <div class="stage-pill" style="background:#fef2f2;color:#b91c1c;">
+              Stage 3 · 20–23
+            </div>
+            <div class="stage-title">Early Career & Family</div>
+            <div class="stage-subtitle">
+              First job, entrepreneurship, housing & long‑term financial planning.
+            </div>
+            <div class="stage-meta">
+              <div class="stage-badge" style="background:#eff6ff;color:#1d4ed8;">
+                Youth‑led
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <span class="stage-dot" style="background:#3b82f6;"></span>
+                <span>Linked to Youth Platform</span>
+              </div>
+            </div>
+            <div class="stage-progress">
+              <div class="stage-progress-bar">
+                <div class="stage-progress-fill" style="width: 30%;background:linear-gradient(90deg,#6366f1,#a855f7);"></div>
+              </div>
+              <div class="stage-progress-meta">
+                <span>Concept level</span>
+                <span>30% modelled</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ENTITIES -->
+      <div class="section-title">
+        <span>Entities in this life moment</span>
+        <span>View matrix</span>
+      </div>
+
+      <div class="entity-grid">
+        <article class="entity-card" onclick="openEntity('adek')">
+          <div class="entity-name">🎓 ADEK</div>
+          <div class="entity-focus">
+            Scholarships, recognised universities & school‑to‑uni transition.
+          </div>
+          <div class="entity-chip">Scholarships · Education</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('actvet')">
+          <div class="entity-name">🛠 ACTVET</div>
+          <div class="entity-focus">
+            TVET routes, “Yes to Work”, skills hubs & Emirates Skills.
+          </div>
+          <div class="entity-chip">Vocational · Skills</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('nsra')">
+          <div class="entity-name">🪖 NSRA</div>
+          <div class="entity-focus">
+            National Service registration, tracks & post‑service pathways.
+          </div>
+          <div class="entity-chip">National Service</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('mawaheb')">
+          <div class="entity-name">📊 Mawaheb (DGE)</div>
+          <div class="entity-focus">
+            Job‑seeker coaching, profiling & placement for unemployed youth.
+          </div>
+          <div class="entity-chip">Placement · Coaching</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('khalifaFund')">
+          <div class="entity-name">🚀 Khalifa Fund</div>
+          <div class="entity-focus">
+            Youth entrepreneurship, loans, training & membership.
+          </div>
+          <div class="entity-chip">Entrepreneurship</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('fya')">
+          <div class="entity-name">🌐 FYA / Youth Platform</div>
+          <div class="entity-focus">
+            Youth councils, events, gamification & unified youth app.
+          </div>
+          <div class="entity-chip">Platform · Participation</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('maan')">
+          <div class="entity-name">🤝 Ma’an & FCA</div>
+          <div class="entity-focus">
+            Life skills, financial literacy, positive citizenship & prevention.
+          </div>
+          <div class="entity-chip">Life Skills</div>
+        </article>
+
+        <article class="entity-card" onclick="openEntity('adPolice')">
+          <div class="entity-name">🚓 AD Police</div>
+          <div class="entity-focus">
+            Safety, youth programmes & prevention of risky behaviours.
+          </div>
+          <div class="entity-chip">Safety · Prevention</div>
+        </article>
+      </div>
+
+      <!-- CURRENT FOCUS -->
+      <div class="section-title">
+        <span>My current focus</span>
+        <span>Edit journey</span>
+      </div>
+
+      <div class="focus-column">
+        <article class="focus-card" onclick="openJourney('hind')">
+          <div class="focus-label">Journey</div>
+          <div class="focus-title">Hind · Health Science Scholarship</div>
+          <div class="focus-subtitle">
+            ADEK scholarship abroad with clear pre‑departure prep & return pathway.
+          </div>
+          <div class="focus-tags">
+            <span class="focus-tag">ADEK list of universities</span>
+            <span class="focus-tag">Parent + youth interview</span>
+            <span class="focus-tag">Financial literacy</span>
+          </div>
+        </article>
+
+        <article class="focus-card" onclick="openJourney('firstJobGrad')">
+          <div class="focus-label">Journey</div>
+          <div class="focus-title">First Job · University Graduate</div>
+          <div class="focus-subtitle">
+            TAMM as single entry point, with mandatory work‑readiness workshops.
+          </div>
+          <div class="focus-tags">
+            <span class="focus-tag">CV builder & profile</span>
+            <span class="focus-tag">Integrated job portals</span>
+            <span class="focus-tag">Early‑career coaching</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- TASKS SUMMARY -->
+      <div class="section-title">
+        <span>Today’s priority actions</span>
+        <span>Auto‑generated</span>
+      </div>
+
+      <section class="tasks-card">
+        <div class="tasks-header">
+          <h3>Linked across entities</h3>
+          <span>Stage 2 · Transition</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-bullet">1</div>
+            <div>Confirm your high‑school stream & upload predicted grades for ADEK / scholarships.</div>
+          </li>
+          <li class="task-item">
+            <div class="task-bullet">2</div>
+            <div>Book your mandatory school counsellor session (career + major fit) & share summary with parents.</div>
+          </li>
+          <li class="task-item">
+            <div class="task-bullet">3</div>
+            <div>Pre‑register for National Service awareness session and check medical requirements timeline.</div>
+          </li>
+          <li class="task-item">
+            <div class="task-bullet">4</div>
+            <div>Join one ACTVET “Yes to Work” or Skills Hub opportunity linked to your chosen field.</div>
+          </li>
+          <li class="task-item">
+            <div class="task-bullet">5</div>
+            <div>Complete your basic financial literacy module (with Ma’an / FCA programme) before first income.</div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <div class="nav-item active">
+        <span>🏠</span>
+        <span>Life moment</span>
+      </div>
+      <div class="nav-item">
+        <span>📊</span>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item">
+        <span>🧾</span>
+        <span>Spaces</span>
+      </div>
+      <div class="nav-item">
+        <span>👤</span>
+        <span>Profile</span>
+      </div>
+    </nav>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" onclick="backdropClose(event)">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-pill" id="modalPill"></div>
+        <div class="modal-title" id="modalTitle">Title</div>
+        <div class="modal-subtitle" id="modalSubtitle">Subtitle</div>
+
+        <div class="modal-badges" id="modalBadges"></div>
+        <ul class="modal-list" id="modalList"></ul>
+
+        <div class="modal-footer">
+          <button class="btn-ghost" onclick="closeModal()">Close</button>
+          <button class="btn-primary">Export to TAMM Space</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data models for modal content -----------------------------------------
+    const stageData = {
+      school: {
+        pill: "Stage · School & Preparation (16–18)",
+        title: "Stage 1 · School & Preparation",
+        subtitle:
+          "Early guidance on education, TVET and life skills so youth and families can make confident decisions before grade 12.",
+        badges: ["High-school streams", "Scholarships awareness", "Life skills & wellbeing"],
+        bullets: [
+          "Define a single narrative that links school counsellors, ADEK, ACTVET and Ma’an life-skills programmes.",
+          "Surface clear information on recognised universities, TVET options and entry requirements in one place.",
+          "Introduce structured parent + youth conversations about majors and career directions, not just grades.",
+          "Embed financial literacy, digital safety and mental health basics as standard for all students.",
+          "Create early exposure to work through ACTVET “Yes to Work”, Skills Camp and volunteering hours that count for graduation."
+        ]
+      },
+      transition: {
+        pill: "Stage · University / Workforce / NS (18–22)",
+        title: "Stage 2 · University / Workforce / National Service",
+        subtitle:
+          "Orchestrate decisions around National Service timing, higher education, TVET, first internships and early income.",
+        badges: ["Complex multi-entity stage", "High drop-off risk", "National Service interface"],
+        bullets: [
+          "Align ADEK scholarships, ACTVET pathways and NSRA timelines so youth can see viable combinations (e.g. NS before vs. after university).",
+          "Use TAMM as a single canvas for registration status, scholarship applications and key deadlines across entities.",
+          "Strengthen school-to-university handover by making work-readiness workshops mandatory before graduation.",
+          "Bridge National Service exit to Mawaheb / Nafis / TAMM opportunities, including specialised tracks (data, tech, teaching).",
+          "Ensure special cases (health, learning needs) have a visible support route that cuts across health, universities and NSRA rather than starting from zero each time."
+        ]
+      },
+      earlyCareer: {
+        pill: "Stage · Early Career & Family (20–23)",
+        title: "Stage 3 · Early Career & Family",
+        subtitle:
+          "Help youth secure a first stable pathway – employment, entrepreneurship or further study – while supporting early family responsibilities.",
+        badges: ["First job & entrepreneurship", "Housing & finances", "Youth Platform integration"],
+        bullets: [
+          "Normalise multiple first-path options (employment, entrepreneurship, further study) within one Coming of Age life moment.",
+          "Leverage TAMM + Youth Platform as a front door to Mawaheb, Khalifa Fund, Nafis and entity job portals – with one CV and skills profile.",
+          "Move from ad-hoc volunteering to a structured skills portfolio that feeds into CVs and talent pools.",
+          "Introduce simple, youth-friendly tools for long-term financial planning (saving, loan literacy, housing pathways).",
+          "Connect early career journeys to family life moments (marriage, first child) for a holistic view of obligations and support."
+        ]
+      }
+    };
+
+    const entityData = {
+      adek: {
+        pill: "Entity · ADEK",
+        title: "ADEK · Scholarships & School-to-University Transitions",
+        subtitle:
+          "Owns the scholarship layer of Coming of Age and sets clarity on recognised universities and majors.",
+        badges: ["Scholarship provider", "Recognised universities list", "ASE & enrichment"],
+        bullets: [
+          "Publish a single, trusted list of recognised universities and eligible majors, visible inside the Coming of Age journey.",
+          "Coordinate scholarship timelines with grade 12 milestones, National Service requirements and ACTVET options.",
+          "Provide guidance content and tools that help counsellors explain scholarship conditions (GPA, tests, service obligations) to youth and parents.",
+          "Design pre-departure and re-entry support as part of the scholarship journey (not optional extras)."
+        ]
+      },
+      actvet: {
+        pill: "Entity · ACTVET",
+        title: "ACTVET · Vocational & Work-Experience Pathways",
+        subtitle:
+          "Provides TVET routes, short programmes and work exposure that sit alongside academic paths.",
+        badges: ["Yes to Work", "Skills Hub & Skills Camp", "Emirates Skills"],
+        bullets: [
+          "Map ACTVET pathways from school/ATS/private providers through ADVETI/FCHS to NQC/MOHESR in youth language.",
+          "Position 'Yes to Work' as a standard work-experience option in Stage 1 & 2, with certificates landing automatically in TAMM.",
+          "Use Skills Hub and Skills Camp as feeder experiences into specific job families (e.g. retail, health, tech).",
+          "Ensure all ACTVET micro-credentials and hours are recognised as prior learning towards diplomas."
+        ]
+      },
+      nsra: {
+        pill: "Entity · NSRA",
+        title: "NSRA · National Service & Post-Service Pathways",
+        subtitle:
+          "Owns the mandatory National Service journey and its connection to study and work.",
+        badges: ["National Service tracks", "Advanced programmes", "Post-service bridge"],
+        bullets: [
+          "Make NS status and timelines visible inside the Coming of Age life moment (not on a separate island).",
+          "Explain standard, alternative and advanced programmes (e.g. data, tech) as part of youth choices in Stage 2.",
+          "Clarify how National Service experience translates into CV value, job families and further education credit.",
+          "Co-design a 'What’s next after service?' flow into Mawaheb, Nafis, scholarships and entrepreneurship options."
+        ]
+      },
+      mawaheb: {
+        pill: "Entity · DGE / Mawaheb",
+        title: "Mawaheb · Job-Seeker Coaching & Placement",
+        subtitle:
+          "Supports unemployed youth with profiling, coaching and matching to available jobs.",
+        badges: ["Placement focused", "Employment coaches", "Data-driven"],
+        bullets: [
+          "Offer a clear handover from graduation, National Service or ACTVET completion into Mawaheb when a youth remains unemployed.",
+          "Use job families and CV diagnostics to drive targeted upskilling, not generic training.",
+          "Integrate rejection reasons back into the Coming of Age dashboard to adjust journeys (e.g. skills gaps, unrealistic expectations).",
+          "Collaborate with TAMM so youth see Mawaheb as part of one pathway, not a separate system."
+        ]
+      },
+      khalifaFund: {
+        pill: "Entity · Khalifa Fund",
+        title: "Khalifa Fund · Youth Entrepreneurship Engine",
+        subtitle:
+          "Provides funding, training and membership to help youth build and grow businesses.",
+        badges: ["Loans & advisory", "Youth entrepreneurship", "On TAMM"],
+        bullets: [
+          "Connector for youth who choose 'start a business' as their first stable pathway instead of a salaried job.",
+          "Offer pre-screening tools and consultations that surface inside the Coming of Age journey (not only on Khalifa Fund channels).",
+          "Link entrepreneurship programmes and loans to Youth Platform gamification and recognition (badges, stories).",
+          "Ensure loan conditions, grace periods and repayment expectations are explained in youth-friendly financial literacy modules."
+        ]
+      },
+      fya: {
+        pill: "Entity · FYA / Youth Platform",
+        title: "Federal Youth Authority · Youth Platform & Councils",
+        subtitle:
+          "Curates youth spaces, councils, events, gamification and the overarching digital platform.",
+        badges: ["Youth Platform owner", "Councils & hubs", "Knowledge & gamification"],
+        bullets: [
+          "Host the digital Coming of Age life moment as a core journey in the national Youth Platform.",
+          "Provide youth-facing features like CV builder, interests questionnaire, events map and gamification that Coming of Age can reuse.",
+          "Use dashboards and analytics to track youth progression across stages, not just activity counts.",
+          "Coordinate with councils and entities so Coming of Age content and services stay current and youth-tested."
+        ]
+      },
+      maan: {
+        pill: "Entity · Ma’an & FCA",
+        title: "Ma’an & FCA · Life Skills, Citizenship & Prevention",
+        subtitle:
+          "Owns key life-skills and prevention programmes that cut across all stages.",
+        badges: ["Life skills", "Financial literacy", "Citizenship & identity"],
+        bullets: [
+          "Deliver core programmes like life skills, financial literacy, positive citizenship and community awareness as standard offerings in Stage 1.",
+          "Ensure prevention initiatives (e.g. against risky behaviours) are framed as support and empowerment, not only policing.",
+          "Use Active Hub and similar spaces as physical anchors for Coming of Age experiences and initiative cards.",
+          "Connect volunteering, community work and transitional homes into broader youth pathways, not isolated services."
+        ]
+      },
+      adPolice: {
+        pill: "Entity · Abu Dhabi Police",
+        title: "Abu Dhabi Police · Safety & Positive Behaviour",
+        subtitle:
+          "Brings road safety, digital safety and positive behaviour into youth journeys.",
+        badges: ["Safety & awareness", "Youth programmes", "Community policing"],
+        bullets: [
+          "Integrate youth safety content (roads, cyber, substances) into the Life Skills & Prevention journey rather than separate campaigns.",
+          "Position youth programmes (e.g. cadet-style, awareness sessions) as part of Stage 1 and 2 preparedness.",
+          "Use QR codes and Youth Platform events modules to simplify booking school/university sessions.",
+          "Feed safety-related insights into journey design (e.g. peak risk segments) for targeted interventions."
+        ]
+      }
+    };
+
+    const journeyData = {
+      hind: {
+        pill: "Journey · Scholarship / Study Abroad",
+        title: "Hind · Health Science Scholarship Journey",
+        subtitle:
+          "To-be journey from grade 12 to overseas study and back into Abu Dhabi’s labour market.",
+        badges: ["ADEK scholarship", "Parents + youth", "Study abroad & return"],
+        bullets: [
+          "Early in grade 11–12, Hind sees all recognised Health Science programmes, both locally and abroad, with ADEK criteria clearly explained.",
+          "School counsellor + AI coach + parents align on an initial plan (major, country, NS timing) documented in her Coming of Age profile.",
+          "She applies once through a unified experience that surfaces ADEK scholarship steps and university requirements together.",
+          "Pre-departure, she completes life skills, wellbeing and financial literacy modules and meets a small group of alumni from similar paths.",
+          "On graduation abroad, her degree attestation, NS plan and first-job recommendations appear automatically inside Coming of Age."
+        ]
+      },
+      complexAbroad: {
+        pill: "Journey · Study Abroad (Current As-Is)",
+        title: "Complex Study-Abroad Journey · Current Pain Map",
+        subtitle:
+          "Captures the fragmented path of a student applying randomly, relying on family/friends and struggling with support.",
+        badges: ["As-Is pain", "No clear owner", "Weak escalation"],
+        bullets: [
+          "Initial decisions driven by random portals and family suggestions, with little structured school guidance.",
+          "National Service timing, COVID-style disruptions and health needs collide without a single case owner.",
+          "Accommodation and support issues abroad are handled through slow, unclear email loops with no escalation path.",
+          "Scholarship options, complaints channels and attestation steps are opaque, leaving the student feeling alone.",
+          "This journey defines negative patterns the To-be Coming of Age model must actively prevent."
+        ]
+      },
+      actvetPath: {
+        pill: "Journey · TVET / Yes to Work",
+        title: "Amna · ACTVET & 'Yes to Work' Journey",
+        subtitle:
+          "Vocational pathway where short work experiences and skills hubs lead to diplomas and jobs.",
+        badges: ["TVET route", "Work experience", "Recognition of prior learning"],
+        bullets: [
+          "Amna discovers ACTVET routes and 'Yes to Work' from inside the School & Preparation stage, not by accident.",
+          "She completes a 10-day 'Yes to Work' placement; her certificate and volunteering hours appear automatically in Coming of Age and TAMM.",
+          "She joins a Skills Hub track with 150–300 hours of training linked to a defined job family (e.g. retail, tech, health).",
+          "Her micro-credentials and hours are recognised as prior learning when she enrols in an ADVETI diploma.",
+          "On graduation, her NQC/MOHESR attestation triggers a notification with targeted job matches via TAMM/Mawaheb."
+        ]
+      },
+      firstJobGrad: {
+        pill: "Journey · First Job",
+        title: "Khalid · First Job After University",
+        subtitle:
+          "From final year to a first stable role, using TAMM as the single entry point.",
+        badges: ["Work-readiness", "Unified job search", "Early-career coaching"],
+        bullets: [
+          "Khalid attends a mandatory work-readiness workshop before graduation; his CV and skills profile are created on TAMM.",
+          "He searches for jobs through one unified view that aggregates entity portals, Nafis and selected private platforms.",
+          "For each application, he receives clear status and reasons for rejection or progression, not generic 'in process' states.",
+          "If unemployed beyond a defined period, he is nudged into Mawaheb for coaching and targeted upskilling.",
+          "Once employed, his profile and journey outcomes feed into Youth Platform analytics to improve future Coming of Age design."
+        ]
+      }
+    };
+
+    // Modal helpers --------------------------------------------------------
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalPill = document.getElementById("modalPill");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSubtitle = document.getElementById("modalSubtitle");
+    const modalBadges = document.getElementById("modalBadges");
+    const modalList = document.getElementById("modalList");
+
+    function openStage(key) {
+      const data = stageData[key];
+      if (!data) return;
+      fillModal(data);
+      modalOverlay.classList.add("open");
+    }
+
+    function openEntity(key) {
+      const data = entityData[key];
+      if (!data) return;
+      fillModal(data);
+      modalOverlay.classList.add("open");
+    }
+
+    function openJourney(key) {
+      const data = journeyData[key];
+      if (!data) return;
+      fillModal(data);
+      modalOverlay.classList.add("open");
+    }
+
+    function fillModal(data) {
+      modalPill.textContent = data.pill || "";
+      modalTitle.textContent = data.title || "";
+      modalSubtitle.textContent = data.subtitle || "";
+
+      modalBadges.innerHTML = "";
+      (data.badges || []).forEach((badge) => {
+        const span = document.createElement("span");
+        span.className = "modal-badge";
+        span.textContent = badge;
+        modalBadges.appendChild(span);
+      });
+
+      modalList.innerHTML = "";
+      (data.bullets || []).forEach((text, index) => {
+        const li = document.createElement("li");
+        li.className = "modal-item";
+
+        const bubble = document.createElement("div");
+        bubble.className = "modal-bullet";
+        bubble.textContent = index + 1;
+
+        const body = document.createElement("div");
+        body.textContent = text;
+
+        li.appendChild(bubble);
+        li.appendChild(body);
+        modalList.appendChild(li);
+      });
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove("open");
+    }
+
+    function backdropClose(event) {
+      if (event.target === modalOverlay) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>

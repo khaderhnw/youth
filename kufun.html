@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAMM - Funding Request Tracker</title>
+    <style>
+        :root {
+            --primary: #0A4A6A;
+            --secondary: #D4A017;
+            --bg-color: #F4F7F6;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --success: #2E7D32;
+            --warning: #ED6C02;
+            --info: #0288D1;
+            --border: #E0E0E0;
+            --radius: 12px;
+            --shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 80px; }
+
+        /* Header */
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--primary);
+        }
+        .header-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Overview Card */
+        .overview-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--primary);
+        }
+        .request-id { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
+        .request-title { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
+        .amount-box { text-align: right; }
+        .amount-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .amount-value { font-size: 1.5rem; font-weight: bold; color: var(--success); }
+
+        /* Action Required Alert (Digital Clarification Loop) */
+        .alert-box {
+            background: #FFF4E5;
+            border: 1px solid #FFE0B2;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 15px;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(237, 108, 2, 0.2); } 70% { box-shadow: 0 0 0 10px rgba(237, 108, 2, 0); } 100% { box-shadow: 0 0 0 0 rgba(237, 108, 2, 0); } }
+        
+        .alert-icon { font-size: 24px; }
+        .alert-content h3 { color: var(--warning); margin-bottom: 8px; font-size: 1.1rem; }
+        .alert-content p { font-size: 0.95rem; color: #555; margin-bottom: 15px; line-height: 1.4; }
+        
+        .upload-mini {
+            border: 2px dashed var(--warning);
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .upload-mini:hover { background: #FFF9F0; }
+
+        /* Vertical Timeline */
+        .tracker-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        .tracker-title { margin-bottom: 2rem; font-size: 1.2rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 11px; top: 5px; bottom: 0; width: 2px; background: var(--border);
+        }
+
+        .timeline-item { position: relative; margin-bottom: 2rem; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        
+        /* Status Nodes */
+        .node {
+            position: absolute; left: -30px; top: 2px; width: 24px; height: 24px;
+            border-radius: 50%; background: white; border: 3px solid var(--border);
+            z-index: 2; display: flex; align-items: center; justify-content: center;
+        }
+        
+        .timeline-item.completed .node { border-color: var(--success); background: var(--success); }
+        .timeline-item.completed .node::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; }
+        .timeline-item.active .node { border-color: var(--warning); background: white; }
+        .timeline-item.active .node::after { content: ''; width: 10px; height: 10px; background: var(--warning); border-radius: 50%; }
+
+        /* Timeline Content */
+        .content { padding-left: 15px; }
+        .status-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; color: var(--text-main); }
+        .timeline-item.completed .status-title { color: var(--success); }
+        .timeline-item.active .status-title { color: var(--warning); }
+        
+        .status-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
+        .timestamp { font-size: 0.8rem; color: #999; font-weight: 600; }
+
+        /* AI Buddy */
+        .ai-buddy {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background-color: var(--primary); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            box-shadow: 0 4px 15px rgba(10, 74, 106, 0.4); cursor: pointer;
+            border: 3px solid white; z-index: 100; transition: transform 0.2s;
+        }
+        .ai-buddy:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">TAMM | My Requests</div>
+        <div style="font-weight: 500; font-size: 0.9rem;">Omar Saif Al Nuaimi</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="overview-card">
+            <div>
+                <div class="request-id">REF: KF-REQ-2026-0842</div>
+                <div class="request-title">Business Expansion Funding</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Enterprise: Albarez Exhibition Organizing L.L.C</div>
+            </div>
+            <div class="amount-box">
+                <div class="amount-label">Requested Amount</div>
+                <div class="amount-value">AED 250,000</div>
+            </div>
+        </div>
+
+        <div class="alert-box">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content" style="flex-grow: 1;">
+                <h3>Action Required: Waiting for your documents</h3>
+                <p>The initial review is paused. The credit committee requires an updated <strong>Supplier Quotation</strong> matching the requested machinery list in your business plan before moving forward.</p>
+                <div class="upload-mini" onclick="alert('Uploading document directly into the existing case without restarting the application...')">
+                    <span style="color: var(--warning); font-weight: bold;">+ Click to upload updated Quotation (PDF)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tracker-card">
+            <h2 class="tracker-title">Application Status</h2>
+            
+            <div class="timeline">
+                
+                <div class="timeline-item completed">
+                    <div class="node"></div>
+                    <div class="content">
+                        <div class="status-title">Application Submitted</div>
+                        <div class="status-desc">Your funding request and initial documents were securely received.</div>
+                        <div class="timestamp">Feb 24, 2026 - 10:30 AM</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="node"></div>
+                    <div class="content">
+                        <div class="status-title">Under Initial Review</div>
+                        <div class="status-desc">The Khalifa Fund team screened your application for basic eligibility and AECB credit score validation.</div>
+                        <div class="timestamp">Feb 25, 2026 - 02:15 PM</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item active">
+                    <div class="node"></div>
+                    <div class="content">
+                        <div class="status-title">Waiting for your documents</div>
+                        <div class="status-desc">The reviewer requires clarification or missing files. Please check the action box above to update your application.</div>
+                        <div class="timestamp">Today - 09:00 AM</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="node"></div>
+                    <div class="content">
+                        <div class="status-title" style="color: #999;">In Credit Committee</div>
+                        <div class="status-desc">Your complete profile will be reviewed by the funding committee for a final decision.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="node"></div>
+                    <div class="content">
+                        <div class="status-title" style="color: #999;">Decision & E-Signature</div>
+                        <div class="status-desc">Once approved, you will sign the financing agreement digitally via UAE Pass. A disbursement schedule will then be generated.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-buddy" onclick="alert('AI Buddy: I see your application is paused. Do you need help understanding what kind of supplier quotation the committee is looking for?')">
+        🤖
+    </div>
+
+</body>
+</html>

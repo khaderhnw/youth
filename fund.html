@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAMM - Khalifa Fund Application Flow</title>
+    <style>
+        :root {
+            --primary: #0A4A6A;
+            --secondary: #D4A017;
+            --bg-color: #F4F7F6;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --success: #2E7D32;
+            --border: #E0E0E0;
+            --radius: 12px;
+            --shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); }
+
+        /* Header */
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--secondary);
+        }
+        .header-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+
+        /* Main Layout */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Stepper Top Bar */
+        .stepper {
+            display: flex;
+            background: #FAFAFA;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+        }
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            opacity: 0.5;
+            transition: 0.3s ease;
+        }
+        .step-indicator.active { opacity: 1; }
+        .step-indicator.completed { opacity: 1; color: var(--success); }
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--border);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            z-index: 2;
+        }
+        .active .step-icon { background: var(--primary); }
+        .completed .step-icon { background: var(--success); }
+        
+        .step-indicator:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%; width: 100%; height: 2px; background: var(--border); z-index: 1;
+        }
+        .completed:not(:last-child)::after { background: var(--success); }
+        .step-label { font-size: 0.85rem; font-weight: 600; text-align: center; }
+
+        /* Form Area */
+        .form-area {
+            padding: 2.5rem;
+            flex-grow: 1;
+            position: relative;
+        }
+        .form-step { display: none; animation: fadeIn 0.4s ease; }
+        .form-step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.5rem; }
+        p.subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+
+        /* Input Groups */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.9rem; font-weight: 600; color: #444; }
+        
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(10, 74, 106, 0.1); }
+        
+        /* Auto-fetched / Read-only state */
+        .input-group.fetched input {
+            background-color: #F0F4F8;
+            border-color: #DDE5ED;
+            color: #555;
+            cursor: not-allowed;
+        }
+        .fetch-badge {
+            font-size: 0.75rem;
+            color: var(--success);
+            background: #E8F5E9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
+        /* File Upload */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            background: #FAFAFA;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 1rem;
+        }
+        .upload-zone:hover { border-color: var(--primary); background: #F0F4F8; }
+        .upload-zone p { color: var(--text-muted); margin-top: 10px; }
+        
+        /* Document Item (Pre-fetched) */
+        .doc-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; background: white; border: 1px solid var(--border);
+            border-radius: 8px; margin-bottom: 10px;
+        }
+        .doc-status.success { color: var(--success); font-weight: bold; font-size: 0.9rem; }
+
+        /* Footer Controls */
+        .controls {
+            padding: 1.5rem 2rem;
+            background: #FAFAFA;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 12px 24px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: #EEE; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #083a54; transform: translateY(-2px); }
+
+        /* AI Buddy */
+        .ai-buddy {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background-color: var(--secondary); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            box-shadow: 0 4px 15px rgba(212, 160, 23, 0.4); cursor: pointer;
+            border: 3px solid white; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">TAMM | Enterprise Funding Application</div>
+        <div style="font-weight: 500;">Secure UAE Pass Session Active</div>
+    </header>
+
+    <div class="container">
+        <div class="stepper">
+            <div class="step-indicator active" id="ind-0">
+                <div class="step-icon">1</div>
+                <div class="step-label">Eligibility & Info</div>
+            </div>
+            <div class="step-indicator" id="ind-1">
+                <div class="step-icon">2</div>
+                <div class="step-label">Funding Details</div>
+            </div>
+            <div class="step-indicator" id="ind-2">
+                <div class="step-icon">3</div>
+                <div class="step-label">Documents</div>
+            </div>
+            <div class="step-indicator" id="ind-3">
+                <div class="step-icon">4</div>
+                <div class="step-label">Review</div>
+            </div>
+        </div>
+
+        <div class="form-area">
+            
+            <div class="form-step active" id="step-0">
+                <h2>Applicant Details</h2>
+                <p class="subtitle">Information retrieved securely via UAE Pass and TAMM Business Registry.</p>
+                
+                <div class="grid-2">
+                    <div class="input-group fetched">
+                        <label>Full Name <span class="fetch-badge">✓ UAE Pass</span></label>
+                        <input type="text" value="Omar Saif Al Nuaimi" readonly>
+                    </div>
+                    <div class="input-group fetched">
+                        <label>Emirates ID <span class="fetch-badge">✓ UAE Pass</span></label>
+                        <input type="text" value="784-XXXX-XXXXXXX-X" readonly>
+                    </div>
+                    <div class="input-group fetched">
+                        <label>Location <span class="fetch-badge">✓ Profile</span></label>
+                        <input type="text" value="Abu Dhabi, UAE" readonly>
+                    </div>
+                    <div class="input-group fetched">
+                        <label>Khalifa Fund Membership <span class="fetch-badge">✓ Verified</span></label>
+                        <input type="text" value="Active (KF-2026-8891)" readonly>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px 0; color: #444;">Enterprise Information</h3>
+                <div class="grid-2">
+                    <div class="input-group fetched">
+                        <label>Trade License Name <span class="fetch-badge">✓ TAMM Registry</span></label>
+                        <input type="text" value="Albarez Exhibition Organizing L.L.C" readonly>
+                    </div>
+                    <div class="input-group fetched">
+                        <label>Business Sector</label>
+                        <input type="text" value="Events & Exhibitions" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-1">
+                <h2>Funding Requirements</h2>
+                <p class="subtitle">Configure your financing request. Only key choices are required.</p>
+                
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <label>Funding Product</label>
+                    <select>
+                        <option>Select product...</option>
+                        <option>Microfinance (Up to AED 500,000)</option>
+                        <option>Start-up Support (Up to AED 1M)</option>
+                        <option selected>Business Expansion (Up to AED 3M)</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>Requested Amount (AED)</label>
+                        <input type="number" placeholder="e.g., 250000">
+                    </div>
+                    <div class="input-group">
+                        <label>Preferred Tenor (Duration)</label>
+                        <select>
+                            <option>12 Months</option>
+                            <option>24 Months</option>
+                            <option>36 Months</option>
+                            <option>48 Months</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 1.5rem;">
+                    <label>Funding Purpose</label>
+                    <textarea rows="3" placeholder="Briefly describe how the funds will be used (e.g., purchasing equipment, hiring staff, marketing)..."></textarea>
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 10px;">
+                    <input type="checkbox" id="aecb" style="margin-top: 4px; width: 18px; height: 18px;">
+                    <label for="aecb" style="font-weight: normal; font-size: 0.95rem; line-height: 1.4;">
+                        I consent to the Al Etihad Credit Bureau (AECB) report being generated automatically. <br>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">This saves you from manually requesting and uploading your credit report.</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-2">
+                <h2>Required Documents</h2>
+                <p class="subtitle">We've gathered what we can. Please upload the remaining business specific files.</p>
+                
+                <h3 style="font-size: 1rem; margin-bottom: 10px;">Auto-Fetched Documents</h3>
+                <div class="doc-item">
+                    <span>Emirates ID & Passport Copies</span>
+                    <span class="doc-status success">✓ Auto-fetched</span>
+                </div>
+                <div class="doc-item">
+                    <span>Valid Trade License</span>
+                    <span class="doc-status success">✓ Auto-fetched</span>
+                </div>
+                <div class="doc-item" style="margin-bottom: 20px;">
+                    <span>AECB Credit Report</span>
+                    <span class="doc-status success">✓ Generating upon submission</span>
+                </div>
+
+                <h3 style="font-size: 1rem; margin-bottom: 10px;">Action Required</h3>
+                <div class="upload-zone">
+                    <div style="font-size: 2rem; color: var(--primary);">📄</div>
+                    <h4 style="margin-top: 10px; color: var(--primary);">Upload Business Plan / Feasibility Study</h4>
+                    <p>Drag & drop your PDF or click to browse.</p>
+                </div>
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" style="color: var(--primary); font-size: 0.85rem; text-decoration: none; font-weight: bold;">📥 Download KFED Business Plan Template</a>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-3">
+                <h2>Review & Submit</h2>
+                <p class="subtitle">Please review your application summary before sending to the committee.</p>
+                
+                <div style="background: #FAFAFA; border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+                    <h3 style="font-size: 1.1rem; border-bottom: 1px solid #DDD; padding-bottom: 10px; margin-bottom: 15px;">Application Summary</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; font-size: 0.95rem;">
+                        <span style="color: var(--text-muted);">Applicant:</span> <strong>Omar Saif Al Nuaimi</strong>
+                        <span style="color: var(--text-muted);">Enterprise:</span> <strong>Albarez Exhibition Organizing L.L.C</strong>
+                        <span style="color: var(--text-muted);">Product:</span> <strong>Business Expansion</strong>
+                        <span style="color: var(--text-muted);">Amount:</span> <strong>AED 250,000 (36 Months)</strong>
+                        <span style="color: var(--text-muted);">Documents:</span> <strong>3 Fetched, 1 Uploaded</strong>
+                    </div>
+                </div>
+                <br>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">By clicking submit, you agree to the terms and conditions of the Khalifa Fund financing agreement. You will receive an SMS and dashboard notification when your application status changes.</p>
+            </div>
+
+        </div>
+
+        <div class="controls">
+            <button class="btn-secondary" id="btn-back" style="visibility: hidden;">Back</button>
+            <button class="btn-primary" id="btn-next">Continue</button>
+        </div>
+    </div>
+
+    <div class="ai-buddy" onclick="alert('AI Buddy: Need help structuring your business plan? I can guide you through the financial projections section!')">
+        💡
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.form-step');
+        const indicators = document.querySelectorAll('.step-indicator');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+
+        function updateUI() {
+            // Update Forms
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === currentStep);
+            });
+
+            // Update Indicators
+            indicators.forEach((ind, index) => {
+                if (index < currentStep) {
+                    ind.classList.add('completed');
+                    ind.classList.remove('active');
+                } else if (index === currentStep) {
+                    ind.classList.add('active');
+                    ind.classList.remove('completed');
+                } else {
+                    ind.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update Buttons
+            btnBack.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+            
+            if (currentStep === steps.length - 1) {
+                btnNext.textContent = 'Submit Application';
+                btnNext.style.backgroundColor = '#2E7D32'; // Green for submit
+            } else {
+                btnNext.textContent = 'Continue';
+                btnNext.style.backgroundColor = 'var(--primary)';
+            }
+        }
+
+        btnNext.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            } else {
+                alert('Application Submitted Successfully! Redirecting to Youth Dashboard to track status...');
+            }
+        });
+
+        btnBack.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            }
+        });
+    </script>
+</body>
+</html>
